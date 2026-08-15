@@ -26,20 +26,20 @@
 
     <!-- Brand -->
     <a href="index.html" class="tl-brand">
-               <picture class="tl-brand-logo">
-            <img
-              src="assets/images/logo-light.png"
-               alt="Tailora"
-              class="tl-logo-light"
-         >
-          <img
-           src="assets/images/logo-dark.png"
-             alt="Tailora"
-           class="tl-logo-dark"
-                    >
-             </picture>
-      
-                </a>
+      <picture class="tl-brand-logo">
+        <img
+          src="assets/images/logo-light.png"
+          alt="Tailora"
+          class="tl-logo-light"
+        >
+        <img
+          src="assets/images/logo-dark.png"
+          alt="Tailora"
+          class="tl-logo-dark"
+        >
+      </picture>
+    </a>
+
     <!-- Heading -->
     <h1 class="tl-display">Start your journey</h1>
 
@@ -133,101 +133,104 @@
           <div class="tl-field-error"></div>
         </div>
 
-
         <!-- Gender -->
         <div class="tl-field" id="field-gender">
-          <label for="gender">Gender</label>
-
-          <input
-            class="tl-input"
-            type="text"
-            id="gender"
-            name="gender"
-            placeholder="Female"
-            required
-            autocomplete="sex"
-          >
-
+          <label>Gender</label>
+          <div style="display:flex; gap:16px; align-items:center; height:42px;">
+            <label style="display:flex; align-items:center; gap:6px; font-weight:400; cursor:pointer;">
+              <input type="checkbox" id="gender_male" onclick="
+                document.getElementById('gender_female').checked = false;
+                document.getElementById('gender').value = this.checked ? 'Male' : '';
+              ">
+              Male
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-weight:400; cursor:pointer;">
+              <input type="checkbox" id="gender_female" onclick="
+                document.getElementById('gender_male').checked = false;
+                document.getElementById('gender').value = this.checked ? 'Female' : '';
+              ">
+              Female
+            </label>
+          </div>
+          <input type="hidden" id="gender" name="gender" required>
           <div class="tl-field-error"></div>
         </div>
 
       </div>
 
 
-      <!-- Country of Birth -->
-     <div class="tl-field" id="field-dist_country">
-  <label for="dist_country">Country</label>
-
-  <input
-    class="tl-input"
-    type="text"
-    id="dist_country"
-    name="dist_country"
-    placeholder="Egypt"
-    required
-    autocomplete="country-name"
-  >
-
-  <div class="tl-field-error"></div>
-</div>
+      <!-- Country -->
+      <div class="tl-field" id="field-dist_country">
+        <label for="dist_country">Country</label>
+        <select
+          class="tl-input"
+          id="dist_country"
+          name="dist_country"
+          required
+          autocomplete="country-name"
+        >
+          <option value="" disabled selected>Loading countries...</option>
+        </select>
+        <div class="tl-field-error"></div>
+      </div>
 
 
       <!-- Password -->
-     <div class="tl-field" id="field-password">
-  <label for="password">Password</label>
-  <div style="position:relative;">
-    <input class="tl-input" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" style="padding-right:40px;">
-    <span id="toggle-password" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; user-select:none;" onclick="
-      const pwd = document.getElementById('password');
-      const icon = document.getElementById('toggle-password');
-      if (pwd.type === 'password') {
-        pwd.type = 'text';
-        icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>`;
-      } else {
-        pwd.type = 'password';
-        icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>`;
-      }
-    ">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-    </span>
-  </div>
-  <div class="tl-field-error"></div>
-</div>
+      <div class="tl-field" id="field-password">
+        <label for="password">Password</label>
+        <div style="position:relative;">
+          <input class="tl-input" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" style="padding-right:40px;">
+          <span id="toggle-password" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; user-select:none;" onclick="
+            const pwd = document.getElementById('password');
+            const icon = document.getElementById('toggle-password');
+            if (pwd.type === 'password') {
+              pwd.type = 'text';
+              icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>`;
+            } else {
+              pwd.type = 'password';
+              icon.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>`;
+            }
+          ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+        </div>
+        <div class="tl-field-error"></div>
+      </div>
 
       <!-- Confirm Password -->
       <div class="tl-field" id="field-password_confirmation">
-       <label for="password_confirmation">
-  Confirm password
-</label>
+        <label for="password_confirmation">
+          Confirm password
+        </label>
 
-<div style="position:relative;">
-  <input
-    class="tl-input"
-    type="password"
-    id="password_confirmation"
-    name="password_confirmation"
-    placeholder="Repeat your password"
-    minlength="6"
-    required
-    autocomplete="new-password"
-    style="padding-right:40px;"
-  >
-  <span id="toggle-password-confirmation" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; user-select:none;" onclick="
-    const Ammar = document.getElementById('password_confirmation');
-    const Khaled = document.getElementById('toggle-password-confirmation');
-    if (Ammar.type === 'password') {
-      Ammar.type = 'text';
-      Khaled.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>`;
-    } else {
-      Ammar.type = 'password';
-      Khaled.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>`;
-    }
-  ">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-  </span>
-</div>
+        <div style="position:relative;">
+          <input
+            class="tl-input"
+            type="password"
+            id="password_confirmation"
+            name="password_confirmation"
+            placeholder="Repeat your password"
+            minlength="6"
+            required
+            autocomplete="new-password"
+            style="padding-right:40px;"
+          >
+          <span id="toggle-password-confirmation" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; user-select:none;" onclick="
+            const pwd2 = document.getElementById('password_confirmation');
+            const icon2 = document.getElementById('toggle-password-confirmation');
+            if (pwd2.type === 'password') {
+              pwd2.type = 'text';
+              icon2.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24'/><line x1='1' y1='1' x2='23' y2='23'/></svg>`;
+            } else {
+              pwd2.type = 'password';
+              icon2.innerHTML = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z'/><circle cx='12' cy='12' r='3'/></svg>`;
+            }
+          ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+        </div>
 
-<div class="tl-field-error"></div>
+        <div class="tl-field-error"></div>
       </div>
 
 
@@ -269,6 +272,29 @@
 
 <!-- Auth Pages -->
 <script src="assets/js/pages/auth-pages.js"></script>
+
+<!-- Populate country dropdown -->
+<script>
+  fetch('http://127.0.0.1:8000/api/countries')
+    .then(response => response.json())
+    .then(data => {
+      const select = document.getElementById('dist_country');
+      select.innerHTML = '<option value="" disabled selected>Select your country</option>';
+
+      data.forEach(item => {
+        const name = item.country_information.name;
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error('Error loading countries:', error);
+      const select = document.getElementById('dist_country');
+      select.innerHTML = '<option value="" disabled selected>Failed to load countries</option>';
+    });
+</script>
 
 </body>
 </html>
