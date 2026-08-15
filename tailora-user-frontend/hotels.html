@@ -9,6 +9,42 @@
 <link rel="stylesheet" href="assets/css/nav.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
+<style>
+  .tl-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .tl-pagination-info {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+  .tl-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tl-page-ellipsis {
+    padding: 0 4px;
+    opacity: 0.5;
+  }
+  .tl-pagination-jump {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+  }
+  .tl-pagination-jump input {
+    width: 90px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--tl-border, #ddd);
+  }
+</style>
 </head>
 <body>
 
@@ -38,7 +74,10 @@
           <option value="rating-desc">Top Rated</option>
         </select>
       </div>
+
+      <div id="hotels-pagination-top"></div>
       <div class="tl-grid" id="hotels-grid"></div>
+      <div id="hotels-pagination-bottom"></div>
     </div>
   </section>
 </main>
