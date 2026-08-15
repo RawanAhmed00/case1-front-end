@@ -1,6 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>/* Pagination controls (restaurants.js etc.) */
+.tl-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.tl-page-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--tl-border, #e2e2e2);
+  border-radius: 8px;
+  background: var(--tl-surface, #fff);
+  color: var(--tl-text, #1a1a1a);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tl-page-btn:hover:not(:disabled) {
+  border-color: var(--tl-primary, #1a1a1a);
+}
+
+.tl-page-btn.is-active {
+  background: var(--tl-primary, #1a1a1a);
+  border-color: var(--tl-primary, #1a1a1a);
+  color: #fff;
+  cursor: default;
+}
+
+.tl-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tl-page-ellipsis {
+  padding: 0 4px;
+  color: var(--tl-muted, #888);
+}</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Restaurants — Tailora</title>

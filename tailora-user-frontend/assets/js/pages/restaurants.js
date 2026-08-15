@@ -20,7 +20,9 @@ const RESTAURANT_IMAGES = [
 const state = {
   items: [],
   query: "",
-  cuisine: ""
+  cuisine: "",
+  page: 1,
+  lastPage: 1
 };
 
 function getRestaurantImage(item) {
@@ -61,6 +63,9 @@ function getRestaurantImage(item) {
 
   function populateCuisines() {
     const select = document.getElementById("rest-cuisine");
+    // Clear everything except the default "All Cuisines" option before
+    // re-adding, since options are (re)built from whichever page is loaded.
+    select.querySelectorAll("option:not([value=''])").forEach((opt) => opt.remove());
     const cuisines = Array.from(
       new Set(state.items.map((r) => window.TL.Util.pick(r, ["cuisine", "cuisine_type"], "")).filter(Boolean))
     ).sort();
@@ -69,6 +74,52 @@ function getRestaurantImage(item) {
       opt.value = c;
       opt.textContent = c;
       select.appendChild(opt);
+    });
+    select.value = state.cuisine || "";
+  }
+
+  function renderPagination() {
+    let bar = document.getElementById("restaurants-pagination");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "restaurants-pagination";
+      bar.className = "tl-pagination";
+      document.getElementById("restaurants-grid").insertAdjacentElement("afterend", bar);
+    }
+
+    if (state.lastPage <= 1) {
+      bar.innerHTML = "";
+      return;
+    }
+
+    const current = state.page;
+    const last = state.lastPage;
+
+    // Build a compact set of page numbers: first, last, current +-1, with ellipses.
+    const pages = new Set([1, last, current, current - 1, current + 1]);
+    const sorted = Array.from(pages).filter((p) => p >= 1 && p <= last).sort((a, b) => a - b);
+
+    let html = `<button class="tl-page-btn" data-page="${current - 1}" ${current <= 1 ? "disabled" : ""} aria-label="Previous page">‹</button>`;
+
+    let prev = 0;
+    sorted.forEach((p) => {
+      if (prev && p - prev > 1) {
+        html += `<span class="tl-page-ellipsis">…</span>`;
+      }
+      html += `<button class="tl-page-btn${p === current ? " is-active" : ""}" data-page="${p}" ${p === current ? 'aria-current="page"' : ""}>${p}</button>`;
+      prev = p;
+    });
+
+    html += `<button class="tl-page-btn" data-page="${current + 1}" ${current >= last ? "disabled" : ""} aria-label="Next page">›</button>`;
+
+    bar.innerHTML = html;
+
+    bar.querySelectorAll(".tl-page-btn[data-page]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const page = Number(btn.dataset.page);
+        if (!page || page < 1 || page > state.lastPage || page === state.page) return;
+        load(page);
+      });
     });
   }
 
@@ -83,6 +134,7 @@ function getRestaurantImage(item) {
 
     grid.innerHTML = items.length ? items.map(card).join("") : window.TL.Util.emptyState("No restaurants found", "Try a different search or cuisine.");
     wireFav();
+    renderPagination();
   }
 
   function wireFav() {
@@ -112,14 +164,24 @@ function getRestaurantImage(item) {
     });
   }
 
-  async function load() {
+  async function load(page = 1) {
     const grid = document.getElementById("restaurants-grid");
     grid.innerHTML = window.TL.Util.skeletonCards(9);
     try {
-      const response = await window.TL.Restaurants.all();
+      // NOTE: assumes TL.Restaurants.all() forwards a params object as query
+      // params (e.g. ?page=2). If your api wrapper has a different signature,
+      // adjust this call to match (e.g. TL.Restaurants.all(`?page=${page}`)).
+      const response = await window.TL.Restaurants.all({ page });
       state.items = window.TL.Util.list(response);
+
+      const meta = response && response.meta ? response.meta : null;
+      state.page = meta && meta.current_page ? meta.current_page : page;
+      state.lastPage = meta && meta.last_page ? meta.last_page : 1;
+
       populateCuisines();
       render();
+
+      document.getElementById("restaurants-grid").scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (err) {
       grid.innerHTML = window.TL.Util.errorState(err.message);
     }
