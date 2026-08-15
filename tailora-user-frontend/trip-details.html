@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Trip — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <div class="tl-container" style="padding-top:calc(var(--tl-nav-height) + 40px);">
+
+    <div id="trip-loading">
+      <div class="tl-skel" style="height:180px;border-radius:var(--tl-radius-xl);margin-bottom:32px;"></div>
+    </div>
+
+    <div id="trip-shell" class="tl-hidden">
+      <div class="tl-card" id="trip-header" style="padding:32px;margin-bottom:8px;position:relative;overflow:hidden;">
+        <!-- populated by trip-details.js -->
+      </div>
+
+      <div id="trip-weather" class="tl-chip-row" style="margin:20px 0;"></div>
+
+      <div class="tl-day-tabs" id="trip-day-tabs"></div>
+      <div id="trip-timeline"></div>
+
+      <div class="tl-flex tl-justify-between tl-mt-32" style="padding-bottom:60px;flex-wrap:wrap;gap:14px;">
+        <a href="profile.html" class="tl-btn tl-btn--ghost">← Back to My Trips</a>
+        <button type="button" class="tl-btn tl-btn--outline" id="delete-trip-btn" style="border-color:var(--tl-danger);color:var(--tl-danger);">Delete Trip</button>
+      </div>
+    </div>
+
+    <div id="trip-error" class="tl-hidden"></div>
+  </div>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/attractions.js"></script>
+<script src="assets/js/api/trips.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/trip-details.js"></script>
+</body>
+</html>

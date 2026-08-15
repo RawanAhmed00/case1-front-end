@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Reviews — Tailora Admin</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+  >
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+
+<body
+  data-page="reviews"
+  data-page-title="Reviews"
+  data-breadcrumb="Management,Reviews"
+  data-requires-auth="true"
+>
+
+  <div class="tl-app">
+
+
+    <!-- Sidebar -->
+
+    <aside
+      class="tl-sidebar offcanvas offcanvas-start offcanvas-lg"
+      tabindex="-1"
+      id="tlSidebar"
+      aria-labelledby="tlSidebarLabel"
+    ></aside>
+
+
+    <div class="tl-main">
+
+
+      <!-- Topbar -->
+
+      <header
+        class="tl-topbar"
+        id="tlTopbar"
+      ></header>
+
+
+      <main class="tl-content">
+
+
+        <!-- ======================================================
+             PAGE HEADER
+             ====================================================== -->
+
+        <div class="tl-page-header">
+
+          <div>
+
+            <div class="tl-eyebrow">
+
+              <span class="tl-badge tl-badge--info">
+
+                <i class="bi bi-star"></i>
+
+                Moderation
+
+              </span>
+
+            </div>
+
+
+            <h1 class="tl-page-title">
+              Reviews
+            </h1>
+
+
+            <p class="tl-text-secondary">
+              Review moderation using the real review records returned by the backend.
+            </p>
+
+          </div>
+
+
+          <button
+            id="reviewsRefresh"
+            class="tl-btn tl-btn--outline"
+            type="button"
+          >
+
+            <i class="bi bi-arrow-clockwise"></i>
+
+            Refresh
+
+          </button>
+
+        </div>
+
+
+
+        <!-- ======================================================
+             REVIEW QUEUE
+             ====================================================== -->
+
+        <section class="tl-card tl-card--flush">
+
+
+          <div
+            class="tl-card__head"
+            style="padding: 22px 22px 0;"
+          >
+
+            <div>
+
+              <div class="tl-section-title">
+                Review queue
+              </div>
+
+              <div class="tl-metadata">
+                GET /admin/reviews
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- JS renders the real reviews here -->
+
+          <div id="reviewsState">
+
+            <div class="tl-empty">
+
+              <div class="tl-empty__icon">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+
+              <div class="tl-section-title">
+                Loading reviews...
+              </div>
+
+            </div>
+
+          </div>
+
+
+        </section>
+
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/reviews.js"></script>
+
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages/utils.js"></script>
+  <script src="assets/js/pages/reviews.js"></script>
+
+</body>
+
+</html>

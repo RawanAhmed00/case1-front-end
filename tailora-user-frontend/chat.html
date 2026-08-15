@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat — Tailora</title>
+  <link rel="icon" href="assets/images/logo.png">
+  <link rel="stylesheet" href="assets/css/tailora.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/chat.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main class="tl-chat-page">
+  <section class="tl-chat-hero">
+    <div class="tl-container">
+      <span class="tl-eyebrow">Travel Support</span>
+      <h1 class="tl-display tl-mt-8">Your conversations</h1>
+      <p class="tl-hero-sub">Talk to your Tailora guide and keep your trip conversations in one place.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight">
+    <div class="tl-container">
+      <div class="tl-chat-shell">
+
+        <aside class="tl-chat-sidebar">
+          <div class="tl-chat-sidebar-head">
+            <div>
+              <div class="tl-section-title">Chats</div>
+              <p class="tl-text-secondary">Your recent conversations</p>
+            </div>
+            <span class="tl-chat-unread" id="chat-unread-count" hidden>0</span>
+          </div>
+
+          <div id="chat-list" class="tl-chat-list">
+            <div class="tl-chat-loading">Loading conversations...</div>
+          </div>
+        </aside>
+
+        <section class="tl-chat-main" aria-label="Conversation">
+          <div id="chat-empty" class="tl-chat-empty">
+            <div class="tl-chat-empty-icon">✦</div>
+            <h2>Select a conversation</h2>
+            <p>Choose a chat from the left to view messages and continue your conversation.</p>
+          </div>
+
+          <div id="chat-conversation" class="tl-chat-conversation" hidden>
+            <header class="tl-chat-header">
+              <div class="tl-chat-person">
+                <div class="tl-chat-avatar" id="chat-avatar">TG</div>
+                <div>
+                  <h2 id="chat-title">Tour Guide</h2>
+                  <span id="chat-status">Tailora Travel Guide</span>
+                </div>
+              </div>
+            </header>
+
+            <div id="chat-messages" class="tl-chat-messages" aria-live="polite"></div>
+
+            <form id="chat-form" class="tl-chat-composer">
+              <textarea id="chat-input" rows="1" maxlength="2000" placeholder="Write a message..." required></textarea>
+              <button type="submit" class="tl-btn tl-btn--primary" id="chat-send-btn">Send</button>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/catalog.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/api/chats.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/chat.js"></script>
+</body>
+</html>

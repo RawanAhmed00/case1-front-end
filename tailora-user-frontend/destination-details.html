@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destination — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <div class="tl-container">
+    <div class="tl-detail-hero" id="detail-hero">
+      <div class="tl-skel" style="width:100%;height:100%;"></div>
+    </div>
+
+    <div class="tl-detail-tabs" id="detail-tabs">
+      <button class="is-active" data-tab="overview">Overview</button>
+      <button data-tab="hotels">Hotels</button>
+      <button data-tab="restaurants">Restaurants</button>
+      <button data-tab="attractions">Experiences</button>
+    </div>
+
+    <div class="tl-detail-tabpanel is-active" data-panel="overview" id="panel-overview"></div>
+    <div class="tl-detail-tabpanel" data-panel="hotels" id="panel-hotels"></div>
+    <div class="tl-detail-tabpanel" data-panel="restaurants" id="panel-restaurants"></div>
+    <div class="tl-detail-tabpanel" data-panel="attractions" id="panel-attractions"></div>
+  </div>
+
+  <section class="tl-section">
+    <div class="tl-container tl-text-center">
+      <a href="plan-trip.html" class="tl-btn tl-btn--primary">Plan a Trip Here</a>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/catalog.js"></script>
+<script src="assets/js/api/hotels.js"></script>
+<script src="assets/js/api/attractions.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/destination-details.js"></script>
+</body>
+</html>

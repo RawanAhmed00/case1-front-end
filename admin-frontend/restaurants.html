@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Restaurants — Tailora Admin</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+  >
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+
+<body
+  data-page="restaurants"
+  data-page-title="Restaurants"
+  data-breadcrumb="Management,Restaurants"
+  data-requires-auth="true"
+>
+
+  <div class="tl-app">
+
+    <!-- Sidebar -->
+    <aside
+      class="tl-sidebar offcanvas offcanvas-start offcanvas-lg"
+      tabindex="-1"
+      id="tlSidebar"
+      aria-labelledby="tlSidebarLabel"
+    ></aside>
+
+
+    <div class="tl-main">
+
+      <!-- Topbar -->
+      <header
+        class="tl-topbar"
+        id="tlTopbar"
+      ></header>
+
+
+      <main class="tl-content">
+
+
+        <!-- ======================================================
+             PAGE HEADER
+             ====================================================== -->
+
+        <div class="tl-page-header">
+
+          <div>
+
+            <div class="tl-eyebrow">
+
+              <span class="tl-badge tl-badge--info">
+
+                <i class="bi bi-cup-hot"></i>
+
+                Restaurant Management
+
+              </span>
+
+            </div>
+
+
+            <h1 class="tl-page-title">
+              Restaurants
+            </h1>
+
+
+            <p class="tl-text-secondary">
+              Manage restaurants using the real records stored in the database.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ======================================================
+             RESTAURANT LIST
+             ====================================================== -->
+
+        <div
+          class="tl-card tl-card--accent"
+          style="margin-bottom: 20px;"
+        >
+
+          <div id="restaurantList">
+
+            <div class="tl-empty">
+
+              <div class="tl-empty__icon">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+
+              <div class="tl-section-title">
+                Loading restaurants...
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ======================================================
+             CREATE / UPDATE
+             ====================================================== -->
+
+        <div class="row g-4">
+
+
+          <!-- ====================================================
+               CREATE RESTAURANT
+               ==================================================== -->
+
+          <div class="col-xl-6">
+
+            <section class="tl-card">
+
+              <div class="tl-card__head">
+
+                <div class="tl-section-title">
+                  Create restaurant
+                </div>
+
+                <span class="tl-metadata">
+                  POST /admin/restaurants
+                </span>
+
+              </div>
+
+
+              <form id="restaurantCreateForm">
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_name">
+                    Name
+                  </label>
+
+                  <input
+                    id="restaurant_name"
+                    name="restaurant_name"
+                    type="text"
+                    class="tl-input"
+                    placeholder="Restaurant name"
+                    required
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_name"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_city">
+                    City
+                  </label>
+
+                  <input
+                    id="restaurant_city"
+                    name="restaurant_city"
+                    type="text"
+                    class="tl-input"
+                    placeholder="City"
+                    required
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_city"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_address">
+                    Address
+                  </label>
+
+                  <input
+                    id="restaurant_address"
+                    name="restaurant_address"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_address"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_average_cost_for_two">
+                    Average cost for two
+                  </label>
+
+                  <input
+                    id="restaurant_average_cost_for_two"
+                    name="restaurant_average_cost_for_two"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_average_cost_for_two"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_price_range">
+                    Price range
+                  </label>
+
+                  <input
+                    id="restaurant_price_range"
+                    name="restaurant_price_range"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_price_range"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_locality">
+                    Locality
+                  </label>
+
+                  <input
+                    id="restaurant_locality"
+                    name="restaurant_locality"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_locality"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_latitude">
+                    Latitude
+                  </label>
+
+                  <input
+                    id="restaurant_latitude"
+                    name="restaurant_latitude"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_latitude"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_longitude">
+                    Longitude
+                  </label>
+
+                  <input
+                    id="restaurant_longitude"
+                    name="restaurant_longitude"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_longitude"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_cuisines">
+                    Cuisines
+                  </label>
+
+                  <input
+                    id="restaurant_cuisines"
+                    name="restaurant_cuisines"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_cuisines"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_currency">
+                    Currency
+                  </label>
+
+                  <input
+                    id="restaurant_currency"
+                    name="restaurant_currency"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_currency"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_has_table_booking">
+                    Has table booking
+                  </label>
+
+                  <select
+                    id="restaurant_has_table_booking"
+                    name="restaurant_has_table_booking"
+                    class="tl-select"
+                  >
+
+                    <option value="">
+                      Select
+                    </option>
+
+                    <option value="true">
+                      true
+                    </option>
+
+                    <option value="false">
+                      false
+                    </option>
+
+                  </select>
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_has_table_booking"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_has_online_delivery">
+                    Has online delivery
+                  </label>
+
+                  <select
+                    id="restaurant_has_online_delivery"
+                    name="restaurant_has_online_delivery"
+                    class="tl-select"
+                  >
+
+                    <option value="">
+                      Select
+                    </option>
+
+                    <option value="true">
+                      true
+                    </option>
+
+                    <option value="false">
+                      false
+                    </option>
+
+                  </select>
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_has_online_delivery"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_is_delivering_now">
+                    Is delivering now
+                  </label>
+
+                  <select
+                    id="restaurant_is_delivering_now"
+                    name="restaurant_is_delivering_now"
+                    class="tl-select"
+                  >
+
+                    <option value="">
+                      Select
+                    </option>
+
+                    <option value="true">
+                      true
+                    </option>
+
+                    <option value="false">
+                      false
+                    </option>
+
+                  </select>
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_is_delivering_now"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_rating">
+                    Rating
+                  </label>
+
+                  <input
+                    id="restaurant_rating"
+                    name="restaurant_rating"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_rating"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_votes">
+                    Votes
+                  </label>
+
+                  <input
+                    id="restaurant_votes"
+                    name="restaurant_votes"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_votes"
+                  ></div>
+
+                </div>
+
+
+                <button
+                  class="tl-btn tl-btn--primary"
+                  type="submit"
+                >
+                  Create restaurant
+                </button>
+
+              </form>
+
+            </section>
+
+          </div>
+
+
+
+          <!-- ====================================================
+               UPDATE / DELETE
+               ==================================================== -->
+
+          <div class="col-xl-6">
+
+            <section class="tl-card">
+
+              <div class="tl-card__head">
+
+                <div class="tl-section-title">
+                  Update / Delete
+                </div>
+
+                <span class="tl-metadata">
+                  PUT / DELETE /admin/restaurants/{id}
+                </span>
+
+              </div>
+
+
+              <form id="restaurantManageForm">
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_id">
+                    Restaurant ID
+                  </label>
+
+                  <input
+                    id="restaurant_id"
+                    name="restaurant_id"
+                    type="number"
+                    class="tl-input"
+                    placeholder="ID"
+                    required
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_id"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_name">
+                    Name
+                  </label>
+
+                  <input
+                    id="restaurant_u_name"
+                    name="restaurant_u_name"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_name"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_city">
+                    City
+                  </label>
+
+                  <input
+                    id="restaurant_u_city"
+                    name="restaurant_u_city"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_city"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_address">
+                    Address
+                  </label>
+
+                  <input
+                    id="restaurant_u_address"
+                    name="restaurant_u_address"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_address"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_locality">
+                    Locality
+                  </label>
+
+                  <input
+                    id="restaurant_u_locality"
+                    name="restaurant_u_locality"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_locality"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_latitude">
+                    Latitude
+                  </label>
+
+                  <input
+                    id="restaurant_u_latitude"
+                    name="restaurant_u_latitude"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_latitude"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_longitude">
+                    Longitude
+                  </label>
+
+                  <input
+                    id="restaurant_u_longitude"
+                    name="restaurant_u_longitude"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_longitude"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_cuisines">
+                    Cuisines
+                  </label>
+
+                  <input
+                    id="restaurant_u_cuisines"
+                    name="restaurant_u_cuisines"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_cuisines"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_average_cost_for_two">
+                    Average cost for two
+                  </label>
+
+                  <input
+                    id="restaurant_u_average_cost_for_two"
+                    name="restaurant_u_average_cost_for_two"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_average_cost_for_two"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_currency">
+                    Currency
+                  </label>
+
+                  <input
+                    id="restaurant_u_currency"
+                    name="restaurant_u_currency"
+                    type="text"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_currency"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_has_table_booking">
+                    Has table booking
+                  </label>
+
+                  <select
+                    id="restaurant_u_has_table_booking"
+                    name="restaurant_u_has_table_booking"
+                    class="tl-select"
+                  >
+
+                    <option value="">
+                      Select
+                    </option>
+
+                    <option value="true">
+                      true
+                    </option>
+
+                    <option value="false">
+                      false
+                    </option>
+
+                  </select>
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_has_table_booking"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_has_online_delivery">
+                    Has online delivery
+                  </label>
+
+                  <select
+                    id="restaurant_u_has_online_delivery"
+                    name="restaurant_u_has_online_delivery"
+                    class="tl-select"
+                  >
+
+                    <option value="">
+                      Select
+                    </option>
+
+                    <option value="true">
+                      true
+                    </option>
+
+                    <option value="false">
+                      false
+                    </option>
+
+                  </select>
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_has_online_delivery"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_is_delivering_now">
+                    Is delivering now
+                  </label>
+
+                  <select
+                    id="restaurant_u_is_delivering_now"
+                    name="restaurant_u_is_delivering_now"
+                    class="tl-select"
+                  >
+
+                    <option value="">
+                      Select
+                    </option>
+
+                    <option value="true">
+                      true
+                    </option>
+
+                    <option value="false">
+                      false
+                    </option>
+
+                  </select>
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_is_delivering_now"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_price_range">
+                    Price range
+                  </label>
+
+                  <input
+                    id="restaurant_u_price_range"
+                    name="restaurant_u_price_range"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_price_range"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_rating">
+                    Rating
+                  </label>
+
+                  <input
+                    id="restaurant_u_rating"
+                    name="restaurant_u_rating"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_rating"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="restaurant_u_votes">
+                    Votes
+                  </label>
+
+                  <input
+                    id="restaurant_u_votes"
+                    name="restaurant_u_votes"
+                    type="number"
+                    class="tl-input"
+                    placeholder=""
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="restaurant_u_votes"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-flex tl-gap-sm">
+
+                  <button
+                    class="tl-btn tl-btn--primary"
+                    type="submit"
+                  >
+                    Update restaurant
+                  </button>
+
+
+                  <button
+                    class="tl-btn tl-btn--danger"
+                    id="restaurantDeleteBtn"
+                    type="button"
+                  >
+                    Delete restaurant
+                  </button>
+
+                </div>
+
+              </form>
+
+            </section>
+
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/restaurants.js"></script>
+
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages/utils.js"></script>
+  <script src="assets/js/pages/restaurants.js"></script>
+
+</body>
+
+</html>

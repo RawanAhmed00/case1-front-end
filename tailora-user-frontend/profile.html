@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <section class="tl-hero" style="padding-bottom:20px;">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <span class="tl-eyebrow">Your Account</span>
+      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Your travel, all in one place</h1>
+      <p class="tl-hero-sub">Trips, favorites, bookings, and account settings.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight">
+    <div class="tl-container">
+
+      <div id="dash-signed-out" class="tl-card tl-state tl-hidden">
+        <div class="tl-state-icon">🔒</div>
+        <h3>Sign in to view your account</h3>
+        <p>Your trips, favorites, and bookings live here once you're signed in.</p>
+        <a href="signin.html?next=profile.html" class="tl-btn tl-btn--primary">Sign In</a>
+      </div>
+
+      <div class="tl-dash-grid" id="dash-shell">
+        <aside class="tl-dash-side">
+          <div class="tl-card tl-dash-profile">
+            <div class="tl-dash-avatar" id="dash-avatar">T</div>
+            <h3 id="dash-name">Traveler</h3>
+            <p class="tl-text-secondary" id="dash-email" style="font-size:13px;"></p>
+            <nav class="tl-dash-nav" id="dash-nav">
+              <button type="button" class="is-active" data-panel="overview">🏠 Overview</button>
+              <button type="button" data-panel="trips">🧳 My Trips</button>
+              <button type="button" data-panel="favorites">♥ Favorites</button>
+              <button type="button" data-panel="bookings">🧾 Bookings</button>
+              <button type="button" data-panel="settings">⚙️ Settings</button>
+            </nav>
+          </div>
+        </aside>
+
+        <div>
+          <div class="tl-stat-grid" id="dash-stats">
+            <!-- populated by profile.js -->
+          </div>
+
+          <div class="tl-dash-panel is-active" data-panel="overview" id="panel-overview">
+            <div class="tl-card" style="padding:26px;">
+              <h3 style="margin-bottom:14px;">Recent Trips</h3>
+              <div id="overview-trips" class="tl-grid tl-grid--2"></div>
+            </div>
+          </div>
+
+          <div class="tl-dash-panel" data-panel="trips" id="panel-trips">
+            <div class="tl-grid tl-grid--2" id="trips-grid"></div>
+          </div>
+
+          <div class="tl-dash-panel" data-panel="favorites" id="panel-favorites">
+            <div class="tl-grid" id="favorites-grid"></div>
+          </div>
+
+          <div class="tl-dash-panel" data-panel="bookings" id="panel-bookings">
+            <div class="tl-grid tl-grid--2" id="bookings-grid"></div>
+          </div>
+
+          <div class="tl-dash-panel" data-panel="settings" id="panel-settings">
+            <div class="tl-card" style="padding:28px;margin-bottom:20px;">
+              <h3 style="margin-bottom:18px;">Profile Details</h3>
+              <div class="tl-auth-alert" id="settings-alert" role="alert"></div>
+              <form id="profile-form">
+                <div class="tl-field" id="field-name">
+                  <label for="settings-name">Full name</label>
+                  <input class="tl-input" type="text" id="settings-name" name="name" autocomplete="name">
+                  <div class="tl-field-error"></div>
+                </div>
+                <div class="tl-field" id="field-email">
+                  <label for="settings-email">Email address</label>
+                  <input class="tl-input" type="email" id="settings-email" name="email" autocomplete="email">
+                  <div class="tl-field-error"></div>
+                </div>
+                <button type="submit" class="tl-btn tl-btn--primary" id="profile-save">Save Changes</button>
+              </form>
+            </div>
+
+            <div class="tl-card" style="padding:28px;margin-bottom:20px;">
+              <h3 style="margin-bottom:18px;">Change Password</h3>
+              <div class="tl-auth-alert" id="password-alert" role="alert"></div>
+              <form id="password-form">
+                <div class="tl-field" id="field-current_password">
+                  <label for="current-password">Current password</label>
+                  <input class="tl-input" type="password" id="current-password" name="current_password" autocomplete="current-password">
+                  <div class="tl-field-error"></div>
+                </div>
+                <div class="tl-field" id="field-password">
+                  <label for="new-password">New password</label>
+                  <input class="tl-input" type="password" id="new-password" name="password" autocomplete="new-password">
+                  <div class="tl-field-error"></div>
+                </div>
+                <div class="tl-field" id="field-password_confirmation">
+                  <label for="new-password-confirmation">Confirm new password</label>
+                  <input class="tl-input" type="password" id="new-password-confirmation" name="password_confirmation" autocomplete="new-password">
+                  <div class="tl-field-error"></div>
+                </div>
+                <button type="submit" class="tl-btn tl-btn--primary" id="password-save">Update Password</button>
+              </form>
+            </div>
+
+            <div class="tl-card" style="padding:28px;border-color:rgba(248,113,113,0.3);">
+              <h3 style="margin-bottom:8px;color:var(--tl-danger);">Delete Account</h3>
+              <p class="tl-text-secondary" style="font-size:13.5px;margin-bottom:18px;">This permanently deletes your Tailora account and everything in it. This can't be undone.</p>
+              <button type="button" class="tl-btn tl-btn--outline" id="delete-account-btn" style="border-color:var(--tl-danger);color:var(--tl-danger);">Delete My Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/hotels.js"></script>
+<script src="assets/js/api/trips.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/api/profile.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/profile.js"></script>
+</body>
+</html>

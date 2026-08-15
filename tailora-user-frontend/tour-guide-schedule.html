@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Tour Guide Schedule — Tailora</title>
+
+  <link rel="icon" href="assets/images/logo.png">
+
+  <link rel="stylesheet" href="assets/css/tailora.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/tour-guide-schedule.css">
+</head>
+
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="tl-hero tl-schedule-hero">
+    <div class="tl-hero-bg"></div>
+
+    <div class="tl-container">
+
+      <span class="tl-eyebrow">
+        Tour Guides
+      </span>
+
+      <h1 class="tl-display tl-mt-8">
+        Tour Guide Schedule
+      </h1>
+
+      <p class="tl-hero-sub">
+        Explore upcoming tour guide schedules and see who will be
+        accompanying each experience.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- SCHEDULE -->
+  <section class="tl-section">
+    <div class="tl-container">
+
+      <div class="tl-schedule-layout">
+
+        <!-- CALENDAR -->
+        <div class="tl-card tl-calendar-card">
+
+          <div class="tl-calendar-header">
+
+            <div>
+              <span class="tl-calendar-label">
+                Schedule
+              </span>
+
+              <h2 id="calendar-month">
+                August 2026
+              </h2>
+            </div>
+
+            <div class="tl-calendar-navigation">
+
+              <button
+                type="button"
+                class="tl-calendar-nav"
+                id="calendar-prev"
+                aria-label="Previous month"
+              >
+                ‹
+              </button>
+
+              <button
+                type="button"
+                class="tl-calendar-nav"
+                id="calendar-next"
+                aria-label="Next month"
+              >
+                ›
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="tl-calendar-weekdays">
+
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+
+          </div>
+
+
+          <div
+            class="tl-calendar-grid"
+            id="calendar-grid"
+          >
+          </div>
+
+        </div>
+
+
+        <!-- DAY DETAILS -->
+        <aside class="tl-card tl-schedule-details">
+
+          <div class="tl-schedule-details-head">
+
+            <span class="tl-calendar-label">
+              Selected Day
+            </span>
+
+            <h2 id="selected-date">
+              Select a date
+            </h2>
+
+          </div>
+
+
+          <div
+            id="schedule-list"
+            class="tl-schedule-list"
+          >
+
+            <div class="tl-schedule-empty">
+              <div class="tl-schedule-empty-icon">
+                ◷
+              </div>
+
+              <h3>
+                No date selected
+              </h3>
+
+              <p>
+                Select a date from the calendar to view
+                available tour guide schedules.
+              </p>
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+
+<div id="tl-footer-mount"></div>
+
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tour-guide.js"></script>
+
+<script src="assets/js/app.js"></script>
+
+<script src="assets/js/pages/tour-guide-schedule.js"></script>
+
+</body>
+</html>

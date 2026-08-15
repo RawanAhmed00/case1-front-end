@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookings — Tailora Admin</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="bookings" data-page-title="Bookings" data-breadcrumb="Management,Bookings" data-requires-auth="true">
+  <div class="tl-app">
+    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <div class="tl-main">
+      <header class="tl-topbar" id="tlTopbar"></header>
+      <main class="tl-content">
+        
+<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-calendar-check"></i> Booking Management</span></div><h1 class="tl-page-title">Bookings</h1><p class="tl-text-secondary">The booking list and detail response are documented only as a string data field, so rendering is defensive.</p></div><button id="bookingsRefresh" class="tl-btn tl-btn--outline"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
+<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div class="tl-section-title">Booking queue</div><div class="tl-metadata">GET /admin/bookings</div></div><div id="bookingsState"></div></section>
+<div class="tl-card" style="margin-top:20px;"><div class="tl-card__head"><div><div class="tl-section-title">Direct booking actions</div><div class="tl-metadata">Use a real booking ID from the backend.</div></div></div><div class="row g-3 align-items-end"><div class="col-md-4"><div class="tl-field">
+<label for="booking_action_id">Booking ID</label>
+<input id="booking_action_id" name="booking_action_id" type="number" class="tl-input" placeholder="ID" required >
+<div class="tl-field-error" data-error-for="booking_action_id"></div>
+</div></div><div class="col-md-4"><div class="tl-field">
+<label for="booking_status">Status</label>
+<input id="booking_status" name="booking_status" type="text" class="tl-input" placeholder="Backend-defined status" required >
+<div class="tl-field-error" data-error-for="booking_status"></div>
+</div></div><div class="col-md-4"><div class="tl-flex tl-gap-sm"><button id="bookingViewBtn" class="tl-btn tl-btn--outline">View</button><button id="bookingUpdateBtn" class="tl-btn tl-btn--primary">Update status</button><button id="bookingDeleteBtn" class="tl-btn tl-btn--danger">Delete</button></div></div></div></div>
+<div class="modal fade" id="bookingViewModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Booking details</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><pre id="bookingDetails" class="tl-code-block"></pre></div></div></div></div>
+
+      </main>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/bookings.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages/utils.js"></script>
+  <script src="assets/js/pages/bookings.js"></script>
+</body>
+</html>
