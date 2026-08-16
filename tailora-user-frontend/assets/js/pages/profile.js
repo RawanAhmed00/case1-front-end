@@ -160,6 +160,7 @@
         ${status ? `<span class="tl-badge">${window.TL.Util.escape(status)}</span>` : ""}
       </div>
       ${amount ? `<div class="tl-price tl-mt-8">${window.TL.Util.escape(amount)}</div>` : ""}
+      <a href="bookings.html" class="tl-btn tl-btn--outline tl-btn--sm tl-mt-16">Manage</a>
     </div>`;
   }
 

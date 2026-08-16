@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trip Weather — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<style>
+  .tl-weather-form-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: end; }
+  .tl-city-field { position: relative; }
+  .tl-weather-card { padding: 34px; text-align: center; background: var(--tl-gradient-radial); }
+  .tl-weather-temp { font-family: var(--tl-font-display); font-size: 56px; margin: 10px 0; }
+  .tl-weather-condition { font-size: 16px; color: var(--tl-text-secondary); text-transform: capitalize; }
+  .tl-weather-stats { display: flex; justify-content: center; gap: 28px; margin-top: 22px; flex-wrap: wrap; }
+  .tl-weather-stat { text-align: center; }
+  .tl-weather-stat strong { display: block; font-size: 18px; }
+  .tl-weather-stat span { font-size: 12px; color: var(--tl-text-secondary); }
+  @media (max-width: 700px) {
+    .tl-weather-form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <section class="tl-hero" style="padding-bottom:20px;">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <span class="tl-eyebrow">Forecast</span>
+      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Trip Weather</h1>
+      <p class="tl-hero-sub">Check conditions for a city on one of your trips.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight">
+    <div class="tl-container" style="max-width:760px;margin:0 auto;">
+
+      <div id="weather-signed-out" class="tl-card tl-state tl-hidden">
+        <div class="tl-state-icon">🔒</div>
+        <h3>Sign in to check your trip's weather</h3>
+        <a href="signin.html?next=weather.html" class="tl-btn tl-btn--primary">Sign In</a>
+      </div>
+
+      <div id="weather-shell" class="tl-hidden">
+        <div class="tl-card" style="padding:26px;margin-bottom:24px;">
+          <div class="tl-field" style="margin-bottom:16px;">
+            <label for="weather-trip-select">Trip</label>
+            <select class="tl-select tl-input" id="weather-trip-select"></select>
+          </div>
+
+          <div class="tl-weather-form-row">
+            <div class="tl-field tl-city-field" style="margin-bottom:0;">
+              <label>City</label>
+              <input class="tl-input" type="text" id="weather-city-input" placeholder="Search a city..." autocomplete="off">
+              <div class="tl-search-suggest" id="weather-city-suggest"></div>
+            </div>
+            <div></div>
+            <button type="button" class="tl-btn tl-btn--primary" id="weather-fetch-btn">Get Weather</button>
+          </div>
+        </div>
+
+        <div id="weather-no-trips" class="tl-hidden"></div>
+        <div id="weather-result"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/catalog.js"></script>
+<script src="assets/js/api/trips.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/pages/weather.js"></script>
+</body>
+</html>

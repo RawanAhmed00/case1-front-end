@@ -64,7 +64,7 @@
         }
         <div class="tl-place-foot">
           ${price ? `<span class="tl-price">${window.TL.Util.escape(price)} <span>/ night</span></span>` : `<span></span>`}
-          <button class="tl-btn tl-btn--sm tl-btn--outline" onclick="window.location.href='hotels.html'">View</button>
+          <button class="tl-btn tl-btn--sm tl-btn--outline" onclick="window.location.href='hotel-details.html?id=${id}'">View</button>
         </div>
       </div>
     </div>`;

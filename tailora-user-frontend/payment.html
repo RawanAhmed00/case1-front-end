@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+<style>
+  .tl-payment-shell { max-width: 520px; margin: 0 auto; padding: 40px; text-align: center; }
+  .tl-payment-icon { font-size: 40px; margin-bottom: 14px; }
+  .tl-payment-row { display: flex; justify-content: space-between; font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--tl-border); text-align: left; }
+  .tl-payment-row:last-of-type { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <div class="tl-container" style="padding-top:calc(var(--tl-nav-height) + 40px);padding-bottom:80px;">
+
+    <div id="payment-no-booking" class="tl-card tl-payment-shell tl-hidden">
+      <div class="tl-payment-icon">🧾</div>
+      <h1 class="tl-display" style="font-size:24px;">No booking to pay for</h1>
+      <p class="tl-text-secondary tl-mt-8">Create a booking first, then come back here to pay.</p>
+      <a href="bookings.html" class="tl-btn tl-btn--primary tl-mt-24">Go to Bookings</a>
+    </div>
+
+    <div id="payment-shell" class="tl-card tl-payment-shell tl-hidden">
+      <div class="tl-payment-icon">💳</div>
+      <h1 class="tl-display" style="font-size:26px;">Secure Payment</h1>
+      <p class="tl-text-secondary tl-mt-8" id="payment-subtitle">Reviewing your booking…</p>
+
+      <div id="payment-details" class="tl-mt-24"></div>
+
+      <div id="payment-error" class="tl-hidden tl-mt-16"></div>
+
+      <button type="button" class="tl-btn tl-btn--primary tl-btn--block tl-mt-24" id="create-payment-btn">Create Payment</button>
+      <div id="payment-checkout-actions" class="tl-mt-16"></div>
+
+      <a href="bookings.html" class="tl-btn tl-btn--ghost tl-btn--block tl-mt-8">← Back to Booking</a>
+    </div>
+  </div>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/api/payments.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/pages/payment.js"></script>
+</body>
+</html>

@@ -11,6 +11,7 @@
     { href: "index.html", label: "Home" },
     { href: "destinations.html", label: "Destinations" },
     { href: "plan-trip.html", label: "Plan a Trip" },
+    { href: "flights.html", label: "Flights" },
     { href: "experiences.html", label: "Experiences" },
     { href: "hotels.html", label: "Hotels" },
     { href: "restaurants.html", label: "Restaurants" },
@@ -94,6 +95,14 @@
 
             <a href="plan-trip.html" role="menuitem">
               ✦ Plan a Trip
+            </a>
+
+            <a href="bookings.html" role="menuitem">
+              🧾 My Booking
+            </a>
+
+            <a href="weather.html" role="menuitem">
+              🌦 Trip Weather
             </a>
 
             <hr>
@@ -480,6 +489,18 @@
 
               <a href="plan-trip.html">
                 Plan a Trip
+              </a>
+
+              <a href="flights.html">
+                Flights
+              </a>
+
+              <a href="bookings.html">
+                My Booking
+              </a>
+
+              <a href="weather.html">
+                Trip Weather
               </a>
 
               <a href="favorites.html">

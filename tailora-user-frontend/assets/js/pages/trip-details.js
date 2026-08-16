@@ -131,6 +131,16 @@
     mount.innerHTML = `<div class="tl-timeline">${cityRow}${items || (city ? "" : window.TL.Util.emptyState("Nothing planned for this day yet", "Add experiences from the Experiences page."))}</div>`;
   }
 
+  function renderFlowActions(tripId) {
+    const mount = document.getElementById("trip-flow-actions");
+    if (!mount) return;
+    mount.innerHTML = `
+      <a href="flights.html" class="tl-pill">✈ Flights</a>
+      <a href="hotels.html" class="tl-pill">🏨 Hotels</a>
+      <a href="weather.html?tripId=${encodeURIComponent(tripId)}" class="tl-pill">🌦 Weather</a>
+      <a href="bookings.html" class="tl-pill">🧾 Booking</a>`;
+  }
+
   function wireDelete(tripId) {
     document.getElementById("delete-trip-btn").addEventListener("click", async () => {
       if (!window.confirm("Delete this trip? This can't be undone.")) return;
@@ -177,6 +187,8 @@
       renderDayTabs();
       renderTimeline();
       renderWeather(tripId);
+      renderFlowActions(tripId);
+      if (window.TL.Cart) window.TL.Cart.setActiveTripId(tripId);
       wireDelete(tripId);
     } catch (err) {
       loading.classList.add("tl-hidden");
