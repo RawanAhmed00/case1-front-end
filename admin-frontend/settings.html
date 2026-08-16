@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,47 +10,117 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body data-page="settings" data-page-title="Website Settings" data-breadcrumb="Insights & System,Website Settings" data-requires-auth="true">
+
+<body data-page="settings" data-page-title="Website Settings" data-breadcrumb="Insights & System,Website Settings"
+  data-requires-auth="true">
   <div class="tl-app">
-    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar"
+      aria-labelledby="tlSidebarLabel"></aside>
     <div class="tl-main">
       <header class="tl-topbar" id="tlTopbar"></header>
       <main class="tl-content">
-        
-<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-gear"></i> System</span></div><h1 class="tl-page-title">Website Settings</h1><p class="tl-text-secondary">Create, update and delete the website settings resource. There is no documented GET endpoint, so the form never invents existing values.</p></div></div>
-<section class="tl-card tl-card--accent" style="margin-bottom:20px;"><div class="tl-flex-between" style="gap:20px;flex-wrap:wrap;"><div><div class="tl-label">Current settings ID</div><div id="settingsIdDisplay" class="tl-section-title">No settings ID in this browser session</div><div class="tl-metadata">Captured only from a real create/update API response and persisted locally.</div></div><button id="settingsDeleteBtn" class="tl-btn tl-btn--danger">Delete current settings</button></div></section>
-<div class="row g-4"><div class="col-xl-7"><section class="tl-card"><div class="tl-card__head"><div><div class="tl-section-title">Settings form</div><div class="tl-metadata">multipart/form-data · documented fields only</div></div></div>
-<form id="settingsForm"><div class="row"><div class="col-md-6"><div class="tl-field">
-<label for="site_name">Site name</label>
-<input id="site_name" name="site_name" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="site_name"></div>
-</div><div class="tl-field">
-<label for="email">Email</label>
-<input id="email" name="email" type="email" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="email"></div>
-</div><div class="tl-field">
-<label for="phone">Phone</label>
-<input id="phone" name="phone" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="phone"></div>
-</div><div class="tl-field">
-<label for="address">Address</label>
-<input id="address" name="address" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="address"></div>
-</div></div><div class="col-md-6"><div class="tl-field">
-<label for="logo">Logo</label>
-<input id="logo" name="logo" type="file" class="tl-input" placeholder="" accept="image/*">
-<div class="tl-field-error" data-error-for="logo"></div>
-</div><div class="tl-field">
-<label for="homepage_banner">Homepage banner</label>
-<input id="homepage_banner" name="homepage_banner" type="file" class="tl-input" placeholder="" accept="image/*">
-<div class="tl-field-error" data-error-for="homepage_banner"></div>
-</div><div class="tl-field"><label for="social_media_links">Social media links</label><textarea id="social_media_links" name="social_media_links" class="tl-textarea" rows="5" placeholder="Documented request field is plain text."></textarea><div class="tl-field-error" data-error-for="social_media_links"></div></div></div></div><div class="tl-flex tl-gap-sm"><button id="settingsCreateBtn" class="tl-btn tl-btn--primary" type="submit">Create settings</button><button id="settingsUpdateBtn" class="tl-btn tl-btn--violet" type="button">Update current settings</button></div></form></section></div>
-<div class="col-xl-5"><section class="tl-card"><div class="tl-card__head"><div class="tl-section-title">Live API response</div><div class="tl-metadata">No GET endpoint exists</div></div><div id="settingsResponse"></div></section><section class="tl-card" style="margin-top:20px;"><div class="tl-card__head"><div class="tl-section-title">Image preview</div></div><div class="row g-3"><div class="col-6"><div class="tl-metadata mb-2">Logo</div><img id="logoPreview" alt="Selected logo preview" style="width:100%;height:140px;object-fit:contain;background:rgba(255,255,255,.03);border:1px solid var(--tl-border);border-radius:12px;display:none;"></div><div class="col-6"><div class="tl-metadata mb-2">Homepage banner</div><img id="bannerPreview" alt="Selected banner preview" style="width:100%;height:140px;object-fit:cover;background:rgba(255,255,255,.03);border:1px solid var(--tl-border);border-radius:12px;display:none;"></div></div></section></div></div>
+
+        <div class="tl-page-header">
+          <div>
+            <div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-gear"></i> System</span></div>
+            <h1 class="tl-page-title">Website Settings</h1>
+            <p class="tl-text-secondary">Create, update and delete the website settings resource. There is no documented
+              GET endpoint, so the form never invents existing values.</p>
+          </div>
+        </div>
+        <section class="tl-card tl-card--accent" style="margin-bottom:20px;">
+          <div class="tl-flex-between" style="gap:20px;flex-wrap:wrap;">
+            <div>
+              <div class="tl-label">Current settings ID</div>
+              <div id="settingsIdDisplay" class="tl-section-title">No settings ID in this browser session</div>
+              <div class="tl-metadata">Captured only from a real create/update API response and persisted locally.</div>
+            </div><button id="settingsDeleteBtn" class="tl-btn tl-btn--danger">Delete current settings</button>
+          </div>
+        </section>
+        <div class="row g-4">
+          <div class="col-xl-7">
+            <section class="tl-card">
+              <div class="tl-card__head">
+                <div>
+                  <div class="tl-section-title">Settings form</div>
+                  <div class="tl-metadata">multipart/form-data · documented fields only</div>
+                </div>
+              </div>
+              <form id="settingsForm">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="site_name">Site name</label>
+                      <input id="site_name" name="site_name" type="text" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="site_name"></div>
+                    </div>
+                    <div class="tl-field">
+                      <label for="email">Email</label>
+                      <input id="email" name="email" type="email" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="email"></div>
+                    </div>
+                    <div class="tl-field">
+                      <label for="phone">Phone</label>
+                      <input id="phone" name="phone" type="text" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="phone"></div>
+                    </div>
+                    <div class="tl-field">
+                      <label for="address">Address</label>
+                      <input id="address" name="address" type="text" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="address"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="logo">Logo</label>
+                      <input id="logo" name="logo" type="file" class="tl-input" placeholder="" accept="image/*">
+                      <div class="tl-field-error" data-error-for="logo"></div>
+                    </div>
+                    <div class="tl-field">
+                      <label for="homepage_banner">Homepage banner</label>
+                      <input id="homepage_banner" name="homepage_banner" type="file" class="tl-input" placeholder=""
+                        accept="image/*">
+                      <div class="tl-field-error" data-error-for="homepage_banner"></div>
+                      <div class="tl-field">
+
+                        <div id="socialMediaLinksContainer">
+
+                          <label class="Social-Media-Links">Social Media Links</label>
+
+                          <div class="social-media-row tl-flex tl-gap-sm mb-2">
+
+                            <select name="social_media_links[0][type]" class="tl-input social-media-type" required>
+                              <option value="">Select platform</option>
+                              <option value="facebook">Facebook</option>
+                              <option value="instagram">Instagram</option>
+                              <option value="twitter">Twitter</option>
+                              <option value="linkedin">LinkedIn</option>
+                              <option value="youtube">YouTube</option>
+                            </select>
+
+                            <input type="url" name="social_media_links[0][link]" class="tl-input social-media-link"
+                              placeholder="https://facebook.com/..." required>
+
+                            <button type="button" class="tl-btn tl-btn--danger remove-social-btn">
+                              Remove
+                            </button>
+
+                          </div>
+
+                        </div>
+
+                        <button type="button" id="addSocialMediaBtn" class="tl-btn tl-btn--outline mt-2">
+                          + Add Social Media
+                        </button>
+
+                        <div class="tl-field-error" data-error-for="social_media_links"></div>
+                      </div>
 
       </main>
     </div>
@@ -62,4 +133,5 @@
   <script src="assets/js/pages/utils.js"></script>
   <script src="assets/js/pages/settings.js"></script>
 </body>
+
 </html>
