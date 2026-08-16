@@ -2,10 +2,12 @@
  * TAILORA USER — PLAN A TRIP
  * Drives the 5-step planner (destination → dates → budget → travelers →
  * style) on top of:
- *   GET  /cities                       (destination search, client-filtered —
- *                                        no city search endpoint is documented)
+ *   GET  /countries                    (destination options)
+ *   GET  /cities                       (used to resolve city_ids that
+ *                                        belong to the chosen country, for
+ *                                        attaching to the trip)
  *   POST /trips                        (create the trip)
- *   POST /trips/trips/{id}/cities      (attach the chosen city)
+ *   POST /trips/trips/{id}/cities      (attach the chosen city/cities)
  * and the AI assistant on top of:
  *   POST /ai/travel                    (chat)
  *   POST /ai/travel/{conversationId}/plans   (generate plan options)
@@ -23,19 +25,33 @@
   const state = {
     step: 1,
     allCities: [],
-    city: null, // { id, name }
+    countries: [], // [{ name, cityIds: [...] }]
+    country: null, // { name, cityIds: [...] }
     startDate: "",
     endDate: "",
     budget: "",
     adults: 1,
-    children: 0,
-    styles: [],
+    styles: "",
     tripId: null,
     conversationId: null
   };
 
   function getParam(name) {
     return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function normalizeStyles(value) {
+    if (Array.isArray(value)) {
+      return value.map((style) => String(style).trim()).filter(Boolean).join(", ");
+    }
+    if (typeof value === "string") {
+      return value
+        .split(",")
+        .map((style) => style.trim())
+        .filter(Boolean)
+        .join(", ");
+    }
+    return "";
   }
 
   /* --------------------------- Step navigation --------------------------- */
@@ -57,8 +73,8 @@
   }
 
   function validateStep(step) {
-    if (step === 1 && !state.city) {
-      window.TL.toast("Pick a destination to continue", "error");
+    if (step === 1 && !state.country) {
+      window.TL.toast("Pick a country to continue", "error");
       return false;
     }
     if (step === 2 && state.startDate && state.endDate && state.endDate < state.startDate) {
@@ -88,9 +104,19 @@
     updateStepUI();
   }
 
-  /* --------------------------- Step 1: destination --------------------------- */
+  /* --------------------------- Step 1: destination (country) --------------------------- */
 
-  async function loadCities() {
+  async function loadCatalog() {
+    try {
+      const response = await window.TL.Countries.allFull();
+      state.countries = window.TL.Util.list(response)
+        .map((c) => ({ name: window.TL.Util.name(c) }))
+        .filter((c) => c.name)
+        .sort((a, b) => a.name.localeCompare(b.name));
+    } catch (err) {
+      state.countries = [];
+    }
+
     try {
       const response = await window.TL.Cities.all();
       state.allCities = window.TL.Util.list(response);
@@ -99,69 +125,71 @@
     }
   }
 
-  function selectCity(city) {
-    state.city = { id: window.TL.Util.id(city), name: window.TL.Util.name(city) };
-    const input = document.getElementById("plan-destination");
-    if (input) input.value = state.city.name;
-    const box = document.getElementById("plan-destination-suggest");
-    if (box) box.classList.remove("is-open");
-    renderSelectedCity();
+  function toText(value) {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") {
+      return value.name || value.title || value.label || "";
+    }
+    return String(value);
   }
 
-  function renderSelectedCity() {
+  function cityIdsForCountry(name) {
+    const target = name.trim().toLowerCase();
+    return state.allCities
+      .filter((c) => toText(window.TL.Util.country(c)).trim().toLowerCase() === target)
+      .map((c) => window.TL.Util.id(c))
+      .filter(Boolean);
+  }
+
+  function renderCountryOptions() {
+    const select = document.getElementById("plan-destination");
+    if (!select) return;
+    const placeholder = select.querySelector("option[value='']");
+    select.innerHTML = "";
+    if (placeholder) {
+      select.appendChild(placeholder);
+    } else {
+      const opt = document.createElement("option");
+      opt.value = "";
+      opt.disabled = true;
+      opt.selected = true;
+      opt.textContent = "Select a country...";
+      select.appendChild(opt);
+    }
+    state.countries.forEach((country) => {
+      const opt = document.createElement("option");
+      opt.value = country.name;
+      opt.textContent = country.name;
+      select.appendChild(opt);
+    });
+  }
+
+  function selectCountry(name) {
+    const country = state.countries.find((c) => c.name === name) || null;
+    state.country = country ? { name: country.name, cityIds: cityIdsForCountry(country.name) } : null;
+    renderSelectedCountry();
+  }
+
+  function renderSelectedCountry() {
     const mount = document.getElementById("plan-destination-selected");
     if (!mount) return;
-    if (!state.city) {
+    if (!state.country) {
       mount.innerHTML = "";
       return;
     }
     mount.innerHTML = `
       <div class="tl-badge tl-mt-16" style="font-size:13px;padding:8px 14px;">
-        📍 ${window.TL.Util.escape(state.city.name)} selected
+        📍 ${window.TL.Util.escape(state.country.name)} selected
       </div>`;
   }
 
-  let suggestTimer;
-  function wireDestinationSuggest() {
-    const input = document.getElementById("plan-destination");
-    const box = document.getElementById("plan-destination-suggest");
-    if (!input || !box) return;
-
-    input.addEventListener("input", () => {
-      state.city = null;
-      clearTimeout(suggestTimer);
-      const q = input.value.trim().toLowerCase();
-      if (q.length < 1) {
-        box.classList.remove("is-open");
-        return;
-      }
-      suggestTimer = setTimeout(() => {
-        const matches = state.allCities
-          .filter((c) => window.TL.Util.name(c).toLowerCase().includes(q))
-          .slice(0, 8);
-        if (!matches.length) {
-          box.innerHTML = `<button type="button" disabled>No cities found</button>`;
-        } else {
-          box.innerHTML = matches
-            .map((c) => {
-              const name = window.TL.Util.name(c);
-              const country = window.TL.Util.country(c);
-              return `<button type="button" data-id="${window.TL.Util.id(c)}" data-name="${window.TL.Util.escape(name)}">${window.TL.Util.escape(name)}${country ? ` <span style="opacity:.55;">— ${window.TL.Util.escape(country)}</span>` : ""}</button>`;
-            })
-            .join("");
-        }
-        box.classList.add("is-open");
-      }, 200);
-    });
-
-    box.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-id]");
-      if (!btn) return;
-      selectCity({ id: btn.dataset.id, name: btn.dataset.name });
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!box.contains(e.target) && e.target !== input) box.classList.remove("is-open");
+  function wireDestinationSelect() {
+    const select = document.getElementById("plan-destination");
+    if (!select) return;
+    renderCountryOptions();
+    select.addEventListener("change", () => {
+      selectCountry(select.value);
     });
   }
 
@@ -193,8 +221,7 @@
       btn.addEventListener("click", () => {
         const key = btn.dataset.adjust;
         const dir = Number(btn.dataset.dir);
-        const min = key === "adults" ? 1 : 0;
-        state[key] = Math.max(min, state[key] + dir);
+        state[key] = Math.max(1, state[key] + dir);
         const countEl = document.getElementById(`plan-${key}-count`);
         if (countEl) countEl.textContent = state[key];
       });
@@ -206,13 +233,24 @@
   function wireStyleCards() {
     document.querySelectorAll("#plan-style-cards .tl-option-card").forEach((card) => {
       card.addEventListener("click", () => {
-        const style = card.dataset.style;
-        card.classList.toggle("is-selected");
-        if (card.classList.contains("is-selected")) {
-          if (!state.styles.includes(style)) state.styles.push(style);
+        const style = (card.dataset.style || "").trim();
+        if (!style) return;
+
+        const selected = new Set(
+          normalizeStyles(state.styles)
+            .split(",")
+            .map((item) => item.trim())
+            .filter(Boolean)
+        );
+
+        if (selected.has(style)) {
+          selected.delete(style);
         } else {
-          state.styles = state.styles.filter((s) => s !== style);
+          selected.add(style);
         }
+
+        state.styles = Array.from(selected).join(", ");
+        card.classList.toggle("is-selected", selected.has(style));
       });
     });
   }
@@ -226,24 +264,32 @@
       nextBtn.textContent = "Creating your trip…";
     }
     try {
+      const budgetMap = {
+        budget: 1,
+        moderate: 2,
+        luxury: 3
+      };
+
       const payload = {
-        title: `Trip to ${state.city.name}`,
-        destination: state.city.name,
+        title: `Trip to ${state.country.name}`,
+        dis_country: state.country.name,
+        destination: state.country.name,
         start_date: state.startDate || undefined,
         end_date: state.endDate || undefined,
-        budget: state.budget || undefined,
+        budget: Number(state.budget) || budgetMap[state.budget] || 1,
         adults: state.adults,
-        children: state.children,
-        travelers: state.adults + state.children,
-        travel_style: state.styles
+        travelers: state.adults,
+        number_of_travelers: Number(state.adults) || 1,
+        travel_style: normalizeStyles(state.styles) || undefined,
+        interst: normalizeStyles(state.styles) || "general"
       };
       const response = await window.TL.Trips.create(payload);
       const trip = window.TL.Util.pick(response, ["data", "trip"], response);
       const tripId = window.TL.Util.id(trip);
 
-      if (tripId && state.city.id) {
+      if (tripId && state.country.cityIds.length) {
         try {
-          await window.TL.Trips.selectCities(tripId, { city_ids: [state.city.id] });
+          await window.TL.Trips.selectCities(tripId, { city_ids: state.country.cityIds });
         } catch (e) {
           /* Non-fatal — the trip itself was created successfully. */
         }
@@ -315,7 +361,7 @@
       sendBtn.disabled = true;
 
       try {
-        const payload = { message: text };
+        const payload = { content: text };
         if (state.conversationId) payload.conversation_id = state.conversationId;
         const response = await window.TL.Ai.travel(payload);
         const convId = extractConversationId(response);
@@ -403,10 +449,12 @@
     const styles = getParam("styles");
 
     if (destination) {
-      const input = document.getElementById("plan-destination");
-      if (input) input.value = destination;
-      const match = state.allCities.find((c) => window.TL.Util.name(c).toLowerCase() === destination.toLowerCase());
-      if (match) selectCity(match);
+      const match = state.countries.find((c) => c.name.toLowerCase() === destination.toLowerCase());
+      if (match) {
+        const select = document.getElementById("plan-destination");
+        if (select) select.value = match.name;
+        selectCountry(match.name);
+      }
     }
     if (when) {
       const start = document.getElementById("plan-start");
@@ -424,13 +472,17 @@
       }
     }
     if (styles) {
+      const selected = [];
       styles.split(",").forEach((style) => {
-        const card = document.querySelector(`#plan-style-cards [data-style="${CSS.escape(style)}"]`);
+        const value = style.trim();
+        if (!value) return;
+        const card = document.querySelector(`#plan-style-cards [data-style="${CSS.escape(value)}"]`);
         if (card) {
           card.classList.add("is-selected");
-          state.styles.push(style);
         }
+        selected.push(value);
       });
+      state.styles = selected.join(", ");
     }
   }
 
@@ -452,14 +504,14 @@
     if (shell) shell.classList.remove("tl-hidden");
     if (aiCard) aiCard.classList.remove("tl-hidden");
 
-    await loadCities();
+    await loadCatalog();
+    wireDestinationSelect();
     prefillFromQuery();
     updateStepUI();
 
     document.getElementById("planner-next").addEventListener("click", handleNext);
     document.getElementById("planner-back").addEventListener("click", handleBack);
 
-    wireDestinationSuggest();
     wireDates();
     wireBudgetCards();
     wireTravelerSteppers();

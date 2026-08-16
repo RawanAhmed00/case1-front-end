@@ -28,8 +28,29 @@
 
 
   const Countries = {
-    all: function () {
-      return window.TL.Api.get("/countries");
+    all: function (query = {}) {
+      return window.TL.Api.get("/countries", query);
+    },
+
+    async allFull() {
+      const all = [];
+      const perPage = 100;
+      let page = 1;
+
+      while (page <= 20) {
+        const response = await window.TL.Api.get("/countries", { page, per_page: perPage });
+        const items = window.TL.Util.list(response);
+
+        if (!items.length) break;
+
+        all.push(...items);
+
+        if (items.length < perPage) break;
+
+        page += 1;
+      }
+
+      return all;
     },
 
     search: function (query) {

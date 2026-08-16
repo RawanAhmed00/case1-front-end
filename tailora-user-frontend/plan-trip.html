@@ -48,11 +48,13 @@
           <!-- Step 1 -->
           <div class="tl-planner-content" data-content="1">
             <h2>Where are you going?</h2>
-            <p class="tl-hint">Search for a city from Tailora's catalog.</p>
-            <div class="tl-field" style="position:relative;">
-              <label for="plan-destination">Destination</label>
-              <input class="tl-input" id="plan-destination" type="text" placeholder="Search a city..." autocomplete="off">
-              <div class="tl-search-suggest" id="plan-destination-suggest"></div>
+            <p class="tl-hint">Choose a country from Tailora's catalog.</p>
+            <div class="tl-field">
+              <label for="plan-destination">Country</label>
+              <select class="tl-input" id="plan-destination">
+                <option value="" selected disabled>Select a country...</option>
+                <!-- Options populated dynamically from catalog.js (GET /countries) -->
+              </select>
             </div>
             <div id="plan-destination-selected"></div>
           </div>
@@ -86,10 +88,6 @@
               <span>Adults</span>
               <div class="tl-stepper-input"><button type="button" data-adjust="adults" data-dir="-1">−</button><span id="plan-adults-count">1</span><button type="button" data-adjust="adults" data-dir="1">+</button></div>
             </div>
-            <div class="tl-traveler-row">
-              <span>Children</span>
-              <div class="tl-stepper-input"><button type="button" data-adjust="children" data-dir="-1">−</button><span id="plan-children-count">0</span><button type="button" data-adjust="children" data-dir="1">+</button></div>
-            </div>
           </div>
 
           <!-- Step 5 -->
@@ -99,7 +97,7 @@
             <div class="tl-option-cards" id="plan-style-cards">
               <button type="button" class="tl-option-card" data-style="Adventure"><span class="tl-icon">🧗</span><strong>Adventure</strong><p>Outdoors and adrenaline</p></button>
               <button type="button" class="tl-option-card" data-style="Relaxation"><span class="tl-icon">🌴</span><strong>Relaxation</strong><p>Slow, restorative days</p></button>
-              <button type="button" class="tl-option-card" data-style="Culture"><span class="tl-icon">🏛️</span><strong>Culture</strong><p>History, museums, heritage</p></button>
+              <button type="button" class="tl-option-card" data-style="Culture"><span class="tl-icon">🏛</span><strong>Culture</strong><p>History, museums, heritage</p></button>
               <button type="button" class="tl-option-card" data-style="Food"><span class="tl-icon">🍜</span><strong>Food</strong><p>Markets and tasting menus</p></button>
               <button type="button" class="tl-option-card" data-style="Luxury"><span class="tl-icon">✨</span><strong>Luxury</strong><p>Elevated, effortless travel</p></button>
               <button type="button" class="tl-option-card" data-style="Nature"><span class="tl-icon">🌲</span><strong>Nature</strong><p>Landscapes and wildlife</p></button>
@@ -144,3 +142,4 @@
 <script src="assets/js/pages/plan-trip.js"></script>
 </body>
 </html>
+

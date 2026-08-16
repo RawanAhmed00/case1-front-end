@@ -266,6 +266,23 @@ p { margin: 0; }
   background: rgba(34, 211, 238, 0.12); color: var(--tl-cyan);
   border: 1px solid rgba(34, 211, 238, 0.25);
 }
+/* Dark-mode fix: native <select> dropdowns don't inherit page theme automatically */
+select.tl-input {
+  color-scheme: dark;
+  background-color: #0b0f24;
+  color: #f2f2f2;
+  border: 1px solid #3a3d46;
+}
+
+select.tl-input option {
+  background-color: #0b0f24;
+  color: #f2f2f2;
+}
+
+select.tl-input:focus {
+  outline: none;
+  border-color: #5b8def;
+}
 
 /* ---------------------------------------------------------------------
    Forms
@@ -295,6 +312,23 @@ p { margin: 0; }
   background-size: 400% 100%;
   animation: tl-shimmer 1.4s ease infinite;
   border-radius: var(--tl-radius-md);
+}
+.tl-home-planner-cta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+}
+
+.tl-home-plan-btn {
+  width: min(100%, 520px);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
 }
 @keyframes tl-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
 
