@@ -273,19 +273,19 @@
 <!-- Auth Pages -->
 <script src="assets/js/pages/auth-pages.js"></script>
 
-<!-- Populate country dropdown -->
+<!-- Populate country dropdown from local countries table (includes id) -->
 <script>
   fetch('http://127.0.0.1:8000/api/countries')
     .then(response => response.json())
-    .then(data => {
+    .then(result => {
       const select = document.getElementById('dist_country');
       select.innerHTML = '<option value="" disabled selected>Select your country</option>';
 
-      data.forEach(item => {
-        const name = item.country_information.name;
+      const countries = result.data || [];
+      countries.forEach(country => {
         const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
+        option.value = country.id;
+        option.textContent = country.name;
         select.appendChild(option);
       });
     })

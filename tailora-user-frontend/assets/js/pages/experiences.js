@@ -19,7 +19,7 @@
       <div class="tl-place-media">
         <img src="${img}" alt="${window.TL.Util.escape(name)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
         ${rating ? `<span class="tl-badge">★ ${window.TL.Util.escape(rating)}</span>` : ""}
-        <button class="tl-fav-btn" data-fav-id="${id}" data-fav-type="Attraction" aria-label="Save to favorites">♡</button>
+        <button class="tl-fav-btn" data-fav-id="${id}" data-fav-type="attraction" aria-label="Save to favorites">♡</button>
       </div>
       <div class="tl-place-body">
         <div class="tl-place-title"><h3>${window.TL.Util.escape(name)}</h3></div>
@@ -79,11 +79,11 @@
         const active = btn.classList.contains("is-active");
         try {
           if (active) {
-            await window.TL.Favorites.remove(id, type);
+            await window.TL.Favorites.remove(type, id);
             btn.classList.remove("is-active");
             btn.textContent = "♡";
           } else {
-            await window.TL.Favorites.add(id, type);
+            await window.TL.Favorites.add(type, id);
             btn.classList.add("is-active");
             btn.textContent = "♥";
           }

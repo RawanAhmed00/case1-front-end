@@ -6,25 +6,25 @@
   "use strict";
 
   // GET /favorites, POST /favorites, DELETE /favorites
-  // The docs describe favorites as polymorphic, referenced through
-  // `favoritable_id` and `favoritable_type`. The doc doesn't give the exact
-  // type strings to send — we use the model class name convention Laravel
-  // favorite/polymorphic packages use (e.g. "City", "Hotel", "Restaurant",
-  // "Attraction"), matching each catalog's singular resource name. Confirm
-  // these against the backend's actual model names before going live.
+  // Favorites are polymorphic, referenced through a `type` string that
+  // matches the backend's model class name — capitalized, singular
+  // (confirmed via live response: "Hotel"). Use the same convention for
+  // other resources: "Country", "Restaurant", "Attraction", etc.
+  // Confirm any type you haven't tested yet against the backend before
+  // relying on it.
   const Favorites = {
     all() {
-      return window.TL.Api.get("/favorites");
+      return window.TL.Api.get("favorites/favorites");
     },
-    add(favoritableId, favoritableType) {
+    add(type, id) {
       return window.TL.Api.post("/favorites", {
-        favoritable_id: favoritableId,
-        favoritable_type: favoritableType
+        type: type,
+        id: id
       });
     },
-    remove(favoritableId, favoritableType) {
+    remove(type, id) {
       return window.TL.Api.delete("/favorites", {
-        body: { favoritable_id: favoritableId, favoritable_type: favoritableType }
+        body: { type: type, id: id }
       });
     }
   };

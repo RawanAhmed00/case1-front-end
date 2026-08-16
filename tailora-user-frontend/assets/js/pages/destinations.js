@@ -21,7 +21,7 @@
     const img = window.TL.Util.image(item, FALLBACK_IMG);
     const rating = window.TL.Util.rating(item);
     const id = window.TL.Util.id(item);
-    const type = view === "cities" ? "City" : "Country";
+    const type = view === "cities" ? "city" : "country";
     const detailHref = view === "cities" ? `destination-details.html?city=${encodeURIComponent(id)}` : `destination-details.html?country=${encodeURIComponent(id)}`;
 
     return `
@@ -144,12 +144,12 @@
         const isActive = btn.classList.contains("is-active");
         try {
           if (isActive) {
-            await window.TL.Favorites.remove(id, type);
+            await window.TL.Favorites.remove(type, id);
             btn.classList.remove("is-active");
             btn.textContent = "♡";
             window.TL.toast("Removed from favorites");
           } else {
-            await window.TL.Favorites.add(id, type);
+            await window.TL.Favorites.add(type, id);
             btn.classList.add("is-active");
             btn.textContent = "♥";
             window.TL.toast("Saved to favorites");
