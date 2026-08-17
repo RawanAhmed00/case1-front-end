@@ -552,6 +552,19 @@
             path,
             formData
         ) {
+            if (formData instanceof FormData) {
+                if (!formData.has("_method")) {
+                    formData.append("_method", "PUT");
+                }
+                return request(
+                    "POST",
+                    path,
+                    {
+                        body: formData,
+                        isFormData: true
+                    }
+                );
+            }
 
             return request(
                 "PUT",

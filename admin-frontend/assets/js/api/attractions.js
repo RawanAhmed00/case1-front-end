@@ -1,47 +1,62 @@
 /* ==========================================================================
    TAILORA ADMIN — assets/js/api/attractions.js
-   Owns: /admin/attractions (3 documented endpoints).
-
-   NOTE — no GET/list endpoint is documented for attractions. There is no
-   getAttractions()/getAttraction() here; see the Step 3 handoff notes.
-
-   Create/Update use multipart/form-data per the docs (there's an `image`
-   file field). `categories` is documented only as a plain "text" field —
-   the docs don't confirm whether it accepts a comma-separated string, a
-   single ID, or repeated fields, so it's passed through as given rather
-   than reshaped.
+   Owns: /attractions endpoints (GET, POST, PUT, DELETE).
    ========================================================================== */
 
 (function () {
   "use strict";
 
   function toFormData(fields) {
+    if (fields instanceof FormData) return fields;
     const fd = new FormData();
     Object.entries(fields || {}).forEach(([key, value]) => {
-      if (value === undefined || value === null) return;
-      fd.append(key, value);
+      if (value === undefined || value === null || value === "") return;
+      if (key === "categories") {
+        if (Array.isArray(value)) {
+          value.forEach(v => {
+            if (v !== "" && v !== null && v !== undefined) fd.append("categories[]", v);
+          });
+        } else if (typeof value === "string") {
+          const parts = value.split(",").map(s => s.trim()).filter(Boolean);
+          parts.forEach(v => fd.append("categories[]", v));
+        }
+      } else {
+        fd.append(key, value);
+      }
     });
     return fd;
   }
 
-  // POST /admin/attractions
+  // GET /attractions
+  function getAttractions(query) {
+    return window.TL.Api.get("/attractions", query);
+  }
+
+  // GET /attractions/{id}
+  function getAttraction(id) {
+    return window.TL.Api.get(`/attractions/${encodeURIComponent(id)}`);
+  }
+
+  // POST /attractions
   // fields: city_id, name, description, latitude, longitude, price, image (File), categories
   function createAttraction(fields) {
     return window.TL.Api.postForm("/attractions", toFormData(fields));
   }
 
-  // PUT /admin/attractions/{id}
+  // PUT /attractions/{id}
   function updateAttraction(id, fields) {
     return window.TL.Api.putForm(`/attractions/${encodeURIComponent(id)}`, toFormData(fields));
   }
 
-  // DELETE /admin/attractions/{id}
+  // DELETE /attractions/{id}
   function deleteAttraction(id) {
     return window.TL.Api.delete(`/attractions/${encodeURIComponent(id)}`);
   }
 
   window.TL = window.TL || {};
   window.TL.Attractions = {
+    getAttractions,
+    getAttraction,
     createAttraction,
     updateAttraction,
     deleteAttraction,

@@ -1,19 +1,168 @@
-(function(){
-"use strict";
-document.addEventListener("DOMContentLoaded",function(){
- const P=TL.Pages;
- function fdFrom(form,prefix){
-  const fd={}; form.querySelectorAll("[name]").forEach(el=>{if(el.type==="file"){if(el.files[0])fd[el.name.replace(prefix+"_","")]=el.files[0];}else if(el.value!=="")fd[el.name.replace(prefix+"_","")]=el.value;});return fd;
- }
- async function submitForm(form,fn,success){
-  P.clearErrors(form);const btn=form.querySelector("button[type=submit]");P.setBusy(btn,true);
-  try{await fn();TL.showToast(success,"success");form.reset();}catch(e){if(e instanceof TL.Api.ApiValidationError)P.showValidation(form,e.errors);TL.showToast(e.message,"error");}finally{P.setBusy(btn,false);}
- }
- document.getElementById("cityCreateForm").addEventListener("submit",e=>{e.preventDefault();submitForm(e.currentTarget,()=>TL.Cities.createCity(fdFrom(e.currentTarget,"city")),"City created successfully.");});
- document.getElementById("cityManageForm").addEventListener("submit",e=>{e.preventDefault();const f=e.currentTarget;const id=f.city_id.value;submitForm(f,()=>TL.Cities.updateCity(id,fdFrom(f,"city_update")),"City updated successfully.");});
- document.getElementById("cityDeleteBtn").addEventListener("click",async()=>{const id=document.getElementById("city_id").value;if(!id)return TL.showToast("Enter a city ID.","warning");if(!P.confirm("Delete this city? This cannot be undone."))return;try{await TL.Cities.deleteCity(id);TL.showToast("City deleted.","success");document.getElementById("cityManageForm").reset();}catch(e){TL.showToast(e.message,"error");}});
- document.getElementById("attractionCreateForm").addEventListener("submit",e=>{e.preventDefault();submitForm(e.currentTarget,()=>TL.Attractions.createAttraction(fdFrom(e.currentTarget,"att")),"Attraction created successfully.");});
- document.getElementById("attractionManageForm").addEventListener("submit",e=>{e.preventDefault();const f=e.currentTarget;const id=f.att_id.value;submitForm(f,()=>TL.Attractions.updateAttraction(id,fdFrom(f,"att_update")),"Attraction updated successfully.");});
- document.getElementById("attractionDeleteBtn").addEventListener("click",async()=>{const id=document.getElementById("att_id").value;if(!id)return TL.showToast("Enter an attraction ID.","warning");if(!P.confirm("Delete this attraction? This cannot be undone."))return;try{await TL.Attractions.deleteAttraction(id);TL.showToast("Attraction deleted.","success");document.getElementById("attractionManageForm").reset();}catch(e){TL.showToast(e.message,"error");}});
-});
+(function () {
+  "use strict";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const P = TL.Pages;
+
+    function extractFormFields(form, prefix) {
+      const data = {};
+      form.querySelectorAll("[name]").forEach(el => {
+        const key = el.name.replace(prefix + "_", "");
+        if (el.type === "file") {
+          if (el.files && el.files[0]) {
+            data[key] = el.files[0];
+          }
+        } else {
+          const val = el.value.trim();
+          if (val !== "") {
+            data[key] = val;
+          }
+        }
+      });
+      return data;
+    }
+
+    async function submitAction(form, actionFn, successMsg) {
+      P.clearErrors(form);
+      const btn = form.querySelector("button[type=submit]");
+      P.setBusy(btn, true);
+
+      try {
+        await actionFn();
+        TL.showToast(successMsg, "success");
+        form.reset();
+      } catch (err) {
+        if (err instanceof TL.Api.ApiValidationError) {
+          P.showValidation(form, err.errors);
+        }
+        TL.showToast(err.message || "Request failed.", "error");
+      } finally {
+        P.setBusy(btn, false);
+      }
+    }
+
+    // 1. Create City
+    const cityCreateForm = document.getElementById("cityCreateForm");
+    if (cityCreateForm) {
+      cityCreateForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const payload = extractFormFields(cityCreateForm, "city");
+        if (!payload.country_id || !payload.name) {
+          TL.showToast("Please fill in Country ID and City Name.", "warning");
+          return;
+        }
+        submitAction(
+          cityCreateForm,
+          () => TL.Cities.createCity(payload),
+          "City created and inserted into database successfully."
+        );
+      });
+    }
+
+    // 2. Update City
+    const cityManageForm = document.getElementById("cityManageForm");
+    if (cityManageForm) {
+      cityManageForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const id = document.getElementById("city_id")?.value.trim();
+        if (!id) {
+          TL.showToast("Please enter a valid City ID.", "warning");
+          return;
+        }
+        const payload = extractFormFields(cityManageForm, "city_update");
+        submitAction(
+          cityManageForm,
+          () => TL.Cities.updateCity(id, payload),
+          "City updated successfully."
+        );
+      });
+    }
+
+    // 3. Delete City
+    const cityDeleteBtn = document.getElementById("cityDeleteBtn");
+    if (cityDeleteBtn) {
+      cityDeleteBtn.addEventListener("click", async () => {
+        const id = document.getElementById("city_id")?.value.trim();
+        if (!id) {
+          TL.showToast("Please enter a Target City ID to delete.", "warning");
+          return;
+        }
+        if (!P.confirm(`Are you sure you want to delete City #${id}? This cannot be undone.`)) {
+          return;
+        }
+        P.setBusy(cityDeleteBtn, true);
+        try {
+          await TL.Cities.deleteCity(id);
+          TL.showToast("City deleted successfully.", "success");
+          if (cityManageForm) cityManageForm.reset();
+        } catch (err) {
+          TL.showToast(err.message || "Failed to delete city.", "error");
+        } finally {
+          P.setBusy(cityDeleteBtn, false);
+        }
+      });
+    }
+
+    // 4. Create Attraction
+    const attractionCreateForm = document.getElementById("attractionCreateForm");
+    if (attractionCreateForm) {
+      attractionCreateForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const payload = extractFormFields(attractionCreateForm, "att");
+        if (!payload.city_id || !payload.name) {
+          TL.showToast("Please fill in City ID and Attraction Name.", "warning");
+          return;
+        }
+        submitAction(
+          attractionCreateForm,
+          () => TL.Attractions.createAttraction(payload),
+          "Attraction created and inserted into database successfully."
+        );
+      });
+    }
+
+    // 5. Update Attraction
+    const attractionManageForm = document.getElementById("attractionManageForm");
+    if (attractionManageForm) {
+      attractionManageForm.addEventListener("submit", e => {
+        e.preventDefault();
+        const id = document.getElementById("att_id")?.value.trim();
+        if (!id) {
+          TL.showToast("Please enter a valid Attraction ID.", "warning");
+          return;
+        }
+        const payload = extractFormFields(attractionManageForm, "att_update");
+        submitAction(
+          attractionManageForm,
+          () => TL.Attractions.updateAttraction(id, payload),
+          "Attraction updated successfully."
+        );
+      });
+    }
+
+    // 6. Delete Attraction
+    const attractionDeleteBtn = document.getElementById("attractionDeleteBtn");
+    if (attractionDeleteBtn) {
+      attractionDeleteBtn.addEventListener("click", async () => {
+        const id = document.getElementById("att_id")?.value.trim();
+        if (!id) {
+          TL.showToast("Please enter a Target Attraction ID to delete.", "warning");
+          return;
+        }
+        if (!P.confirm(`Are you sure you want to delete Attraction #${id}? This cannot be undone.`)) {
+          return;
+        }
+        P.setBusy(attractionDeleteBtn, true);
+        try {
+          await TL.Attractions.deleteAttraction(id);
+          TL.showToast("Attraction deleted successfully.", "success");
+          if (attractionManageForm) attractionManageForm.reset();
+        } catch (err) {
+          TL.showToast(err.message || "Failed to delete attraction.", "error");
+        } finally {
+          P.setBusy(attractionDeleteBtn, false);
+        }
+      });
+    }
+  });
 })();

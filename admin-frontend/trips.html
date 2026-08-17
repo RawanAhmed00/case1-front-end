@@ -106,103 +106,106 @@
 
           <div id="tripsState" style="padding: 0 24px 24px;"></div>
         </section>
-
-        <!-- Edit Trip Modal -->
-        <div class="modal fade" id="tripEditModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">Edit Trip</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <form id="tripEditForm" novalidate>
-                <div class="modal-body">
-                  <input type="hidden" id="trip_id">
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="trip_num_days">Number of Days</label>
-                        <input id="trip_num_days" name="trip_num_days" type="number" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="trip_num_days"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="trip_travel_style">Travel Style</label>
-                        <input id="trip_travel_style" name="trip_travel_style" type="text" class="tl-input" placeholder="e.g. Luxury, Adventure, Cultural">
-                        <div class="tl-field-error" data-error-for="trip_travel_style"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="trip_dis_country">Destination Country</label>
-                        <input id="trip_dis_country" name="trip_dis_country" type="text" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="trip_dis_country"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="trip_budget">Budget</label>
-                        <input id="trip_budget" name="trip_budget" type="number" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="trip_budget"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="trip_number_of_travelers">Travelers</label>
-                        <input id="trip_number_of_travelers" name="trip_number_of_travelers" type="number" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="trip_number_of_travelers"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="trip_user_id">User ID</label>
-                        <input id="trip_user_id" name="trip_user_id" type="number" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="trip_user_id"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-12">
-                      <div class="tl-field">
-                        <label for="trip_interst">Interests</label>
-                        <textarea id="trip_interst" name="trip_interst" class="tl-textarea" rows="3" placeholder="e.g. Museums, Cuisine, Hiking"></textarea>
-                        <div class="tl-field-error" data-error-for="trip_interst"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
-                  <button class="tl-btn tl-btn--primary" type="submit">Save Changes</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Trip Details Modal -->
-        <div class="modal fade" id="tripDetailsModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">Trip Details</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <pre id="tripDetails" class="tl-code-block"></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </main>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODALS (Placed directly at root body level to prevent backdrop overlay)
+       ========================================================================= -->
+
+  <!-- Edit Trip Modal -->
+  <div class="modal fade" id="tripEditModal" tabindex="-1" aria-labelledby="tripEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tripEditModalLabel">Edit Trip</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="tripEditForm" novalidate>
+          <div class="modal-body">
+            <input type="hidden" id="trip_id">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="trip_num_days">Number of Days</label>
+                  <input id="trip_num_days" name="trip_num_days" type="number" class="tl-input" placeholder="">
+                  <div class="tl-field-error" data-error-for="trip_num_days"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="trip_travel_style">Travel Style</label>
+                  <input id="trip_travel_style" name="trip_travel_style" type="text" class="tl-input" placeholder="e.g. Luxury, Adventure, Cultural">
+                  <div class="tl-field-error" data-error-for="trip_travel_style"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="trip_dis_country">Destination Country</label>
+                  <input id="trip_dis_country" name="trip_dis_country" type="text" class="tl-input" placeholder="">
+                  <div class="tl-field-error" data-error-for="trip_dis_country"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="trip_budget">Budget</label>
+                  <input id="trip_budget" name="trip_budget" type="number" class="tl-input" placeholder="">
+                  <div class="tl-field-error" data-error-for="trip_budget"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="trip_number_of_travelers">Travelers</label>
+                  <input id="trip_number_of_travelers" name="trip_number_of_travelers" type="number" class="tl-input" placeholder="">
+                  <div class="tl-field-error" data-error-for="trip_number_of_travelers"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="trip_user_id">User ID</label>
+                  <input id="trip_user_id" name="trip_user_id" type="number" class="tl-input" placeholder="">
+                  <div class="tl-field-error" data-error-for="trip_user_id"></div>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="tl-field">
+                  <label for="trip_interst">Interests</label>
+                  <textarea id="trip_interst" name="trip_interst" class="tl-textarea" rows="3" placeholder="e.g. Museums, Cuisine, Hiking"></textarea>
+                  <div class="tl-field-error" data-error-for="trip_interst"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trip Details Modal -->
+  <div class="modal fade" id="tripDetailsModal" tabindex="-1" aria-labelledby="tripDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tripDetailsModalLabel">Trip Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <pre id="tripDetails" class="tl-code-block"></pre>
+        </div>
+      </div>
     </div>
   </div>
 

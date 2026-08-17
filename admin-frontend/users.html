@@ -47,7 +47,7 @@
             </p>
           </div>
 
-          <button class="tl-btn tl-btn--primary" data-bs-toggle="modal" data-bs-target="#userCreateModal">
+          <button class="tl-btn tl-btn--primary" id="openCreateUserBtn" data-bs-toggle="modal" data-bs-target="#userCreateModal">
             <i class="bi bi-person-plus"></i> Add User
           </button>
         </div>
@@ -67,241 +67,243 @@
 
           <div id="usersState" style="padding: 0 24px 24px;"></div>
         </section>
-
-        <!-- Create User Modal -->
-        <div class="modal fade" id="userCreateModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">Create User</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <form id="userCreateForm" novalidate>
-                <div class="modal-body">
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_name">Name</label>
-                        <input id="create_name" name="create_name" type="text" class="tl-input" placeholder="Full name" required>
-                        <div class="tl-field-error" data-error-for="create_name"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_email">Email</label>
-                        <input id="create_email" name="create_email" type="email" class="tl-input" placeholder="name@example.com" required>
-                        <div class="tl-field-error" data-error-for="create_email"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_password">Password</label>
-                        <input id="create_password" name="create_password" type="password" class="tl-input" placeholder="••••••••" required>
-                        <div class="tl-field-error" data-error-for="create_password"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_age">Age</label>
-                        <input id="create_age" name="create_age" type="number" class="tl-input" placeholder="e.g. 28">
-                        <div class="tl-field-error" data-error-for="create_age"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_dist_country">Destination Country</label>
-                        <input id="create_dist_country" name="create_dist_country" type="text" class="tl-input" placeholder="e.g. France">
-                        <div class="tl-field-error" data-error-for="create_dist_country"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_gender">Gender</label>
-                        <select id="create_gender" name="create_gender" class="tl-select">
-                          <option value="">Select gender</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
-                        <div class="tl-field-error" data-error-for="create_gender"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_role">Role</label>
-                        <select id="create_role" name="create_role" class="tl-select">
-                          <option value="admin">Admin</option>
-                          <option value="user" selected>User</option>
-                          <option value="t_guide">Tour Guide (t_guide)</option>
-                        </select>
-                        <div class="tl-field-error" data-error-for="create_role"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="create_phone_num">Phone</label>
-                        <input id="create_phone_num" name="create_phone_num" type="text" class="tl-input" placeholder="+1 (555) 000-0000">
-                        <div class="tl-field-error" data-error-for="create_phone_num"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
-                  <button class="tl-btn tl-btn--primary" type="submit">Create User</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Edit User Modal -->
-        <div class="modal fade" id="userEditModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">Edit User</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <form id="userEditForm" novalidate>
-                <input type="hidden" name="id" id="edit_user_id">
-                <div class="modal-body">
-                  <div class="row g-3">
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_name">Name</label>
-                        <input id="edit_name" name="edit_name" type="text" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="edit_name"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_email">Email</label>
-                        <input id="edit_email" name="edit_email" type="email" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="edit_email"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_password">New Password (leave blank to keep current)</label>
-                        <input id="edit_password" name="edit_password" type="password" class="tl-input" placeholder="••••••••">
-                        <div class="tl-field-error" data-error-for="edit_password"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_age">Age</label>
-                        <input id="edit_age" name="edit_age" type="number" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="edit_age"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_dist_country">Destination Country</label>
-                        <input id="edit_dist_country" name="edit_dist_country" type="text" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="edit_dist_country"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_gender">Gender</label>
-                        <select id="edit_gender" name="edit_gender" class="tl-select">
-                          <option value="">Select gender</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                        </select>
-                        <div class="tl-field-error" data-error-for="edit_gender"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_role">Role</label>
-                        <select id="edit_role" name="edit_role" class="tl-select">
-                          <option value="admin">Admin</option>
-                          <option value="user">User</option>
-                          <option value="t_guide">Tour Guide (t_guide)</option>
-                        </select>
-                        <div class="tl-field-error" data-error-for="edit_role"></div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-6">
-                      <div class="tl-field">
-                        <label for="edit_phone_num">Phone</label>
-                        <input id="edit_phone_num" name="edit_phone_num" type="text" class="tl-input" placeholder="">
-                        <div class="tl-field-error" data-error-for="edit_phone_num"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
-                  <button class="tl-btn tl-btn--primary" type="submit">Save Changes</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Status Modal -->
-        <div class="modal fade" id="userStatusModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">Change User Status</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-
-              <form id="userStatusForm">
-                <div class="modal-body">
-                  <input type="hidden" id="status_user_id">
-                  <p class="tl-text-secondary mb-3">
-                    Update status via <code>PATCH /users/{id}/status</code>. Enter the backend-defined JSON payload:
-                  </p>
-                  <textarea id="status_payload" class="tl-textarea" rows="5" placeholder='{ "is_active": 1 }'></textarea>
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
-                  <button class="tl-btn tl-btn--primary" type="submit">Send Status Request</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Details Modal -->
-        <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">User Details</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <pre id="userDetails" class="tl-code-block"></pre>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </main>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODALS (Placed directly at root body level to prevent backdrop overlay)
+       ========================================================================= -->
+
+  <!-- Create User Modal -->
+  <div class="modal fade" id="userCreateModal" tabindex="-1" aria-labelledby="userCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userCreateModalLabel">Create User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="userCreateForm" novalidate>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_name">Name <span class="text-danger">*</span></label>
+                  <input id="create_name" name="create_name" type="text" class="tl-input" placeholder="Full name" required>
+                  <div class="tl-field-error" data-error-for="create_name"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_email">Email <span class="text-danger">*</span></label>
+                  <input id="create_email" name="create_email" type="email" class="tl-input" placeholder="name@example.com" required>
+                  <div class="tl-field-error" data-error-for="create_email"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_password">Password <span class="text-danger">*</span></label>
+                  <input id="create_password" name="create_password" type="password" class="tl-input" placeholder="Min 8 characters" required>
+                  <div class="tl-field-error" data-error-for="create_password"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_age">Age</label>
+                  <input id="create_age" name="create_age" type="number" class="tl-input" placeholder="e.g. 28">
+                  <div class="tl-field-error" data-error-for="create_age"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_dist_country">Destination Country</label>
+                  <input id="create_dist_country" name="create_dist_country" type="text" class="tl-input" placeholder="e.g. France">
+                  <div class="tl-field-error" data-error-for="create_dist_country"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_gender">Gender</label>
+                  <select id="create_gender" name="create_gender" class="tl-select">
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <div class="tl-field-error" data-error-for="create_gender"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_role">Role <span class="text-danger">*</span></label>
+                  <select id="create_role" name="create_role" class="tl-select" required>
+                    <option value="admin">Admin</option>
+                    <option value="t_guide" selected>Tour Guide (t_guide)</option>
+                  </select>
+                  <div class="tl-field-error" data-error-for="create_role"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="create_phone_num">Phone</label>
+                  <input id="create_phone_num" name="create_phone_num" type="text" class="tl-input" placeholder="+1 (555) 000-0000">
+                  <div class="tl-field-error" data-error-for="create_phone_num"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">Create User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userEditModalLabel">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="userEditForm" novalidate>
+          <input type="hidden" name="id" id="edit_user_id">
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_name">Name <span class="text-danger">*</span></label>
+                  <input id="edit_name" name="edit_name" type="text" class="tl-input" placeholder="Full name" required>
+                  <div class="tl-field-error" data-error-for="edit_name"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_email">Email <span class="text-danger">*</span></label>
+                  <input id="edit_email" name="edit_email" type="email" class="tl-input" placeholder="name@example.com" required>
+                  <div class="tl-field-error" data-error-for="edit_email"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_password">New Password (leave blank to keep current)</label>
+                  <input id="edit_password" name="edit_password" type="password" class="tl-input" placeholder="Enter new password (min 8 chars)">
+                  <div class="tl-field-error" data-error-for="edit_password"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_age">Age</label>
+                  <input id="edit_age" name="edit_age" type="number" class="tl-input" placeholder="e.g. 30">
+                  <div class="tl-field-error" data-error-for="edit_age"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_dist_country">Destination Country</label>
+                  <input id="edit_dist_country" name="edit_dist_country" type="text" class="tl-input" placeholder="e.g. Egypt">
+                  <div class="tl-field-error" data-error-for="edit_dist_country"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_gender">Gender</label>
+                  <select id="edit_gender" name="edit_gender" class="tl-select">
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                  <div class="tl-field-error" data-error-for="edit_gender"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_role">Role</label>
+                  <select id="edit_role" name="edit_role" class="tl-select">
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="t_guide">Tour Guide (t_guide)</option>
+                  </select>
+                  <div class="tl-field-error" data-error-for="edit_role"></div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="tl-field">
+                  <label for="edit_phone_num">Phone</label>
+                  <input id="edit_phone_num" name="edit_phone_num" type="text" class="tl-input" placeholder="e.g. 01000000001">
+                  <div class="tl-field-error" data-error-for="edit_phone_num"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Status Modal -->
+  <div class="modal fade" id="userStatusModal" tabindex="-1" aria-labelledby="userStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userStatusModalLabel">Change User Status</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="userStatusForm">
+          <div class="modal-body">
+            <input type="hidden" id="status_user_id">
+            <p class="tl-text-secondary mb-3">
+              Update status via <code>PATCH /users/{id}/status</code>. Enter the backend-defined JSON payload:
+            </p>
+            <textarea id="status_payload" class="tl-textarea" rows="5" placeholder='{ "is_active": 1 }'></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">Send Status Request</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <pre id="userDetails" class="tl-code-block"></pre>
+        </div>
+      </div>
     </div>
   </div>
 
