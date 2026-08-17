@@ -62,8 +62,11 @@
     }
   };
 
-  // GET/POST /weather/trips/{tripId}
+  // Weather API: city-based and trip-based
   const Weather = {
+    getByCity(city) {
+      return window.TL.Api.get("/weather", { city });
+    },
     get(tripId) {
       return window.TL.Api.get(`/weather/trips/${tripId}`);
     },
