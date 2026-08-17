@@ -208,6 +208,11 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--tl-text-muted);
 }
 
+.Social-Media-Links{
+  margin-top: 20px;
+}
+
+
 .tl-gradient-text {
   background: var(--tl-gradient-text);
   -webkit-background-clip: text;
@@ -297,4 +302,51 @@ h1, h2, h3, h4, h5, h6 {
   clip: rect(0,0,0,0);
   white-space: nowrap;
   border: 0;
+}
+.tl-input::file-selector-button,
+#homepage_banner::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #22d3ee, #3b82f6);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tl-input::file-selector-button:hover,
+#homepage_banner::file-selector-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+/* Logo file input - same transparent style as Homepage Banner */
+.tl-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--tl-border-strong);
+  border-radius: 10px;
+  
+  color: var(--tl-text-primary);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Choose File button */
+.tl-input::file-selector-button {
+    margin-right: 12px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #22d3ee, #3b82f6);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    
+}
+
+/* Hover */
+.tl-input::file-selector-button:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
