@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Categories — Tailora Admin</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+  >
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+<body
+  data-page="categories"
+  data-page-title="Categories"
+  data-breadcrumb="Management,Categories"
+  data-requires-auth="true"
+>
+
+  <div class="tl-app">
+
+    <aside
+      class="tl-sidebar offcanvas offcanvas-start offcanvas-lg"
+      tabindex="-1"
+      id="tlSidebar"
+      aria-labelledby="tlSidebarLabel"
+    ></aside>
+
+    <div class="tl-main">
+
+      <header
+        class="tl-topbar"
+        id="tlTopbar"
+      ></header>
+
+      <main class="tl-content">
+
+        <!-- PAGE HEADER -->
+        <div class="tl-page-header">
+          <div>
+
+            <div class="tl-eyebrow">
+              <span class="tl-badge tl-badge--info">
+                <i class="bi bi-grid"></i>
+                Category Management
+              </span>
+            </div>
+
+            <h1 class="tl-page-title">
+              Categories
+            </h1>
+
+            <p class="tl-text-secondary">
+              Manage categories using the live Categories API.
+            </p>
+
+          </div>
+        </div>
+
+
+        <!-- CATEGORY LIST -->
+        <section class="tl-card tl-card--accent">
+
+          <div class="tl-card__head">
+
+            <div>
+              <div class="tl-section-title">
+                Category List
+              </div>
+
+              <p class="tl-metadata mb-0">
+                Categories loaded directly from the database.
+              </p>
+            </div>
+
+            <span class="tl-badge tl-badge--info">
+              <span id="categoriesCount">0</span>
+              categories
+            </span>
+
+          </div>
+
+          <div id="categoriesList">
+
+            <div class="tl-empty">
+
+              <div class="tl-empty__icon">
+                <i class="bi bi-arrow-repeat"></i>
+              </div>
+
+              <h3 class="tl-section-title">
+                Loading categories...
+              </h3>
+
+              <p class="tl-text-secondary">
+                Fetching categories from the API.
+              </p>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- CREATE / UPDATE -->
+        <div class="row g-4 mt-1">
+
+          <!-- CREATE CATEGORY -->
+          <div class="col-lg-6">
+
+            <section class="tl-card">
+
+              <div class="tl-card__head">
+
+                <div class="tl-section-title">
+                  Create category
+                </div>
+
+                <span class="tl-metadata">
+                  POST /admin/categories
+                </span>
+
+              </div>
+
+              <form id="categoryCreateForm">
+
+                <div class="tl-field">
+
+                  <label for="category_create_name">
+                    Name
+                  </label>
+
+                  <input
+                    id="category_create_name"
+                    name="category_create_name"
+                    type="text"
+                    class="tl-input"
+                    placeholder="Category name"
+                    required
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="category_create_name"
+                  ></div>
+
+                </div>
+                <button
+                  class="tl-btn tl-btn--primary"
+                  type="submit"
+                >
+                  <i class="bi bi-plus-circle"></i>
+                  Create category
+                </button>
+
+              </form>
+
+            </section>
+
+          </div>
+
+
+          <!-- UPDATE / DELETE -->
+          <div class="col-lg-6">
+
+            <section class="tl-card">
+
+              <div class="tl-card__head">
+
+                <div class="tl-section-title">
+                  Update / Delete
+                </div>
+
+                <span class="tl-metadata">
+                  PUT / DELETE /admin/categories/{id}
+                </span>
+
+              </div>
+
+              <form id="categoryManageForm">
+
+                <div class="tl-field">
+
+                  <label for="category_id">
+                    Category ID
+                  </label>
+
+                  <input
+                    id="category_id"
+                    name="category_id"
+                    type="number"
+                    class="tl-input"
+                    placeholder="ID"
+                    required
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="category_id"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-field">
+
+                  <label for="category_update_name">
+                    Name
+                  </label>
+
+                  <input
+                    id="category_update_name"
+                    name="category_update_name"
+                    type="text"
+                    class="tl-input"
+                    placeholder="Category name"
+                  >
+
+                  <div
+                    class="tl-field-error"
+                    data-error-for="category_update_name"
+                  ></div>
+
+                </div>
+
+
+                <div class="tl-flex tl-gap-sm">
+
+                  <button
+                    class="tl-btn tl-btn--primary"
+                    type="submit"
+                  >
+                    <i class="bi bi-pencil"></i>
+                    Update category
+                  </button>
+
+                  <button
+                    class="tl-btn tl-btn--danger"
+                    id="categoryDeleteBtn"
+                    type="button"
+                  >
+                    <i class="bi bi-trash"></i>
+                    Delete category
+                  </button>
+
+                </div>
+
+              </form>
+
+            </section>
+
+          </div>
+
+        </div>
+
+      </main>
+
+    </div>
+
+  </div>
+
+
+  <!-- Bootstrap -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <!-- API -->
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/categories.js"></script>
+
+  <!-- App -->
+  <script src="assets/js/app.js"></script>
+
+  <!-- Page utilities -->
+  <script src="assets/js/pages/utils.js"></script>
+
+  <!-- Categories page -->
+  <script src="assets/js/pages/categories.js"></script>
+
+  
+
+</body>
+</html>

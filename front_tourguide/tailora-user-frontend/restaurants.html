@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurants — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <section class="tl-hero" style="padding-bottom:20px;">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <span class="tl-eyebrow">Eat</span>
+      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Meals worth planning a trip around</h1>
+      <p class="tl-hero-sub">Restaurants from Tailora's catalog — filter by cuisine and price range.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight">
+    <div class="tl-container">
+      <div class="tl-card tl-filter-bar">
+        <div class="tl-filter-search">
+          <span class="tl-icon">🔍</span>
+          <input class="tl-input" id="rest-search" type="text" placeholder="Search restaurants or cuisines...">
+        </div>
+        <select class="tl-select" id="rest-cuisine">
+          <option value="">All Cuisines</option>
+        </select>
+      </div>
+      <div class="tl-grid" id="restaurants-grid"></div>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/hotels.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/restaurants.js"></script>
+</body>
+</html>

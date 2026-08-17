@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Destinations — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <section class="tl-hero" style="padding-bottom:20px;">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <span class="tl-eyebrow">Discover</span>
+      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Where will you go next?</h1>
+      <p class="tl-hero-sub">Browse every destination in Tailora's catalog — filter by region and search by name.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight">
+    <div class="tl-container">
+
+      <div class="tl-card tl-filter-bar">
+        <div class="tl-filter-search">
+          <span class="tl-icon">🔍</span>
+          <input class="tl-input" id="dest-search" type="text" placeholder="Search destinations by name...">
+        </div>
+        <select class="tl-select" id="dest-region">
+          <option value="">All Regions</option>
+          <option value="Africa">Africa</option>
+          <option value="Americas">Americas</option>
+          <option value="Asia">Asia</option>
+          <option value="Europe">Europe</option>
+          <option value="Oceania">Oceania</option>
+        </select>
+        <div class="tl-chip-row">
+          <button type="button" class="tl-pill is-active" data-view="cities">Cities</button>
+          <button type="button" class="tl-pill" data-view="countries">Countries</button>
+        </div>
+      </div>
+
+      <div class="tl-grid" id="destinations-grid">
+        <!-- populated by destinations.js -->
+      </div>
+
+      <div id="destinations-loadmore" class="tl-text-center tl-mt-32"></div>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/catalog.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/destinations.js"></script>
+</body>
+</html>
