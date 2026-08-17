@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
   <link rel="stylesheet" href="assets/css/chat.css">
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+>
 </head>
 <body>
 
@@ -50,15 +54,35 @@
           </div>
 
           <div id="chat-conversation" class="tl-chat-conversation" hidden>
-            <header class="tl-chat-header">
-              <div class="tl-chat-person">
-                <div class="tl-chat-avatar" id="chat-avatar">TG</div>
-                <div>
-                  <h2 id="chat-title">Tour Guide</h2>
-                  <span id="chat-status">Tailora Travel Guide</span>
-                </div>
-              </div>
-            </header>
+           <header class="tl-chat-header">
+
+  <button
+    type="button"
+    id="chat-back-btn"
+    class="tl-chat-back-btn"
+    aria-label="Back to chats"
+  >
+    <i class="bi bi-arrow-left"></i>
+  </button>
+
+  <div class="tl-chat-person">
+    <div class="tl-chat-avatar" id="chat-avatar">TG</div>
+
+    <div>
+      <h2 id="chat-title">Tour Guide</h2>
+      <span id="chat-status">Tailora Travel Guide</span>
+    </div>
+
+</header>
+    <div>
+      <h2 id="chat-title">Tour Guide</h2>
+      <span id="chat-status">Tailora Travel Guide</span>
+    </div>
+  </div>
+</header>
+    </div>
+
+</header>
 
             <div id="chat-messages" class="tl-chat-messages" aria-live="polite"></div>
 

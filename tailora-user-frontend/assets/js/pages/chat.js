@@ -198,6 +198,44 @@
   // ============================================================
 
   function showConversation(chat) {
+    function closeChat() {
+  const shell = document.querySelector(".tl-chat-shell");
+  const sidebar = document.querySelector(".tl-chat-sidebar");
+  const main = document.querySelector(".tl-chat-main");
+  const conversation = document.getElementById("chat-conversation");
+  const empty = document.getElementById("chat-empty");
+
+  state.activeChatId = null;
+  state.messages = [];
+
+  // Close mobile chat mode
+  if (shell) {
+    shell.classList.remove("chat-open");
+  }
+
+  // Show sidebar
+  if (sidebar) {
+    sidebar.classList.remove("is-hidden");
+  }
+
+  // Remove active conversation state
+  if (main) {
+    main.classList.remove("is-active");
+  }
+
+  // Hide conversation
+  if (conversation) {
+    conversation.hidden = true;
+  }
+
+  // Show empty state
+  if (empty) {
+    empty.hidden = false;
+  }
+
+  // Re-render list so active chat is removed
+  renderChatList();
+}
     const empty =
       document.getElementById("chat-empty");
 
@@ -337,6 +375,12 @@
 
     state.activeChatId = Number(id);
     state.messages = [];
+
+    const shell = document.querySelector(".tl-chat-shell");
+
+if (shell) {
+    shell.classList.add("chat-open");
+}
 
     renderChatList();
     showConversation(chat);
@@ -596,24 +640,23 @@
 // If there are no previous conversations,
 // open the default Tour Guide so the user can
 // start the first conversation.
-if (state.chats.length === 0) {
-  state.chats = [
-    {
-      id: 4,
-      name: "Guide 1",
-      role: "t_guide"
-    }
-  ];
-}
+ if (state.chats.length === 0) {
+            listEl.innerHTML = `
+                <div class="tl-chat-empty">
+                    No conversations yet.
+                </div>
+            `;
+            return;
+        }
 
 renderChatList();
 
-if (
-  selectFirst &&
-  state.chats.length
-) {
-  await openChat(state.chats[0].id);
-}
+// if (
+//   selectFirst &&
+//   state.chats.length
+// ) {
+//   await openChat(state.chats[0].id);
+// }
 
     } catch (error) {
       console.error(
@@ -639,7 +682,12 @@ if (
   document.addEventListener(
     "DOMContentLoaded",
     async function () {
+      const backBtn =
+       document.getElementById("chat-back-btn");
 
+     if (backBtn) {
+       backBtn.addEventListener("click", closeChat);
+     }
       if (
         !window.TL ||
         !window.TL.Auth ||
@@ -680,8 +728,8 @@ if (
       }
 
       await loadUnreadCount();
-      await loadChats(true);
+      await loadChats(false);
     }
   );
-
+  
 })();
