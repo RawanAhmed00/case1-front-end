@@ -740,9 +740,9 @@
   hotelsResponse,
   restaurantsResponse
 ] = await Promise.all([
-  window.TL.Attractions.mapped(),
-  window.TL.Hotels.mapped(),
-  window.TL.Restaurants.mapped()
+ window.TL.Attractions.all(),
+window.TL.Hotels.all(),
+window.TL.Restaurants.all()
 ]);
 
       state.allLocations = [

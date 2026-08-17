@@ -27,19 +27,19 @@
     }
   };
 
-  const Restaurants = {
-    all(query = {}) {
-      return window.TL.Api.get("/restaurants", query);
-    },
+ const Restaurants = {
+  all(query = {}) {
+    return window.TL.Api.get("/restaurants", query);
+  },
 
-    get(id) {
-      return window.TL.Api.get("/restaurants/" + id);
-    },
+  get(id) {
+    return window.TL.Api.get("/restaurants/" + id);
+  },
 
-    mapped() {
-      return window.TL.Api.get("/map/restaurants");
-    }
-  };
+  mapped() {
+    return window.TL.Api.get("/map/restaurants");
+  }
+};
 
   window.TL = window.TL || {};
 
