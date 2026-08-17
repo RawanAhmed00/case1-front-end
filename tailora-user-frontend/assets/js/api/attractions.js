@@ -18,15 +18,11 @@
     },
 
     get(id) {
-      return window.TL.Api.get(
-        "/attractions/" + id
-      );
+      return window.TL.Api.get("/attractions/" + id);
     },
 
     mapped() {
-      return window.TL.Api.get(
-        "/map/attractions"
-      );
+      return window.TL.Api.get("/map/attractions");
     }
   };
 
@@ -36,17 +32,12 @@
     },
 
     get(id) {
-      return window.TL.Api.get(
-        "/categories/" + id
-      );
+      return window.TL.Api.get("/categories/" + id);
     }
   };
 
   window.TL = window.TL || {};
 
-  window.TL.Attractions =
-    Attractions;
-
-  window.TL.Categories =
-    Categories;
+  window.TL.Attractions = Attractions;
+  window.TL.Categories = Categories;
 })();

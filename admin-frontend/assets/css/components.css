@@ -530,6 +530,11 @@
   flex-shrink: 0;
 }
 
+[data-theme="light"] .tl-sidebar__brand img {
+  /* Logo is white by default, invert it in light mode to make it dark */
+  filter: brightness(0);
+}
+
 .tl-sidebar__wordmark {
   font-weight: 800;
   font-size: 16.5px;
@@ -1197,6 +1202,11 @@
 .tl-auth-brand img {
   height: 40px;
   margin-bottom: 16px;
+}
+
+[data-theme="light"] .tl-auth-brand img {
+  /* Logo is white by default, invert it in light mode to make it dark */
+  filter: brightness(0);
 }
 
 .tl-auth-brand h1 {
