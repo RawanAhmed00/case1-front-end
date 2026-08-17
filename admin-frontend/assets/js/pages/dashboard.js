@@ -69,10 +69,14 @@
       if (!dateStr) return "—";
       try {
         const d = new Date(dateStr);
-        if (isNaN(d.getTime())) return dateStr.substring(0, 10);
-        return d.toISOString().split("T")[0];
+        if (isNaN(d.getTime())) return dateStr;
+        return d.toLocaleString("en-US", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        });
       } catch (_) {
-        return String(dateStr).substring(0, 10);
+        return String(dateStr);
       }
     }
 

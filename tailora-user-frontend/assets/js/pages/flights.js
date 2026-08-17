@@ -106,15 +106,7 @@
       return value;
     }
 
-    return date.toLocaleString(
-      undefined,
-      {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      }
-    );
+    return window.TL.Util.formatDate(value, true);
   }
 
   function formatCabinClass(value) {

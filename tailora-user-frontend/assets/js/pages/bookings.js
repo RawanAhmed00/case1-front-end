@@ -45,12 +45,14 @@
     const airline = window.TL.Util.pick(flight, ["airline", "airline_name", "carrier"], "");
     const departure = window.TL.Util.pick(flight, ["departure", "departure_time", "departure_date"], "");
     const price = flightPrice(flight);
+    
+    const formattedDeparture = departure ? window.TL.Util.formatDate(departure, true) : "";
 
     mount.innerHTML = `
     <div class="tl-booking-item">
       <div class="tl-booking-item-body">
         <strong>${window.TL.Util.escape(origin)} → ${window.TL.Util.escape(destination)}</strong>
-        <span>${[airline, departure].filter(Boolean).map((s) => window.TL.Util.escape(s)).join(" · ") || "Selected flight"}</span>
+        <span>${[airline, formattedDeparture].filter(Boolean).join(" · ") || "Selected flight"}</span>
       </div>
       ${price !== null ? `<span class="tl-price">${window.TL.Util.escape(window.TL.Util.money(price))}</span>` : ""}
       <button type="button" class="tl-btn tl-btn--ghost tl-btn--sm" id="remove-flight-btn">Remove</button>
@@ -103,6 +105,7 @@
     checkbox.checked = window.TL.Cart.getWantsTourGuide();
     checkbox.addEventListener("change", () => {
       window.TL.Cart.setWantsTourGuide(checkbox.checked);
+      renderTotal();
     });
   }
 
@@ -127,6 +130,11 @@
         total += hp;
         hasAny = true;
       }
+    }
+
+    // Add $100 if tour guide is selected
+    if (window.TL.Cart.getWantsTourGuide()) {
+      total += 100;
     }
 
     mount.innerHTML = hasAny
