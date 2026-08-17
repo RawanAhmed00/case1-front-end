@@ -171,7 +171,7 @@
     return `
       <div class="tl-sidebar__brand">
         <img src="${LOGO_PATH}" alt="Tailora">
-        <span class="tl-sidebar__wordmark tl-body">Tailora</span>
+      
         <button type="button" class="tl-sidebar-close" id="tlSidebarCloseBtn" aria-label="Close sidebar">
           <i class="bi bi-x-lg"></i>
         </button>
