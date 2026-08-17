@@ -69,6 +69,10 @@
     const end = window.TL.Util.pick(trip, ["end_date", "ends_at"], "");
     const status = window.TL.Util.pick(trip, ["status"], "");
     const id = window.TL.Util.id(trip);
+    
+    const formattedStart = start ? window.TL.Util.formatDate(start) : "";
+    const formattedEnd = end ? window.TL.Util.formatDate(end) : "";
+    
     return `
     <a href="trip-details.html?id=${encodeURIComponent(id)}" class="tl-card" style="padding:20px;display:block;">
       <div class="tl-flex tl-justify-between tl-items-center" style="margin-bottom:8px;">
@@ -76,7 +80,7 @@
         ${status ? `<span class="tl-badge">${window.TL.Util.escape(status)}</span>` : ""}
       </div>
       ${destination ? `<div class="tl-place-meta">📍 ${window.TL.Util.escape(destination)}</div>` : ""}
-      ${start || end ? `<div class="tl-place-meta tl-mt-8">🗓️ ${window.TL.Util.escape(start)}${end ? ` – ${window.TL.Util.escape(end)}` : ""}</div>` : ""}
+      ${formattedStart || formattedEnd ? `<div class="tl-place-meta tl-mt-8">🗓️ ${formattedStart}${formattedEnd ? ` – ${formattedEnd}` : ""}</div>` : ""}
     </a>`;
   }
 

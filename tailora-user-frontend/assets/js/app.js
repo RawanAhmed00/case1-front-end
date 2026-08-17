@@ -1094,6 +1094,57 @@
 
         </div>
       `;
+    },
+
+    /*
+     * Format dates consistently:
+     * "17 Aug 2026" for dates only
+     * "17 Aug 2026 • 2:30 PM" for dates with time
+     */
+    formatDate(
+      dateStr,
+      includeTime = false
+    ) {
+      if (!dateStr) return "—";
+
+      try {
+        const date = new Date(dateStr);
+
+        if (Number.isNaN(date.getTime())) {
+          return dateStr;
+        }
+
+        if (includeTime) {
+          const dateStr = date.toLocaleString(
+            "en-US",
+            {
+              day: "numeric",
+              month: "short",
+              year: "numeric"
+            }
+          );
+          const timeStr = date.toLocaleString(
+            "en-US",
+            {
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true
+            }
+          );
+          return `${dateStr} • ${timeStr}`;
+        } else {
+          return date.toLocaleString(
+            "en-US",
+            {
+              day: "numeric",
+              month: "short",
+              year: "numeric"
+            }
+          );
+        }
+      } catch (_) {
+        return String(dateStr);
+      }
     }
   };
 

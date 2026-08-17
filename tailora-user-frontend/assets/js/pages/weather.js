@@ -117,6 +117,8 @@
     const wind = window.TL.Util.pick(data, ["weather.wind_speed", "wind_speed"], null);
     const condition = window.TL.Util.pick(data, ["weather.condition", "condition"], "");
     const forecastDate = window.TL.Util.pick(data, ["forecast_date"], "");
+    
+    const formattedForecastDate = forecastDate ? window.TL.Util.formatDate(forecastDate) : "";
 
     mount.innerHTML = `
     <div class="tl-card tl-weather-card">
@@ -126,7 +128,7 @@
       <div class="tl-weather-stats">
         ${humidity !== null ? `<div class="tl-weather-stat"><strong>${window.TL.Util.escape(humidity)}%</strong><span>Humidity</span></div>` : ""}
         ${wind !== null ? `<div class="tl-weather-stat"><strong>${window.TL.Util.escape(wind)}</strong><span>Wind</span></div>` : ""}
-        ${forecastDate ? `<div class="tl-weather-stat"><strong>${window.TL.Util.escape(forecastDate)}</strong><span>Forecast Date</span></div>` : ""}
+        ${formattedForecastDate ? `<div class="tl-weather-stat"><strong>${formattedForecastDate}</strong><span>Forecast Date</span></div>` : ""}
       </div>
     </div>`;
   }
