@@ -87,7 +87,13 @@
     grid.innerHTML = window.TL.Util.skeletonCards(6);
     try {
       const response = await window.TL.Favorites.all();
-      state.items = window.TL.Util.list(response);
+      const rawFavs = window.TL.Util.list(response);
+      state.items = window.TL.Util.uniqueBy(rawFavs, (f) => {
+        const item = window.TL.Util.pick(f, ["favoritable", "item"], f);
+        const favoritableId = window.TL.Util.pick(f, ["favoritable_id"], window.TL.Util.id(item));
+        const type = window.TL.Util.pick(f, ["favoritable_type", "type"], "");
+        return `${type}_${favoritableId}`;
+      });
       renderTypeFilter();
       render();
     } catch (err) {

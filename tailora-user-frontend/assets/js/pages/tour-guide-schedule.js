@@ -404,6 +404,10 @@
 
       if (!Array.isArray(schedules)) {
         schedules = [];
+      } else {
+        schedules = (window.TL && window.TL.Util && typeof window.TL.Util.uniqueBy === "function")
+          ? window.TL.Util.uniqueBy(schedules, (s) => `${s.id || ''}_${s.tour_date}_${s.start_time}_${s.end_time}`)
+          : schedules;
       }
 
       const initialDate =

@@ -10,7 +10,9 @@
 
     try {
       const response = await window.TL.Cities.all();
-      const cities = window.TL.Util.list(response).slice(0, 8);
+      const rawCities = window.TL.Util.list(response);
+      const uniqueCities = window.TL.Util.uniqueBy(rawCities, (c) => window.TL.Util.name(c));
+      const cities = uniqueCities.slice(0, 8);
 
       if (!cities.length) {
         row.innerHTML = window.TL.Util.emptyState("No destinations yet", "Check back soon — new cities are being added.");

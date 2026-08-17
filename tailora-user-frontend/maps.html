@@ -1,69 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Map — Tailora</title>
-<link rel="icon" href="assets/images/logo.png">
-<link rel="stylesheet" href="assets/css/tailora.css">
-<link rel="stylesheet" href="assets/css/nav.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/responsive.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="assets/css/maps.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="assets/css/maps.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Map — Tailora</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/tailora.css">
+  <link rel="stylesheet" href="assets/css/nav.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+
+  <!-- Leaflet & MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="assets/css/maps.css">
 </head>
-<body>
+<body data-page="maps">
+
 <div id="tl-nav-mount"></div>
+
 <main>
-<section class="tl-hero tl-map-hero">
-<div class="tl-hero-bg"></div><div class="tl-container">
-<span class="tl-eyebrow">Explore</span>
-<h1 class="tl-display tl-mt-8">Discover Tailora on the map</h1>
-<p class="tl-hero-sub">Explore attractions, hotels and restaurants, then build a route between any two points.</p>
-</div></section>
-<section class="tl-section tl-section--tight"><div class="tl-container">
-<div class="tl-card tl-map-toolbar">
-<div class="tl-map-search"><span class="tl-icon">⌕</span><input class="tl-input" id="map-search" type="search" placeholder="Search attractions, hotels or restaurants..."></div>
-<div class="tl-map-filters">
-<button type="button" class="tl-map-filter is-active" data-type="all">All</button>
-<button type="button" class="tl-map-filter" data-type="attraction">Attractions</button>
-<button type="button" class="tl-map-filter" data-type="hotel">Hotels</button>
-<button type="button" class="tl-map-filter" data-type="restaurant">Restaurants</button>
-</div></div>
-<div class="tl-map-layout">
-<aside class="tl-card tl-map-sidebar">
-<div class="tl-map-sidebar-head"><div><span class="tl-eyebrow">Directions</span><h2>Plan a route</h2></div>
-<button type="button" class="tl-btn tl-btn--ghost" id="map-clear-route">Clear</button></div>
-<div class="tl-route-fields">
-<label class="tl-map-field"><span>Start</span><div class="tl-route-input-row">
-<input class="tl-input" id="route-start" type="text" placeholder="Click a map point" readonly>
-<button type="button" class="tl-map-small-btn" id="route-use-location" title="Use my location">⌖</button></div></label>
-<label class="tl-map-field"><span>Destination</span><input class="tl-input" id="route-end" type="text" placeholder="Click a map point" readonly></label>
-<button type="button" class="tl-btn tl-btn--primary tl-route-btn" id="route-build" disabled>Get Directions</button>
-</div>
-<div id="route-summary" class="tl-route-summary" hidden></div>
-<div class="tl-map-legend"><div class="tl-map-legend-title">Map markers</div>
-<div><span class="tl-map-dot tl-map-dot--attraction"></span> Attractions</div>
-<div><span class="tl-map-dot tl-map-dot--hotel"></span> Hotels</div>
-<div><span class="tl-map-dot tl-map-dot--restaurant"></span> Restaurants</div></div>
-<div class="tl-map-counts" id="map-counts">Loading locations...</div>
-<div id="map-error" class="tl-map-error" hidden></div>
-</aside>
-<section class="tl-card tl-map-card"><div id="tailora-map"></div>
-<div id="map-loading" class="tl-map-loading"><div class="tl-map-spinner"></div><span>Loading locations...</span></div></section>
-</div></div></section>
+  <section class="tl-hero tl-map-hero">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <span class="tl-eyebrow"><i class="bi bi-geo-alt me-1"></i> Interactive Map</span>
+      <h1 class="tl-display tl-mt-8">Discover Tailora <span class="tl-gradient-text">on the map</span></h1>
+      <p class="tl-hero-sub">Explore attractions, hotels, and restaurants around the globe, then build driving routes between any two points.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight tl-pb-40">
+    <div class="tl-container">
+
+      <!-- TOOLBAR -->
+      <div class="tl-card tl-map-toolbar">
+        <div class="tl-map-search">
+          <span class="tl-icon"><i class="bi bi-search"></i></span>
+          <input class="tl-input" id="map-search" type="search" placeholder="Search attractions, hotels, or restaurants...">
+        </div>
+        <div class="tl-map-filters">
+          <button type="button" class="tl-map-filter is-active" data-type="all">All</button>
+          <button type="button" class="tl-map-filter" data-type="attraction">Attractions</button>
+          <button type="button" class="tl-map-filter" data-type="hotel">Hotels</button>
+          <button type="button" class="tl-map-filter" data-type="restaurant">Restaurants</button>
+        </div>
+      </div>
+
+      <!-- MAP LAYOUT -->
+      <div class="tl-map-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="tl-card tl-map-sidebar">
+          <div class="tl-map-sidebar-head">
+            <div>
+              <span class="tl-eyebrow">Directions</span>
+              <h2>Plan a route</h2>
+            </div>
+            <button type="button" class="tl-btn tl-btn--ghost tl-btn--sm" id="map-clear-route">Clear</button>
+          </div>
+
+          <div class="tl-route-fields">
+            <label class="tl-map-field">
+              <span>Start Location</span>
+              <div class="tl-route-input-row">
+                <input class="tl-input" id="route-start" type="text" placeholder="Click a map marker or enter point" readonly>
+                <button type="button" class="tl-map-small-btn" id="route-use-location" title="Use my current location">
+                  <i class="bi bi-crosshair"></i>
+                </button>
+              </div>
+            </label>
+
+            <label class="tl-map-field">
+              <span>Destination</span>
+              <input class="tl-input" id="route-end" type="text" placeholder="Click a map marker or enter point" readonly>
+            </label>
+
+            <button type="button" class="tl-btn tl-btn--primary tl-route-btn" id="route-build" disabled>
+              <i class="bi bi-signpost-split me-1"></i> Get Directions
+            </button>
+          </div>
+
+          <div id="route-summary" class="tl-route-summary" hidden></div>
+
+          <!-- MAP LEGEND -->
+          <div class="tl-map-legend">
+            <div class="tl-map-legend-title">Categories</div>
+            <div class="d-flex align-items-center gap-2"><span class="tl-map-dot tl-map-dot--attraction"></span> Attractions</div>
+            <div class="d-flex align-items-center gap-2"><span class="tl-map-dot tl-map-dot--hotel"></span> Hotels</div>
+            <div class="d-flex align-items-center gap-2"><span class="tl-map-dot tl-map-dot--restaurant"></span> Restaurants</div>
+          </div>
+
+          <!-- COUNTS & SUMMARY -->
+          <div class="tl-map-counts" id="map-counts">Loading locations...</div>
+
+          <!-- PAGINATION CONTROLS (NEXT 100 / PREV 100) -->
+          <div class="tl-map-pagination-bar mt-3" id="map-pagination-bar">
+            <div class="d-flex align-items-center justify-content-between gap-2">
+              <button type="button" class="tl-btn tl-btn--outline tl-btn--sm" id="map-prev-btn" style="display:none;">
+                <i class="bi bi-arrow-left me-1"></i> Prev 100
+              </button>
+              <span class="tl-map-page-badge" id="map-page-badge">Page 1</span>
+              <button type="button" class="tl-btn tl-btn--primary tl-btn--sm flex-grow-1" id="map-next-btn">
+                <span id="map-next-btn-text">Next 100</span> <i class="bi bi-arrow-right ms-1" id="map-next-btn-icon"></i>
+              </button>
+            </div>
+            <div class="tl-map-pagination-sub text-center mt-2" id="map-pagination-sub">Showing records 1–100</div>
+          </div>
+
+          <div id="map-error" class="tl-map-error" hidden></div>
+        </aside>
+
+        <!-- MAP CARD -->
+        <section class="tl-card tl-map-card">
+          <div id="tailora-map"></div>
+          <div id="map-loading" class="tl-map-loading">
+            <div class="tl-map-spinner"></div>
+            <span>Loading locations...</span>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </section>
 </main>
+
 <div id="tl-footer-mount"></div>
+
+<!-- Scripts -->
 <script src="assets/js/api/api.js"></script>
 <script src="assets/js/api/auth.js"></script>
 <script src="assets/js/api/attractions.js"></script>
 <script src="assets/js/api/hotels.js"></script>
+<script src="assets/js/api/catalog.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="assets/js/pages/maps.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="assets/js/pages/maps.js"></script>
 </body>
 </html>

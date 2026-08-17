@@ -180,7 +180,8 @@
       const fetcher = state.view === "cities" ? window.TL.Cities.all : window.TL.Countries.all;
       const response = await fetcher({ page });
 
-      const items = window.TL.Util.list(response);
+      let items = window.TL.Util.list(response);
+      items = window.TL.Util.uniqueBy(items, (item) => `${window.TL.Util.name(item)}_${window.TL.Util.country(item)}`);
 
       // If the backend supplies pagination meta, use it (server-side paging).
       if (response && response.meta) {

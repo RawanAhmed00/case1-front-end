@@ -87,9 +87,13 @@
         window.TL.Attractions.all()
       ]);
 
-      const hotels = window.TL.Util.list(hotelsRes).filter((h) => belongsToPlace(h, place, placeName));
-      const restaurants = window.TL.Util.list(restaurantsRes).filter((r) => belongsToPlace(r, place, placeName));
-      const attractions = window.TL.Util.list(attractionsRes).filter((a) => belongsToPlace(a, place, placeName));
+      const rawHotels = window.TL.Util.list(hotelsRes).filter((h) => belongsToPlace(h, place, placeName));
+      const rawRestaurants = window.TL.Util.list(restaurantsRes).filter((r) => belongsToPlace(r, place, placeName));
+      const rawAttractions = window.TL.Util.list(attractionsRes).filter((a) => belongsToPlace(a, place, placeName));
+
+      const hotels = window.TL.Util.uniqueBy(rawHotels, (h) => window.TL.Util.name(h));
+      const restaurants = window.TL.Util.uniqueBy(rawRestaurants, (r) => window.TL.Util.name(r));
+      const attractions = window.TL.Util.uniqueBy(rawAttractions, (a) => window.TL.Util.name(a));
 
       hotelsPanel.innerHTML = hotels.length
         ? `<div class="tl-grid">${hotels.map((h) => placeCard(h, "hotels")).join("")}</div>`

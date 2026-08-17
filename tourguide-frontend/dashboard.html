@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="dashboard" data-page-title="Dashboard Overview" data-breadcrumb="Tour Guide, Overview" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--info"><i class="bi bi-compass"></i> Guide Intelligence</span>
+          </div>
+          <h1 class="tl-page-title">
+            Tour Guide <span class="tl-gradient-text">Command Center</span>
+          </h1>
+          <p class="tl-text-secondary">Manage your traveler booking requests, schedule, availability, and tour earnings.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="availabilities.html" class="tl-btn tl-btn--outline"><i class="bi bi-clock-history"></i> Set Availability</a>
+          <a href="requests.html" class="tl-btn tl-btn--primary"><i class="bi bi-inbox"></i> View All Requests</a>
+        </div>
+      </div>
+
+      <!-- KPI METRICS GRID -->
+      <section class="tl-grid tl-grid--kpi">
+        <!-- Total Requests -->
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">Total Requests</span>
+            <div class="tl-card-icon"><i class="bi bi-inbox"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-light mb-1" id="kpiTotalRequests">Loading…</p>
+          <p class="tl-metadata">Total booking requests received</p>
+        </div>
+
+        <!-- Pending Requests -->
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">Pending Requests</span>
+            <div class="tl-card-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--tl-warning);"><i class="bi bi-hourglass-split"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-warning mb-1" id="kpiPendingRequests">Loading…</p>
+          <p class="tl-metadata">Awaiting your accept/reject response</p>
+        </div>
+
+        <!-- Total Earnings -->
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">Total Earnings</span>
+            <div class="tl-card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--tl-success);"><i class="bi bi-cash-stack"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-success mb-1" id="kpiTotalEarnings">Loading…</p>
+          <p class="tl-metadata">Revenue from completed tours</p>
+        </div>
+
+        <!-- Rating -->
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">Average Rating</span>
+            <div class="tl-card-icon" style="background: rgba(138, 92, 246, 0.1); color: var(--tl-purple);"><i class="bi bi-star"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-light mb-1" id="kpiAverageRating">Loading…</p>
+          <p class="tl-metadata">Based on verified traveler reviews</p>
+        </div>
+      </section>
+
+      <!-- TWO COLUMN SECTION: Pending Requests & Today's Schedule -->
+      <div class="row g-4 mb-4">
+
+        <!-- Pending Booking Requests -->
+        <div class="col-lg-8">
+          <div class="tl-card h-100">
+            <div class="tl-card__head border-bottom border-secondary border-opacity-25 pb-3">
+              <div>
+                <h5 class="tl-card-title text-light mb-1"><i class="bi bi-bell me-2 text-warning"></i>Pending Booking Requests</h5>
+                <span class="tl-metadata">Accept or reject incoming requests from travelers</span>
+              </div>
+              <a href="requests.html" class="tl-btn tl-btn--ghost tl-btn--sm">View All <i class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="tl-table-wrap mt-3">
+              <table class="tl-table">
+                <thead>
+                  <tr>
+                    <th>Traveler</th>
+                    <th>Tour Location</th>
+                    <th>Date & Time</th>
+                    <th>Fee</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="pendingRequestsTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-secondary">
+                      <div class="spinner-border spinner-border-sm me-2"></div> Loading requests...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Schedule & Quick Actions -->
+        <div class="col-lg-4">
+          <div class="tl-card h-100">
+            <div class="tl-card__head border-bottom border-secondary border-opacity-25 pb-3 mb-3">
+              <div>
+                <h5 class="tl-card-title text-light mb-1"><i class="bi bi-calendar-event me-2 text-teal"></i>Today's Tour Schedule</h5>
+                <span class="tl-metadata">Confirmed tours scheduled for today</span>
+              </div>
+              <a href="schedule.html" class="tl-btn tl-btn--ghost tl-btn--sm"><i class="bi bi-calendar3"></i></a>
+            </div>
+
+            <div id="todayScheduleContainer" class="mb-4">
+              <div class="text-center py-4 text-secondary">
+                <div class="spinner-border spinner-border-sm me-2"></div> Loading schedule...
+              </div>
+            </div>
+
+            <!-- Quick Shortcuts -->
+            <div class="pt-3 border-top border-secondary border-opacity-25">
+              <span class="tl-label mb-2 d-block">Quick Actions</span>
+              <div class="d-grid gap-2">
+                <a href="messages.html" class="tl-btn tl-btn--outline text-start"><i class="bi bi-chat-dots me-2 text-teal"></i> Open Chat Messages</a>
+                <a href="availabilities.html" class="tl-btn tl-btn--outline text-start"><i class="bi bi-clock me-2 text-purple"></i> Manage Availability Slots</a>
+                <a href="earnings.html" class="tl-btn tl-btn--outline text-start"><i class="bi bi-graph-up me-2 text-success"></i> View Earnings & History</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+<script src="assets/js/api/chat.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/dashboard.js"></script>
+
+</body>
+</html>

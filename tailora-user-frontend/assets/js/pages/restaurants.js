@@ -172,7 +172,8 @@ function getRestaurantImage(item) {
       // params (e.g. ?page=2). If your api wrapper has a different signature,
       // adjust this call to match (e.g. TL.Restaurants.all(`?page=${page}`)).
       const response = await window.TL.Restaurants.all({ page });
-      state.items = window.TL.Util.list(response);
+      const rawRestaurants = window.TL.Util.list(response);
+      state.items = window.TL.Util.uniqueBy(rawRestaurants, (r) => `${window.TL.Util.name(r)}_${window.TL.Util.pick(r, ['address', 'locality', 'city'], '')}`);
 
       const meta = response && response.meta ? response.meta : null;
       state.page = meta && meta.current_page ? meta.current_page : page;

@@ -681,7 +681,7 @@
         state.country.name
       );
 
-    state.cities =
+    const matchedCities =
       state.allCities.filter(
         (city) => {
           const cityCountryName =
@@ -694,6 +694,12 @@
             selectedCountryName
           );
         }
+      );
+
+    state.cities =
+      window.TL.Util.uniqueBy(
+        matchedCities,
+        (city) => window.TL.Util.name(city)
       );
 
     console.log(
@@ -1206,13 +1212,19 @@
                     tripDayId
                   );
 
+              const rawAttractions =
+                extractAttractions(
+                  response
+                );
+
               state.attractionsByDay[
                 tripDayId
               ] = {
                 day,
                 attractions:
-                  extractAttractions(
-                    response
+                  window.TL.Util.uniqueBy(
+                    rawAttractions,
+                    (a) => window.TL.Util.name(a)
                   ),
                 selectedIds: []
               };

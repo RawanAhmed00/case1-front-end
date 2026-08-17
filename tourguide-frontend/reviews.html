@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ratings & Reviews — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="reviews" data-page-title="Ratings & Reviews" data-breadcrumb="Growth & Messages, Reviews" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--warning"><i class="bi bi-star"></i> Reputation & Quality</span>
+          </div>
+          <h1 class="tl-page-title">
+            Tour Guide <span class="tl-gradient-text">Ratings & Reviews</span>
+          </h1>
+          <p class="tl-text-secondary">Read feedback and ratings provided by travelers after their guided tour experiences.</p>
+        </div>
+      </div>
+
+      <!-- RATING HERO SUMMARY -->
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+          <div class="tl-card text-center p-4 h-100 d-flex flex-column align-items-center justify-content-center">
+            <div class="display-3 fw-bold text-warning mb-1" id="avgRatingScore">4.9</div>
+            <div class="mb-2 text-warning fs-5">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <span class="tl-metadata" id="totalReviewsCount">38 verified traveler reviews</span>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="tl-card p-4 h-100">
+            <h6 class="text-light mb-3">Rating Breakdown</h6>
+            <div id="ratingBreakdownList">
+              <div class="text-center py-3 text-secondary"><div class="spinner-border spinner-border-sm me-2 text-teal"></div> Calculating breakdown...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEWS LIST -->
+      <h5 class="text-light mb-3"><i class="bi bi-chat-left-text me-2 text-teal"></i> Traveler Reviews</h5>
+      <div id="reviewsList">
+        <div class="text-center py-5 text-secondary">
+          <div class="spinner-border text-teal" role="status"></div>
+          <p class="mt-2">Loading traveler reviews...</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/reviews.js"></script>
+
+</body>
+</html>

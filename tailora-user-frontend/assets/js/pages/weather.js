@@ -18,7 +18,8 @@
   async function loadCities() {
     try {
       const response = await window.TL.Cities.all();
-      allCities = window.TL.Util.list(response);
+      const rawCities = window.TL.Util.list(response);
+      allCities = window.TL.Util.uniqueBy(rawCities, (c) => `${window.TL.Util.name(c)}_${window.TL.Util.country(c)}`);
     } catch (err) {
       allCities = [];
     }

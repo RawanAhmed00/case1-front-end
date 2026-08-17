@@ -1,0 +1,84 @@
+/* ==========================================================================
+   TAILORA TOUR GUIDE — responsive.css
+   Responsive breakpoints & mobile/tablet layout adaptations.
+   ========================================================================== */
+
+/* Desktop Collapsed Rail (992px+) */
+@media (min-width: 992px) {
+  .tl-sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: var(--tl-sidebar-width) !important;
+    z-index: 1040 !important;
+    transform: none !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transition: width var(--tl-duration-base) var(--tl-ease) !important;
+  }
+
+  .tl-app.is-collapsed .tl-sidebar {
+    width: var(--tl-sidebar-collapsed) !important;
+    transform: none !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .tl-app.is-collapsed .tl-main {
+    margin-left: var(--tl-sidebar-collapsed) !important;
+    transition: margin-left var(--tl-duration-base) var(--tl-ease) !important;
+  }
+
+  .offcanvas-backdrop {
+    display: none !important;
+  }
+}
+
+/* Tablet & Mobile (< 992px) */
+@media (max-width: 991.98px) {
+  .tl-main {
+    margin-left: 0 !important;
+  }
+
+  .tl-topbar {
+    padding: 0 16px;
+  }
+
+  .tl-content {
+    padding: 20px 16px 36px;
+  }
+
+  .tl-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tl-grid--kpi {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Small Mobile (< 576px) */
+@media (max-width: 575.98px) {
+  .tl-grid--kpi {
+    grid-template-columns: 1fr;
+  }
+
+  .tl-page-title {
+    font-size: 20px;
+  }
+
+  .tl-btn {
+    width: 100%;
+  }
+
+  .tl-topbar__right {
+    gap: 8px;
+  }
+
+  .tl-profile-name {
+    display: none;
+  }
+}

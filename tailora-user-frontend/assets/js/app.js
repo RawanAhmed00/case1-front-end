@@ -947,6 +947,29 @@
       return [];
     },
 
+    uniqueBy(items, keyFn) {
+      if (!Array.isArray(items)) return [];
+      const seen = new Set();
+      const result = [];
+      for (const item of items) {
+        if (!item) continue;
+        let key;
+        if (typeof keyFn === "function") {
+          key = keyFn(item);
+        } else if (typeof keyFn === "string") {
+          key = Util.pick(item, [keyFn], "");
+        } else {
+          key = Util.name(item);
+        }
+        key = String(key || "").trim().toLowerCase();
+        if (key && !seen.has(key)) {
+          seen.add(key);
+          result.push(item);
+        }
+      }
+      return result;
+    },
+
     escape(str) {
 
       const div =

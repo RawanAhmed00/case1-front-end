@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-guest-only="true" class="d-flex align-items-center justify-content-center min-vh-100 py-5">
+
+  <div class="container" style="max-width: 460px;">
+    <div class="tl-card p-4 p-md-5 tl-card--accent text-center shadow-lg">
+
+      <!-- Logo & Brand -->
+      <div class="mb-4">
+        <img src="assets/images/logo.png" alt="Tailora" class="mx-auto mb-3" style="width: 54px; height: 54px; object-fit: contain;">
+        <span class="tl-badge tl-badge--info mb-2"><i class="bi bi-compass"></i> Tour Guide Portal</span>
+        <h2 class="tl-page-title mt-2 mb-1">Welcome Back</h2>
+        <p class="tl-text-secondary small mb-0">Sign in to your Tailora Tour Guide Command Center</p>
+      </div>
+
+      <!-- Sign In Form -->
+      <form id="tlLoginForm" novalidate class="text-start">
+        <!-- Email Field -->
+        <div class="tl-field">
+          <label for="tlEmail">Email Address</label>
+          <div class="tl-input-group">
+            <i class="bi bi-envelope tl-input-icon"></i>
+            <input type="email" id="tlEmail" class="tl-input" placeholder="guide@tailora.com" required autocomplete="username">
+          </div>
+          <div class="tl-field-error" id="tlEmailError"></div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="tl-field">
+          <label for="tlPassword">Password</label>
+          <div class="tl-input-group">
+            <i class="bi bi-lock tl-input-icon"></i>
+            <input type="password" id="tlPassword" class="tl-input" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <div class="tl-field-error" id="tlPasswordError"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="tl-btn tl-btn--primary tl-btn--block py-3 mt-3 fs-6" id="tlLoginSubmitBtn">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Command Center
+        </button>
+      </form>
+
+      <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+        <span class="tl-metadata">Tailora AI Travel Planner &bull; Tour Guide Management System</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <!-- API Scripts -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/pages/auth.js"></script>
+</body>
+</html>
