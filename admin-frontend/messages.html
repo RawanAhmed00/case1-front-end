@@ -4,38 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Messages — Tailora Admin</title>
-  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <link rel="icon" type="image/png" href="images/logo.png">
+
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body data-page="messages" data-page-title="Contact Messages" data-breadcrumb="Management,Contact Messages" data-requires-auth="true">
+
+<body
+  data-page="messages"
+  data-page-title="Contact Messages"
+  data-breadcrumb="Management, Contact Messages"
+  data-requires-auth="true"
+>
+
   <div class="tl-app">
-    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <aside class="tl-sidebar" id="tlSidebar" aria-label="Sidebar navigation"></aside>
+
     <div class="tl-main">
       <header class="tl-topbar" id="tlTopbar"></header>
-      <main class="tl-content">
-        
-<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-envelope"></i> Contact Center</span></div><h1 class="tl-page-title">Contact Messages</h1><p class="tl-text-secondary">Review, update and remove user inquiries using the documented endpoints.</p></div><button id="messagesRefresh" class="tl-btn tl-btn--outline"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
-<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div class="tl-section-title">Inbox</div><div class="tl-metadata">GET /admin/contact-messages</div></div><div id="messagesState"></div></section>
-<div class="modal fade" id="messageViewModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Message</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div id="messageDetails"></div><hr class="tl-divider"><form id="messageUpdateForm"><input type="hidden" id="message_update_id"><div class="tl-field">
-<label for="message_status">Status</label>
-<input id="message_status" name="message_status" type="text" class="tl-input" placeholder="Backend-defined status" required >
-<div class="tl-field-error" data-error-for="message_status"></div>
-</div><button class="tl-btn tl-btn--primary" type="submit">Update status</button></form></div></div></div></div>
 
+      <main class="tl-content">
+        <!-- Page Header -->
+        <div class="tl-page-header">
+          <div>
+            <div class="tl-eyebrow">
+              <span class="tl-badge tl-badge--info">
+                <i class="bi bi-envelope"></i> Communication
+              </span>
+            </div>
+            <h1 class="tl-page-title">Contact Messages</h1>
+            <p class="tl-text-secondary">
+              Review and update status on incoming contact messages matching the Admin API.
+            </p>
+          </div>
+
+          <button id="messagesRefresh" class="tl-btn tl-btn--outline" type="button">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+        </div>
+
+        <!-- Messages Table Card -->
+        <section class="tl-card tl-card--flush">
+          <div class="tl-card__head" style="padding: 24px 24px 0;">
+            <div>
+              <h2 class="tl-section-title">Inbox</h2>
+              <span class="tl-metadata">GET /contact-messages · Inbound Messages</span>
+            </div>
+          </div>
+
+          <div id="messagesState" style="padding: 0 24px 24px;"></div>
+        </section>
+
+        <!-- Message Details / Status Modal -->
+        <div class="modal fade" id="messageViewModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content tl-modal">
+              <div class="modal-header">
+                <h5 class="modal-title">Contact Message</h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                <pre id="messageDetails" class="tl-code-block mb-4"></pre>
+
+                <hr class="tl-divider">
+
+                <form id="messageStatusForm" novalidate>
+                  <input type="hidden" id="msg_id">
+                  <div class="tl-field">
+                    <label for="msg_status">Update Status (PUT /contact-messages/{id})</label>
+                    <input id="msg_status" type="text" class="tl-input" placeholder="e.g. read, resolved, pending" required>
+                  </div>
+                  <div class="tl-flex tl-gap-sm">
+                    <button class="tl-btn tl-btn--primary" type="submit">Update Status</button>
+                    <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core API Modules -->
   <script src="assets/js/api/api.js"></script>
   <script src="assets/js/api/auth.js"></script>
   <script src="assets/js/api/messages.js"></script>
+
+  <!-- Shared App & Pages -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/pages/utils.js"></script>
   <script src="assets/js/pages/messages.js"></script>

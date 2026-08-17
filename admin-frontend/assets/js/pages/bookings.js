@@ -1,13 +1,153 @@
-(function(){
-"use strict";
-document.addEventListener("DOMContentLoaded",function(){
- const P=TL.Pages,state=document.getElementById("bookingsState");
- async function load(){state.innerHTML='<div class="tl-inline-loader"><div class="tl-spinner"></div></div>';try{const r=await TL.Bookings.getBookings();const rows=P.list(r);if(!rows){state.innerHTML=P.empty("Booking data unavailable","The documented booking data field is a string. It is rendered only when the runtime response contains a JSON array.","bi-calendar-x");return;}if(!rows.length){state.innerHTML=P.empty("No bookings available","The API returned an empty booking collection.","bi-calendar-x");return;}state.innerHTML=`<div class="tl-table-wrap"><table class="tl-table"><thead><tr><th>ID</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead><tbody>${rows.map(b=>`<tr><td>${P.escape(P.display(b.id))}</td><td>${P.badge(b.status)}</td><td>${P.escape(P.display(b.created_at))}</td><td><button class="tl-btn tl-btn--outline tl-btn--sm" data-booking-select="${P.escape(b.id)}">Use ID</button></td></tr>`).join("")}</tbody></table></div>`;}catch(e){state.innerHTML=P.error(e.message);}}
- document.getElementById("bookingsRefresh").addEventListener("click",load);
- state.addEventListener("click",e=>{const b=e.target.closest("[data-booking-select]");if(b)document.getElementById("booking_action_id").value=b.dataset.bookingSelect;});
- document.getElementById("bookingViewBtn").addEventListener("click",async()=>{const id=document.getElementById("booking_action_id").value;if(!id)return TL.showToast("Enter a booking ID.","warning");try{const r=await TL.Bookings.getBooking(id);document.getElementById("bookingDetails").textContent=JSON.stringify(P.data(r),null,2);P.modal("bookingViewModal")?.show();}catch(e){TL.showToast(e.message,"error");}});
- document.getElementById("bookingUpdateBtn").addEventListener("click",async()=>{const id=document.getElementById("booking_action_id").value,status=document.getElementById("booking_status").value;if(!id||!status)return TL.showToast("Enter both booking ID and status.","warning");try{await TL.Bookings.updateBooking(id,{status});TL.showToast("Booking updated.","success");load();}catch(e){TL.showToast(e.message,"error");}});
- document.getElementById("bookingDeleteBtn").addEventListener("click",async()=>{const id=document.getElementById("booking_action_id").value;if(!id)return TL.showToast("Enter a booking ID.","warning");if(!P.confirm("Delete this booking? This cannot be undone."))return;try{await TL.Bookings.deleteBooking(id);TL.showToast("Booking deleted.","success");load();}catch(e){TL.showToast(e.message,"error");}});
- load();
-});
+(function () {
+  "use strict";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const P = TL.Pages;
+    const state = document.getElementById("bookingsState");
+
+    function getBookingIdInput() {
+      return document.getElementById("booking_id") || document.getElementById("booking_action_id");
+    }
+
+    async function load() {
+      if (!state) return;
+      state.innerHTML = `
+        <div class="tl-inline-loader">
+          <div class="tl-spinner"></div>
+        </div>
+      `;
+
+      try {
+        const r = await TL.Bookings.getBookings();
+        const rows = P.list(r);
+
+        if (!rows) {
+          state.innerHTML = P.empty(
+            "Booking data unavailable",
+            "The documented booking data field is rendered when the runtime response contains a JSON array.",
+            "bi-calendar-x"
+          );
+          return;
+        }
+
+        if (!rows.length) {
+          state.innerHTML = P.empty(
+            "No bookings available",
+            "The API returned an empty booking collection.",
+            "bi-calendar-x"
+          );
+          return;
+        }
+
+        state.innerHTML = `
+          <div class="tl-table-wrap">
+            <table class="tl-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map(function (b) {
+                  return `
+                    <tr>
+                      <td><strong>#${P.escape(P.display(b.id))}</strong></td>
+                      <td>${P.badge(b.status)}</td>
+                      <td>${P.escape(P.display(b.created_at))}</td>
+                      <td>
+                        <button class="tl-btn tl-btn--outline tl-btn--sm" data-booking-select="${P.escape(b.id)}">
+                          <i class="bi bi-arrow-down-short"></i> Use ID
+                        </button>
+                      </td>
+                    </tr>
+                  `;
+                }).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch (e) {
+        state.innerHTML = P.error(e.message);
+      }
+    }
+
+    const refreshBtn = document.getElementById("bookingsRefresh");
+    if (refreshBtn) refreshBtn.addEventListener("click", load);
+
+    if (state) {
+      state.addEventListener("click", function (e) {
+        const b = e.target.closest("[data-booking-select]");
+        if (b) {
+          const input = getBookingIdInput();
+          if (input) {
+            input.value = b.dataset.bookingSelect;
+            input.focus();
+            TL.showToast(`Selected Booking #${b.dataset.bookingSelect}`, "info");
+          }
+        }
+      });
+    }
+
+    const viewBtn = document.getElementById("bookingViewBtn");
+    if (viewBtn) {
+      viewBtn.addEventListener("click", async function () {
+        const input = getBookingIdInput();
+        const id = input ? input.value : "";
+        if (!id) return TL.showToast("Enter a booking ID.", "warning");
+
+        try {
+          const r = await TL.Bookings.getBooking(id);
+          const details = document.getElementById("bookingDetails");
+          if (details) details.textContent = JSON.stringify(P.data(r), null, 2);
+          P.modal("bookingViewModal")?.show();
+        } catch (e) {
+          TL.showToast(e.message, "error");
+        }
+      });
+    }
+
+    const updateBtn = document.getElementById("bookingUpdateBtn");
+    if (updateBtn) {
+      updateBtn.addEventListener("click", async function () {
+        const input = getBookingIdInput();
+        const id = input ? input.value : "";
+        const statusEl = document.getElementById("booking_status");
+        const status = statusEl ? statusEl.value : "";
+
+        if (!id || !status) return TL.showToast("Enter both booking ID and status.", "warning");
+
+        try {
+          await TL.Bookings.updateBooking(id, { status });
+          TL.showToast("Booking updated successfully.", "success");
+          load();
+        } catch (e) {
+          TL.showToast(e.message, "error");
+        }
+      });
+    }
+
+    const deleteBtn = document.getElementById("bookingDeleteBtn");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", async function () {
+        const input = getBookingIdInput();
+        const id = input ? input.value : "";
+        if (!id) return TL.showToast("Enter a booking ID.", "warning");
+        if (!P.confirm("Delete this booking? This cannot be undone.")) return;
+
+        try {
+          await TL.Bookings.deleteBooking(id);
+          TL.showToast("Booking deleted.", "success");
+          if (input) input.value = "";
+          load();
+        } catch (e) {
+          TL.showToast(e.message, "error");
+        }
+      });
+    }
+
+    load();
+  });
 })();

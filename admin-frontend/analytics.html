@@ -4,36 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics — Tailora Admin</title>
-  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <link rel="icon" type="image/png" href="images/logo.png">
+
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body data-page="analytics" data-page-title="Analytics" data-breadcrumb="Insights & System,Analytics" data-requires-auth="true">
+
+<body
+  data-page="analytics"
+  data-page-title="Analytics"
+  data-breadcrumb="Insights & System, Analytics"
+  data-requires-auth="true"
+>
+
   <div class="tl-app">
-    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <aside class="tl-sidebar" id="tlSidebar" aria-label="Sidebar navigation"></aside>
+
     <div class="tl-main">
       <header class="tl-topbar" id="tlTopbar"></header>
-      <main class="tl-content">
-        
-<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-graph-up"></i> Tailora Intelligence</span></div><h1 class="tl-page-title">Analytics</h1><p class="tl-text-secondary">Only metrics and payloads supported by the documented Admin API are rendered.</p></div><button id="analyticsRefresh" class="tl-btn tl-btn--outline"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
-<div class="tl-grid tl-grid--kpi"><div class="tl-card"><div class="tl-label">Total trips</div><div id="aTotal" class="tl-stat-card__value">Loading…</div></div><div class="tl-card"><div class="tl-label">Trips today</div><div id="aToday" class="tl-stat-card__value">Loading…</div></div><div class="tl-card"><div class="tl-label">Trips this month</div><div id="aMonth" class="tl-stat-card__value">Loading…</div></div><div class="tl-card"><div class="tl-label">Dashboard analytics</div><div id="aStatus" class="tl-stat-card__value" style="font-size:16px;">Loading…</div></div></div>
-<div class="row g-4" style="margin-top:0;"><div class="col-xl-7"><section class="tl-card"><div class="tl-card__head"><div class="tl-section-title">Latest trips</div><div class="tl-metadata">Documented trip statistics</div></div><div id="aLatest"></div></section></div><div class="col-xl-5"><section class="tl-card"><div class="tl-card__head"><div class="tl-section-title">Top users</div><div class="tl-metadata">Documented trip statistics</div></div><div id="aTop"></div></section></div></div>
-<section class="tl-card" style="margin-top:20px;"><div class="tl-card__head"><div><div class="tl-section-title">Dashboard analytics response</div><div class="tl-metadata">GET /admin/analytics/dashboard documents data as a string with no internal field schema.</div></div></div><div id="aPayload"></div></section>
 
+      <main class="tl-content">
+        <!-- Page Header -->
+        <div class="tl-page-header">
+          <div>
+            <div class="tl-eyebrow">
+              <span class="tl-badge tl-badge--info">
+                <i class="bi bi-graph-up"></i> Intelligence & Performance
+              </span>
+            </div>
+            <h1 class="tl-page-title">Analytics</h1>
+            <p class="tl-text-secondary">
+              Travel patterns, user rankings, and analytics metrics matching the Admin API.
+            </p>
+          </div>
+
+          <button id="analyticsRefresh" class="tl-btn tl-btn--outline" type="button">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="tl-grid tl-grid--kpi">
+          <div class="tl-card tl-stat-card">
+            <div class="tl-card__head mb-0">
+              <span class="tl-label">Total Trips</span>
+              <i class="bi bi-map tl-card-icon"></i>
+            </div>
+            <div id="statTotalTrips" class="tl-stat-card__value">Loading…</div>
+            <p class="tl-metadata mb-0">From /trips-admin/statistics</p>
+          </div>
+
+          <div class="tl-card tl-stat-card">
+            <div class="tl-card__head mb-0">
+              <span class="tl-label">Trips Today</span>
+              <i class="bi bi-calendar-day tl-card-icon"></i>
+            </div>
+            <div id="statTripsToday" class="tl-stat-card__value">Loading…</div>
+            <p class="tl-metadata mb-0">From /trips-admin/statistics</p>
+          </div>
+
+          <div class="tl-card tl-stat-card">
+            <div class="tl-card__head mb-0">
+              <span class="tl-label">This Month</span>
+              <i class="bi bi-calendar3 tl-card-icon"></i>
+            </div>
+            <div id="statTripsMonth" class="tl-stat-card__value">Loading…</div>
+            <p class="tl-metadata mb-0">From /trips-admin/statistics</p>
+          </div>
+
+          <div class="tl-card tl-stat-card">
+            <div class="tl-card__head mb-0">
+              <span class="tl-label">Dashboard Analytics</span>
+              <i class="bi bi-activity tl-card-icon"></i>
+            </div>
+            <div id="statAnalyticsStatus" class="tl-stat-card__value" style="font-size: 20px;">Loading…</div>
+            <p class="tl-metadata mb-0">GET /analytics/dashboard</p>
+          </div>
+        </div>
+
+        <!-- 2-Column Tables: Latest Trips & Top Users -->
+        <div class="row g-4" style="margin-top: 8px;">
+          <div class="col-xl-6">
+            <section class="tl-card tl-card--flush">
+              <div class="tl-card__head" style="padding: 24px 24px 0;">
+                <div>
+                  <h2 class="tl-section-title">Latest Trips</h2>
+                  <span class="tl-metadata">Recent Travel Bookings</span>
+                </div>
+              </div>
+              <div id="analyticsLatestTrips" style="padding: 0 24px 24px;"></div>
+            </section>
+          </div>
+
+          <div class="col-xl-6">
+            <section class="tl-card tl-card--flush">
+              <div class="tl-card__head" style="padding: 24px 24px 0;">
+                <div>
+                  <h2 class="tl-section-title">Top Users</h2>
+                  <span class="tl-metadata">Ranked by Activity</span>
+                </div>
+              </div>
+              <div id="analyticsTopUsers" style="padding: 0 24px 24px;"></div>
+            </section>
+          </div>
+        </div>
+
+        <!-- Dashboard Analytics Response Table Card -->
+        <section class="tl-card tl-card--flush" style="margin-top: 24px;">
+          <div class="tl-card__head" style="padding: 24px 24px 0;">
+            <div>
+              <h2 class="tl-section-title">Dashboard Analytics Payload</h2>
+              <span class="tl-metadata">GET /analytics/dashboard breakdown</span>
+            </div>
+          </div>
+          <div id="analyticsPayloadState" style="padding: 0 24px 24px;"></div>
+        </section>
       </main>
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core API Modules -->
   <script src="assets/js/api/api.js"></script>
   <script src="assets/js/api/auth.js"></script>
   <script src="assets/js/api/analytics.js"></script>
   <script src="assets/js/api/trips.js"></script>
+
+  <!-- Shared App & Pages -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/pages/utils.js"></script>
   <script src="assets/js/pages/analytics.js"></script>

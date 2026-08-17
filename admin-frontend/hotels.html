@@ -3,29 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Hotels — Tailora Admin</title>
 
-  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="icon" type="image/png" href="images/logo.png">
 
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
-    rel="stylesheet"
-  >
-
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-  >
-
+  <!-- Tailora Design System -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
@@ -34,654 +26,260 @@
 <body
   data-page="hotels"
   data-page-title="Hotels"
-  data-breadcrumb="Management,Hotels"
+  data-breadcrumb="Management, Hotels"
   data-requires-auth="true"
 >
 
   <div class="tl-app">
-
-    <!-- Sidebar -->
-    <aside
-      class="tl-sidebar offcanvas offcanvas-start offcanvas-lg"
-      tabindex="-1"
-      id="tlSidebar"
-      aria-labelledby="tlSidebarLabel"
-    ></aside>
+    <aside class="tl-sidebar" id="tlSidebar" aria-label="Sidebar navigation"></aside>
 
     <div class="tl-main">
-
-      <!-- Topbar -->
-      <header
-        class="tl-topbar"
-        id="tlTopbar"
-      ></header>
+      <header class="tl-topbar" id="tlTopbar"></header>
 
       <main class="tl-content">
-
-        <!-- ======================================================
-             PAGE HEADER
-        ======================================================= -->
-
+        <!-- Page Header -->
         <div class="tl-page-header">
-
           <div>
-
             <div class="tl-eyebrow">
-
               <span class="tl-badge tl-badge--info">
-                <i class="bi bi-building"></i>
-                Hotel Management
+                <i class="bi bi-building"></i> Accommodation
               </span>
-
             </div>
-
-            <h1 class="tl-page-title">
-              Hotels
-            </h1>
-
+            <h1 class="tl-page-title">Hotels</h1>
             <p class="tl-text-secondary">
-              Manage hotels using the real hotel records stored in the database.
+              Manage hotel inventory, availability, and pricing matching the Admin API.
             </p>
-
           </div>
-
         </div>
 
+        <!-- Hotel List Card -->
+        <section class="tl-card tl-card--flush" style="margin-bottom: 24px;">
+          <div id="hotelList">
+            <div class="tl-empty">
+              <div class="tl-empty__icon">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+              <h3 class="tl-section-title">Loading hotels...</h3>
+            </div>
+          </div>
+        </section>
 
-        <!-- ======================================================
-             HOTEL LIST
-        ======================================================= -->
-
-        <div
-          class="tl-card tl-card--accent"
-          style="margin-bottom: 20px;"
-        >
-
-          <div id="hotelList"></div>
-
-        </div>
-
-
-        <!-- ======================================================
-             CREATE / UPDATE
-        ======================================================= -->
-
+        <!-- 2-Column Create & Manage Forms -->
         <div class="row g-4">
-
-          <!-- ====================================================
-               CREATE HOTEL
-          ===================================================== -->
-
+          <!-- Create Hotel Column -->
           <div class="col-xl-6">
-
             <section class="tl-card">
-
               <div class="tl-card__head">
-
-                <div class="tl-section-title">
-                  Create hotel
+                <div>
+                  <h2 class="tl-section-title">Create Hotel</h2>
+                  <span class="tl-metadata">POST /hotels</span>
                 </div>
-
-                <span class="tl-metadata">
-                  POST /admin/hotels
-                </span>
-
+                <i class="bi bi-plus-square tl-card-icon"></i>
               </div>
 
+              <form id="hotelCreateForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_name">Hotel Name</label>
+                      <input id="hotel_name" name="hotel_name" type="text" class="tl-input" placeholder="e.g. Grand Palace" required>
+                      <div class="tl-field-error" data-error-for="hotel_name"></div>
+                    </div>
+                  </div>
 
-              <form id="hotelCreateForm">
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_city">City</label>
+                      <input id="hotel_city" name="hotel_city" type="text" class="tl-input" placeholder="e.g. Rome" required>
+                      <div class="tl-field-error" data-error-for="hotel_city"></div>
+                    </div>
+                  </div>
 
-                <!-- Name -->
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_price_per_night">Price Per Night</label>
+                      <input id="hotel_price_per_night" name="hotel_price_per_night" type="number" class="tl-input" placeholder="e.g. 150">
+                      <div class="tl-field-error" data-error-for="hotel_price_per_night"></div>
+                    </div>
+                  </div>
 
-                <div class="tl-field">
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_available_rooms">Available Rooms</label>
+                      <input id="hotel_available_rooms" name="hotel_available_rooms" type="number" class="tl-input" placeholder="e.g. 25">
+                      <div class="tl-field-error" data-error-for="hotel_available_rooms"></div>
+                    </div>
+                  </div>
 
-                  <label for="hotel_name">
-                    Name
-                  </label>
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_neighborhood">Neighborhood</label>
+                      <input id="hotel_neighborhood" name="hotel_neighborhood" type="text" class="tl-input" placeholder="e.g. Downtown">
+                      <div class="tl-field-error" data-error-for="hotel_neighborhood"></div>
+                    </div>
+                  </div>
 
-                  <input
-                    id="hotel_name"
-                    name="hotel_name"
-                    type="text"
-                    class="tl-input"
-                    placeholder="Hotel name"
-                    required
-                  >
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_distance_km">Distance (km)</label>
+                      <input id="hotel_distance_km" name="hotel_distance_km" type="number" step="0.1" class="tl-input" placeholder="e.g. 2.5">
+                      <div class="tl-field-error" data-error-for="hotel_distance_km"></div>
+                    </div>
+                  </div>
 
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_name"
-                  ></div>
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_rating">Rating</label>
+                      <input id="hotel_rating" name="hotel_rating" type="number" step="0.1" class="tl-input" placeholder="e.g. 4.5">
+                      <div class="tl-field-error" data-error-for="hotel_rating"></div>
+                    </div>
+                  </div>
 
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_review_count">Review Count</label>
+                      <input id="hotel_review_count" name="hotel_review_count" type="number" class="tl-input" placeholder="e.g. 120">
+                      <div class="tl-field-error" data-error-for="hotel_review_count"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="tl-field">
+                      <label for="hotel_amenities">Amenities</label>
+                      <textarea id="hotel_amenities" name="hotel_amenities" class="tl-textarea" rows="3" placeholder="WiFi, Pool, Breakfast, Parking"></textarea>
+                      <div class="tl-field-error" data-error-for="hotel_amenities"></div>
+                    </div>
+                  </div>
                 </div>
 
-
-                <!-- City -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_city">
-                    City
-                  </label>
-
-                  <input
-                    id="hotel_city"
-                    name="hotel_city"
-                    type="text"
-                    class="tl-input"
-                    placeholder="City"
-                    required
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_city"
-                  ></div>
-
-                </div>
-
-
-                <!-- Price -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_price_per_night">
-                    Price per night
-                  </label>
-
-                  <input
-                    id="hotel_price_per_night"
-                    name="hotel_price_per_night"
-                    type="number"
-                    class="tl-input"
-                    placeholder="Price per night"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_price_per_night"
-                  ></div>
-
-                </div>
-
-
-                <!-- Available Rooms -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_available_rooms">
-                    Available rooms
-                  </label>
-
-                  <input
-                    id="hotel_available_rooms"
-                    name="hotel_available_rooms"
-                    type="number"
-                    class="tl-input"
-                    placeholder="Available rooms"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_available_rooms"
-                  ></div>
-
-                </div>
-
-
-                <!-- Neighborhood -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_neighborhood">
-                    Neighborhood
-                  </label>
-
-                  <input
-                    id="hotel_neighborhood"
-                    name="hotel_neighborhood"
-                    type="text"
-                    class="tl-input"
-                    placeholder="Neighborhood"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_neighborhood"
-                  ></div>
-
-                </div>
-
-
-                <!-- Distance -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_distance_km">
-                    Distance (km)
-                  </label>
-
-                  <input
-                    id="hotel_distance_km"
-                    name="hotel_distance_km"
-                    type="number"
-                    step="0.1"
-                    class="tl-input"
-                    placeholder="Distance in km"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_distance_km"
-                  ></div>
-
-                </div>
-
-
-                <!-- Rating -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_rating">
-                    Rating
-                  </label>
-
-                  <input
-                    id="hotel_rating"
-                    name="hotel_rating"
-                    type="number"
-                    step="0.1"
-                    class="tl-input"
-                    placeholder="Rating"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_rating"
-                  ></div>
-
-                </div>
-
-
-                <!-- Review Count -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_review_count">
-                    Review count
-                  </label>
-
-                  <input
-                    id="hotel_review_count"
-                    name="hotel_review_count"
-                    type="number"
-                    class="tl-input"
-                    placeholder="Review count"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_review_count"
-                  ></div>
-
-                </div>
-
-
-                <!-- Amenities -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_amenities">
-                    Amenities
-                  </label>
-
-                  <textarea
-                    id="hotel_amenities"
-                    name="hotel_amenities"
-                    class="tl-textarea"
-                    rows="4"
-                    placeholder="Amenities"
-                  ></textarea>
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_amenities"
-                  ></div>
-
-                </div>
-
-
-                <button
-                  class="tl-btn tl-btn--primary"
-                  type="submit"
-                >
-                  Create hotel
+                <button class="tl-btn tl-btn--primary mt-2" type="submit">
+                  <i class="bi bi-plus-circle"></i> Create Hotel
                 </button>
-
               </form>
-
             </section>
-
           </div>
 
-
-          <!-- ====================================================
-               UPDATE / DELETE HOTEL
-          ===================================================== -->
-
+          <!-- Update / Delete Hotel Column -->
           <div class="col-xl-6">
-
             <section class="tl-card">
-
               <div class="tl-card__head">
-
-                <div class="tl-section-title">
-                  Update / Delete
+                <div>
+                  <h2 class="tl-section-title">Update or Delete Hotel</h2>
+                  <span class="tl-metadata">PUT / DELETE /hotels/{id}</span>
                 </div>
-
-                <span class="tl-metadata">
-                  PUT / DELETE /admin/hotels/{id}
-                </span>
-
+                <i class="bi bi-pencil-square tl-card-icon"></i>
               </div>
 
+              <form id="hotelManageForm" novalidate>
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="tl-field">
+                      <label for="hotel_id">Target Hotel ID</label>
+                      <input id="hotel_id" name="hotel_id" type="number" class="tl-input" placeholder="Enter Hotel ID" required>
+                      <div class="tl-field-error" data-error-for="hotel_id"></div>
+                    </div>
+                  </div>
 
-              <form id="hotelManageForm">
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_name">Hotel Name</label>
+                      <input id="hotel_u_name" name="hotel_u_name" type="text" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_name"></div>
+                    </div>
+                  </div>
 
-                <!-- Hotel ID -->
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_city">City</label>
+                      <input id="hotel_u_city" name="hotel_u_city" type="text" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_city"></div>
+                    </div>
+                  </div>
 
-                <div class="tl-field">
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_price_per_night">Price Per Night</label>
+                      <input id="hotel_u_price_per_night" name="hotel_u_price_per_night" type="number" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_price_per_night"></div>
+                    </div>
+                  </div>
 
-                  <label for="hotel_id">
-                    Hotel ID
-                  </label>
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_available_rooms">Available Rooms</label>
+                      <input id="hotel_u_available_rooms" name="hotel_u_available_rooms" type="number" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_available_rooms"></div>
+                    </div>
+                  </div>
 
-                  <input
-                    id="hotel_id"
-                    name="hotel_id"
-                    type="number"
-                    class="tl-input"
-                    placeholder="ID"
-                    required
-                  >
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_neighborhood">Neighborhood</label>
+                      <input id="hotel_u_neighborhood" name="hotel_u_neighborhood" type="text" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_neighborhood"></div>
+                    </div>
+                  </div>
 
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_id"
-                  ></div>
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_distance_km">Distance (km)</label>
+                      <input id="hotel_u_distance_km" name="hotel_u_distance_km" type="number" step="0.1" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_distance_km"></div>
+                    </div>
+                  </div>
 
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_rating">Rating</label>
+                      <input id="hotel_u_rating" name="hotel_u_rating" type="number" step="0.1" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_rating"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="hotel_u_review_count">Review Count</label>
+                      <input id="hotel_u_review_count" name="hotel_u_review_count" type="number" class="tl-input" placeholder="">
+                      <div class="tl-field-error" data-error-for="hotel_u_review_count"></div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <div class="tl-field">
+                      <label for="hotel_u_amenities">Amenities</label>
+                      <textarea id="hotel_u_amenities" name="hotel_u_amenities" class="tl-textarea" rows="3" placeholder=""></textarea>
+                      <div class="tl-field-error" data-error-for="hotel_u_amenities"></div>
+                    </div>
+                  </div>
                 </div>
 
-
-                <!-- Name -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_name">
-                    Name
-                  </label>
-
-                  <input
-                    id="hotel_u_name"
-                    name="hotel_u_name"
-                    type="text"
-                    class="tl-input"
-                    placeholder="Hotel name"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_name"
-                  ></div>
-
-                </div>
-
-
-                <!-- City -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_city">
-                    City
-                  </label>
-
-                  <input
-                    id="hotel_u_city"
-                    name="hotel_u_city"
-                    type="text"
-                    class="tl-input"
-                    placeholder="City"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_city"
-                  ></div>
-
-                </div>
-
-
-                <!-- Neighborhood -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_neighborhood">
-                    Neighborhood
-                  </label>
-
-                  <input
-                    id="hotel_u_neighborhood"
-                    name="hotel_u_neighborhood"
-                    type="text"
-                    class="tl-input"
-                    placeholder="Neighborhood"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_neighborhood"
-                  ></div>
-
-                </div>
-
-
-                <!-- Distance -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_distance_km">
-                    Distance (km)
-                  </label>
-
-                  <input
-                    id="hotel_u_distance_km"
-                    name="hotel_u_distance_km"
-                    type="number"
-                    step="0.1"
-                    class="tl-input"
-                    placeholder="Distance in km"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_distance_km"
-                  ></div>
-
-                </div>
-
-
-                <!-- Price -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_price_per_night">
-                    Price per night
-                  </label>
-
-                  <input
-                    id="hotel_u_price_per_night"
-                    name="hotel_u_price_per_night"
-                    type="number"
-                    class="tl-input"
-                    placeholder="Price per night"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_price_per_night"
-                  ></div>
-
-                </div>
-
-
-                <!-- Rating -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_rating">
-                    Rating
-                  </label>
-
-                  <input
-                    id="hotel_u_rating"
-                    name="hotel_u_rating"
-                    type="number"
-                    step="0.1"
-                    class="tl-input"
-                    placeholder="Rating"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_rating"
-                  ></div>
-
-                </div>
-
-
-                <!-- Review Count -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_review_count">
-                    Review count
-                  </label>
-
-                  <input
-                    id="hotel_u_review_count"
-                    name="hotel_u_review_count"
-                    type="number"
-                    class="tl-input"
-                    placeholder="Review count"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_review_count"
-                  ></div>
-
-                </div>
-
-
-                <!-- Amenities -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_amenities">
-                    Amenities
-                  </label>
-
-                  <textarea
-                    id="hotel_u_amenities"
-                    name="hotel_u_amenities"
-                    class="tl-textarea"
-                    rows="4"
-                    placeholder="Amenities"
-                  ></textarea>
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_amenities"
-                  ></div>
-
-                </div>
-
-
-                <!-- Available Rooms -->
-
-                <div class="tl-field">
-
-                  <label for="hotel_u_available_rooms">
-                    Available rooms
-                  </label>
-
-                  <input
-                    id="hotel_u_available_rooms"
-                    name="hotel_u_available_rooms"
-                    type="number"
-                    class="tl-input"
-                    placeholder="Available rooms"
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="hotel_u_available_rooms"
-                  ></div>
-
-                </div>
-
-
-                <!-- Buttons -->
-
-                <div class="tl-flex tl-gap-sm">
-
-                  <button
-                    class="tl-btn tl-btn--primary"
-                    type="submit"
-                  >
-                    Update hotel
+                <div class="tl-flex tl-gap-sm flex-wrap mt-3">
+                  <button class="tl-btn tl-btn--primary" type="submit">
+                    <i class="bi bi-pencil"></i> Update Hotel
                   </button>
-
-                  <button
-                    class="tl-btn tl-btn--danger"
-                    id="hotelDeleteBtn"
-                    type="button"
-                  >
-                    Delete hotel
+                  <button type="button" class="tl-btn tl-btn--danger" id="hotelDeleteBtn">
+                    <i class="bi bi-trash"></i> Delete Hotel
                   </button>
-
                 </div>
-
               </form>
-
             </section>
-
           </div>
-
         </div>
-
       </main>
-
     </div>
-
   </div>
 
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 
-  <!-- ============================================================
-       SCRIPTS
-  ============================================================= -->
-
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
-  ></script>
-
+  <!-- Core API Modules -->
   <script src="assets/js/api/api.js"></script>
   <script src="assets/js/api/auth.js"></script>
   <script src="assets/js/api/hotels.js"></script>
 
+  <!-- Shared App & Pages -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/pages/utils.js"></script>
   <script src="assets/js/pages/hotels.js"></script>
-
 </body>
 </html>

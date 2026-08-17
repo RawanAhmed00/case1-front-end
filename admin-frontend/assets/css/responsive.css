@@ -1,77 +1,94 @@
 /* ==========================================================================
    TAILORA ADMIN — responsive.css
-   Breakpoints: 1920 / 1440 / 1024 / 768 / 390.
-   Desktop: fixed sidebar. Tablet: fixed sidebar, tighter spacing.
-   Mobile (<992px): sidebar becomes a real Bootstrap 5 Offcanvas.
+   Breakpoints: 1920 / 1440 / 1200 / 992 / 768 / 480 / 390.
    ========================================================================== */
 
 /* -------------------------------------------------------------------------
-   Large desktop refinement (>=1440px) — a bit more breathing room
+   Large desktop refinement (>=1440px)
    ------------------------------------------------------------------------- */
 @media (min-width: 1440px) {
   .tl-content {
-    padding: 32px 40px 56px;
+    padding: 36px 48px 64px;
   }
 }
 
 /* -------------------------------------------------------------------------
-   Laptop / small desktop (<=1200px)
+   Desktop (>=992px)
+   ------------------------------------------------------------------------- */
+@media (min-width: 992px) {
+  .tl-sidebar-backdrop {
+    display: none !important;
+  }
+
+  .tl-sidebar-close {
+    display: none !important;
+  }
+
+  .offcanvas-backdrop {
+    display: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Laptop / Small desktop (<=1200px)
    ------------------------------------------------------------------------- */
 @media (max-width: 1200px) {
   :root {
-    --tl-sidebar-width: 240px;
+    --tl-sidebar-width: 250px;
+  }
+
+  .tl-grid--kpi {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tl-grid--3 {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 /* -------------------------------------------------------------------------
-   Tablet (<=1024px) — collapse sidebar to icon rail by default
+   Tablet (<=1024px)
    ------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
   .tl-content {
-    padding: 22px 20px 40px;
+    padding: 24px 24px 44px;
   }
 
   .tl-topbar {
-    padding: 0 18px;
-  }
-
-  .tl-page-header {
-    align-items: flex-start;
+    padding: 0 24px;
   }
 }
 
 /* -------------------------------------------------------------------------
-   Mobile / below 992px — REAL Bootstrap Offcanvas sidebar.
-   The .tl-sidebar element itself gets Bootstrap's .offcanvas classes
-   added via markup (see dashboard.html / index pages), so at this
-   breakpoint Bootstrap's own JS drives show/hide, backdrop, and focus
-   trapping. We only reset the layout so main content is full width
-   and stop faking any custom slide/overlay behavior.
+   Mobile / Below 992px
    ------------------------------------------------------------------------- */
 @media (max-width: 991.98px) {
   .tl-main {
     margin-left: 0 !important;
   }
 
-  .tl-app.is-collapsed .tl-sidebar {
-    width: var(--tl-sidebar-width);
+  .tl-sidebar {
+    width: min(var(--tl-sidebar-width), 85vw);
+    background: var(--tl-bg-secondary);
+    border-right: 1px solid var(--tl-border-strong);
+    box-shadow: var(--tl-shadow-lg);
+    transform: translateX(-100%);
+    visibility: hidden;
+    z-index: 1050;
   }
 
-  .tl-app.is-collapsed .tl-nav-group__label,
-  .tl-app.is-collapsed .tl-nav-link__label,
-  .tl-app.is-collapsed .tl-sidebar__wordmark {
+  .tl-app.is-sidebar-mobile-open .tl-sidebar {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+  }
+
+  .tl-app.is-sidebar-mobile-open .tl-sidebar-backdrop {
     display: block;
   }
 
-  /* Bootstrap's offcanvas component controls transform/visibility;
-     we only supply width, background and internal layout. */
-  .tl-sidebar.offcanvas {
-    width: min(var(--tl-sidebar-width), 84vw);
-  }
-
   .tl-topbar {
-    padding: 0 16px;
-    gap: 10px;
+    padding: 0 18px;
+    gap: 12px;
   }
 
   .tl-breadcrumb__trail {
@@ -79,12 +96,17 @@
   }
 
   .tl-content {
-    padding: 18px 16px 32px;
+    padding: 20px 18px 36px;
   }
 
   .tl-page-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tl-grid--2 {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -93,11 +115,11 @@
    ------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .tl-stat-card__value {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .tl-auth-card {
-    padding: 32px 24px;
+    padding: 34px 24px;
   }
 
   .tl-card {
@@ -106,25 +128,36 @@
   }
 
   .tl-page-title {
-    font-size: 20px;
+    font-size: 21px;
   }
 
-  /* Tables scroll horizontally instead of overflowing the page */
-  .tl-table-wrap {
-    border-radius: var(--tl-radius-md);
+  .tl-grid--3 {
+    grid-template-columns: 1fr;
+  }
+
+  .social-media-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .social-media-row .social-media-type {
+    width: 100%;
   }
 }
 
 /* -------------------------------------------------------------------------
-   Phone (<=390px)
+   Small phone (<=560px)
    ------------------------------------------------------------------------- */
-@media (max-width: 420px) {
-  .tl-topbar__right {
-    gap: 6px;
+@media (max-width: 560px) {
+  .tl-grid--kpi {
+    grid-template-columns: 1fr;
   }
 
-  .tl-profile-trigger span.tl-profile-name {
+  .tl-profile-name {
     display: none;
+  }
+
+  .tl-topbar__right {
+    gap: 8px;
   }
 
   .tl-icon-btn {
@@ -133,49 +166,37 @@
   }
 
   .tl-sidebar-toggle {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
   }
 
   .tl-content {
-    padding: 14px 12px 28px;
+    padding: 16px 14px 28px;
   }
 
   .tl-auth-screen {
-    padding: 16px;
+    padding: 18px 14px;
   }
 
   .tl-auth-card {
-    padding: 26px 18px;
+    padding: 28px 20px;
   }
 
   .tl-toast-container {
-    top: 12px;
-    right: 12px;
-    left: 12px;
+    top: 14px;
+    right: 14px;
+    left: 14px;
     width: auto;
   }
+
+  .tl-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 
-/* -------------------------------------------------------------------------
-   No horizontal overflow anywhere, ever.
-   ------------------------------------------------------------------------- */
+/* Global overflow protection */
 html, body {
   max-width: 100%;
-}
-
-.tl-grid--kpi {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-@media (max-width: 1200px) {
-  .tl-grid--kpi {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 560px) {
-  .tl-grid--kpi {
-    grid-template-columns: 1fr;
-  }
 }

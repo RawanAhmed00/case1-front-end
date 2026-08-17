@@ -5,30 +5,21 @@
     const P = TL.Pages;
 
     const list = document.getElementById("categoriesList");
-    const count = document.getElementById("categoriesCount");
 
     async function loadCategories() {
       if (!list) return;
 
       list.innerHTML = `
-        <div class="tl-empty">
-          <div class="tl-empty__icon">
-            <i class="bi bi-arrow-repeat"></i>
-          </div>
-          <h3 class="tl-section-title">Loading categories...</h3>
-          <p class="tl-text-secondary">
-            Fetching categories from the API.
-          </p>
+        <div class="tl-inline-loader">
+          <div class="tl-spinner"></div>
         </div>
       `;
 
       try {
         const response = await TL.Categories.getCategories();
-
         const data = P.data(response);
 
         let categories = [];
-
         if (Array.isArray(data)) {
           categories = data;
         } else if (Array.isArray(data?.data)) {
@@ -39,298 +30,210 @@
           categories = response;
         }
 
-        if (count) {
-          count.textContent = categories.length;
-        }
-
         if (!categories.length) {
-          list.innerHTML = P.empty(
-            "No categories found",
-            "The categories endpoint returned no records.",
-            "bi-tags"
-          );
+          list.innerHTML = `
+            <div style="padding: 24px;">
+              ${P.empty("No categories found", "The categories endpoint returned no records.", "bi-tags")}
+            </div>
+          `;
           return;
         }
 
         list.innerHTML = `
-          <div class="tl-table-wrap">
-            <table class="tl-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
+          <div class="tl-card__head" style="padding: 24px 24px 0;">
+            <div>
+              <h2 class="tl-section-title">Category Directory</h2>
+              <span class="tl-metadata">Taxonomy items loaded directly from the database</span>
+            </div>
+            <span class="tl-badge tl-badge--info">${categories.length} categories</span>
+          </div>
 
-              <tbody>
-                ${categories
-                  .map(
-                    (category) => `
+          <div style="padding: 0 24px 24px;">
+            <div class="tl-table-wrap">
+              <table class="tl-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${categories.map(function (category) {
+                    return `
                       <tr>
+                        <td><strong>#${P.escape(P.display(category.id))}</strong></td>
+                        <td>${P.escape(P.display(category.name))}</td>
                         <td>
-                          ${P.escape(
-                            P.display(category.id)
-                          )}
-                        </td>
-
-                        <td>
-                          ${P.escape(
-                            P.display(category.name)
-                          )}
-                        </td>
-
-                        <td>
-                          <div class="tl-flex tl-gap-sm">
-
+                          <div class="tl-table-actions">
                             <button
                               type="button"
                               class="tl-btn tl-btn--outline tl-btn--sm category-edit-btn"
-                              data-id="${P.escape(
-                                P.display(category.id)
-                              )}"
-                              data-name="${P.escape(
-                                P.display(category.name)
-                              )}"
+                              data-id="${P.escape(P.display(category.id))}"
+                              data-name="${P.escape(P.display(category.name))}"
+                              title="Edit Category"
                             >
                               <i class="bi bi-pencil"></i>
                             </button>
-
                             <button
                               type="button"
                               class="tl-btn tl-btn--danger tl-btn--sm category-delete-btn"
-                              data-id="${P.escape(
-                                P.display(category.id)
-                              )}"
+                              data-id="${P.escape(P.display(category.id))}"
+                              title="Delete Category"
                             >
                               <i class="bi bi-trash"></i>
                             </button>
-
                           </div>
                         </td>
                       </tr>
-                    `
-                  )
-                  .join("")}
-              </tbody>
-            </table>
+                    `;
+                  }).join("")}
+                </tbody>
+              </table>
+            </div>
           </div>
         `;
 
         bindCategoryActions();
 
       } catch (e) {
-        list.innerHTML = P.error(
-          e?.message || "Failed to load categories."
-        );
-
-        if (count) {
-          count.textContent = "—";
-        }
+        list.innerHTML = `
+          <div style="padding: 24px;">
+            ${P.error(e?.message || "Failed to load categories.")}
+          </div>
+        `;
       }
     }
 
     function bindCategoryActions() {
-      document
-        .querySelectorAll(".category-edit-btn")
-        .forEach((button) => {
-          button.addEventListener("click", function () {
-            const id = this.dataset.id;
-            const name = this.dataset.name;
+      document.querySelectorAll(".category-edit-btn").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const id = this.dataset.id;
+          const name = this.dataset.name;
 
-            const idInput =
-              document.getElementById("category_id");
+          const idInput = document.getElementById("category_id");
+          const nameInput = document.getElementById("category_update_name");
 
-            const nameInput =
-              document.getElementById("category_update_name");
+          if (idInput) idInput.value = id;
+          if (nameInput) {
+            nameInput.value = name;
+            nameInput.focus();
+          }
 
-            if (idInput) {
-              idInput.value = id;
-            }
-
-            if (nameInput) {
-              nameInput.value = name;
-              nameInput.focus();
-            }
-
-            window.scrollTo({
-              top: document.body.scrollHeight,
-              behavior: "smooth",
-            });
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
           });
+          TL.showToast("Category selected for update.", "info");
         });
+      });
 
-      document
-        .querySelectorAll(".category-delete-btn")
-        .forEach((button) => {
-          button.addEventListener("click", async function () {
-            const id = this.dataset.id;
+      document.querySelectorAll(".category-delete-btn").forEach(function (button) {
+        button.addEventListener("click", async function () {
+          const id = this.dataset.id;
+          if (!id) return;
+          if (!P.confirm("Delete this category? This cannot be undone.")) return;
 
-            if (!id) return;
-
-            if (
-              !P.confirm(
-                "Delete this category? This cannot be undone."
-              )
-            ) {
-              return;
-            }
-
-            try {
-              await TL.Categories.deleteCategory(id);
-
-              TL.showToast(
-                "Category deleted.",
-                "success"
-              );
-
-              await loadCategories();
-
-            } catch (e) {
-              TL.showToast(
-                e?.message || "Failed to delete category.",
-                "error"
-              );
-            }
-          });
+          try {
+            await TL.Categories.deleteCategory(id);
+            TL.showToast("Category deleted.", "success");
+            await loadCategories();
+          } catch (e) {
+            TL.showToast(e?.message || "Failed to delete category.", "error");
+          }
         });
+      });
     }
 
     async function submit(form, fn, message) {
       P.clearErrors(form);
-
-      const button =
-        form.querySelector('button[type="submit"]');
-
+      const button = form.querySelector('button[type="submit"]');
       P.setBusy(button, true);
 
       try {
         await fn();
-
         TL.showToast(message, "success");
-
         form.reset();
-
         await loadCategories();
-
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
           P.showValidation(form, e.errors);
         }
-
-        TL.showToast(
-          e?.message || "Request failed.",
-          "error"
-        );
-
+        TL.showToast(e?.message || "Request failed.", "error");
       } finally {
         P.setBusy(button, false);
       }
     }
 
     // CREATE
-    const createForm =
-      document.getElementById("categoryCreateForm");
-
+    const createForm = document.getElementById("categoryCreateForm");
     if (createForm) {
-      createForm.addEventListener(
-        "submit",
-        function (e) {
-          e.preventDefault();
+      createForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const nameVal = form.querySelector("#category_name")?.value || form.name?.value;
+        const fileInput = form.querySelector("#category_image");
 
-          submit(
-            e.currentTarget,
-            () =>
-              TL.Categories.createCategory({
-                name:
-                  e.currentTarget.category_create_name.value,
-              }),
-            "Category created successfully."
-          );
+        const data = { name: nameVal };
+        if (fileInput && fileInput.files[0]) {
+          data.image = fileInput.files[0];
         }
-      );
+
+        submit(
+          form,
+          () => TL.Categories.createCategory(data),
+          "Category created successfully."
+        );
+      });
     }
 
     // UPDATE
-    const manageForm =
-      document.getElementById("categoryManageForm");
-
+    const manageForm = document.getElementById("categoryManageForm");
     if (manageForm) {
-      manageForm.addEventListener(
-        "submit",
-        function (e) {
-          e.preventDefault();
+      manageForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const id = form.querySelector("#category_id")?.value;
+        if (!id) return TL.showToast("Enter a category ID.", "warning");
 
-          const form = e.currentTarget;
+        const nameVal = form.querySelector("#category_update_name")?.value;
+        const fileInput = form.querySelector("#category_update_image");
 
-          submit(
-            form,
-            () =>
-              TL.Categories.updateCategory(
-                form.category_id.value,
-                {
-                  name:
-                    form.category_update_name.value,
-                }
-              ),
-            "Category updated successfully."
-          );
-        }
-      );
+        const data = {};
+        if (nameVal) data.name = nameVal;
+        if (fileInput && fileInput.files[0]) data.image = fileInput.files[0];
+
+        submit(
+          form,
+          () => TL.Categories.updateCategory(id, data),
+          "Category updated successfully."
+        );
+      });
     }
 
     // DELETE from manual ID form
-    const deleteButton =
-      document.getElementById("categoryDeleteBtn");
-
+    const deleteButton = document.getElementById("categoryDeleteBtn");
     if (deleteButton) {
-      deleteButton.addEventListener(
-        "click",
-        async function () {
-          const id =
-            document.getElementById(
-              "category_id"
-            )?.value;
-
-          if (!id) {
-            TL.showToast(
-              "Enter a category ID.",
-              "warning"
-            );
-            return;
-          }
-
-          if (
-            !P.confirm(
-              "Delete this category? This cannot be undone."
-            )
-          ) {
-            return;
-          }
-
-          try {
-            await TL.Categories.deleteCategory(id);
-
-            TL.showToast(
-              "Category deleted.",
-              "success"
-            );
-
-            manageForm?.reset();
-
-            await loadCategories();
-
-          } catch (e) {
-            TL.showToast(
-              e?.message || "Failed to delete category.",
-              "error"
-            );
-          }
+      deleteButton.addEventListener("click", async function () {
+        const id = document.getElementById("category_id")?.value;
+        if (!id) {
+          TL.showToast("Enter a category ID.", "warning");
+          return;
         }
-      );
+
+        if (!P.confirm("Delete this category? This cannot be undone.")) return;
+
+        try {
+          await TL.Categories.deleteCategory(id);
+          TL.showToast("Category deleted.", "success");
+          manageForm?.reset();
+          await loadCategories();
+        } catch (e) {
+          TL.showToast(e?.message || "Failed to delete category.", "error");
+        }
+      });
     }
 
-    // Initial load
     await loadCategories();
   });
 })();

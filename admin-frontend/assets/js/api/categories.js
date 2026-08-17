@@ -1,3 +1,8 @@
+/* ==========================================================================
+   TAILORA ADMIN — assets/js/api/categories.js
+   Owns: /categories (documented endpoints in Admin document.md Section 8).
+   ========================================================================== */
+
 (function () {
   "use strict";
 
@@ -13,26 +18,26 @@
     );
   }
 
-  // POST /admin/categories
+  // POST /categories
   function createCategory(data) {
     return window.TL.Api.post(
-      "/admin/categories",
+      "/categories",
       data
     );
   }
 
-  // PUT /admin/categories/{id}
+  // PUT /categories/{id}
   function updateCategory(id, data) {
     return window.TL.Api.put(
-      "/admin/categories/" + encodeURIComponent(id),
+      "/categories/" + encodeURIComponent(id),
       data
     );
   }
 
-  // DELETE /admin/categories/{id}
+  // DELETE /categories/{id}
   function deleteCategory(id) {
     return window.TL.Api.delete(
-      "/admin/categories/" + encodeURIComponent(id)
+      "/categories/" + encodeURIComponent(id)
     );
   }
 

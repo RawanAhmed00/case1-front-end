@@ -1,23 +1,20 @@
 /* ==========================================================================
    TAILORA ADMIN — app.js
-   Step 1 scope: global shell only.
-   - Builds the reusable sidebar + topbar into every authenticated page
-     from a single config, so no page hand-writes that markup twice.
-   - Wires the desktop collapse toggle and the real Bootstrap 5 Offcanvas
-     for mobile/tablet (no fake slide-in / overlay code).
-   - Exposes showLoading()/hideLoading() and showToast() on window.TL,
-     with no auto-fired toasts and the loader hidden by default.
-   No API calls. No authentication logic. No fake data. That starts later.
+   Global shell, dynamic authenticated user/guide name & role, persistent
+   sidebar visibility toggle (shown by default), Dark & Light theme,
+   loading overlay, and toasts.
    ========================================================================== */
 
 (function () {
   "use strict";
 
   /* -----------------------------------------------------------------------
-     1. NAVIGATION CONFIG
-     Single source of truth for the sidebar. Each page declares which
-     item is active via <body data-page="...">.
+     1. CONSTANTS & STORAGE KEYS
      ----------------------------------------------------------------------- */
+  const THEME_KEY = "tailora_theme";
+  const SIDEBAR_HIDDEN_KEY = "tailora_sidebar_hidden";
+  const LOGO_PATH = "images/logo.png";
+
   const NAV_SECTIONS = [
     {
       label: "Overview",
@@ -48,8 +45,6 @@
     },
   ];
 
-  const LOGO_PATH = "images/logo.png";
-
   /* -----------------------------------------------------------------------
      2. HELPERS
      ----------------------------------------------------------------------- */
@@ -63,15 +58,96 @@
     return div.innerHTML;
   }
 
+  function getUserInfo() {
+    let name = "Admin";
+    let role = "Administrator";
+
+    if (window.TL && window.TL.Auth) {
+      if (typeof window.TL.Auth.getUserName === "function") {
+        name = window.TL.Auth.getUserName() || "Admin";
+      }
+      if (typeof window.TL.Auth.getUser === "function") {
+        const user = window.TL.Auth.getUser();
+        if (user && user.role) {
+          if (user.role === "t_guide") role = "Tour Guide";
+          else if (user.role === "admin") role = "Administrator";
+          else role = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+        }
+      }
+    }
+
+    const initial = (name.charAt(0) || "A").toUpperCase();
+    return { name, role, initial };
+  }
+
   /* -----------------------------------------------------------------------
-     3. SIDEBAR RENDERING
-     Rendered as a responsive Bootstrap Offcanvas:
-     - Below the lg breakpoint (992px): real offcanvas — hidden by default,
-       slides in with a backdrop, closes on backdrop click / Esc.
-     - At lg and above: Bootstrap keeps it always visible in the layout;
-       our own CSS then pins it to a fixed rail (see components.css).
+     3. THEME SYSTEM (Dark / Light Mode)
      ----------------------------------------------------------------------- */
+  function getTheme() {
+    try {
+      return localStorage.getItem(THEME_KEY) || "dark";
+    } catch (_) {
+      return "dark";
+    }
+  }
+
+  function setTheme(theme) {
+    const validTheme = theme === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", validTheme);
+    try {
+      localStorage.setItem(THEME_KEY, validTheme);
+    } catch (_) {}
+
+    const themeBtn = qs("#tlThemeToggle");
+    if (themeBtn) {
+      themeBtn.innerHTML = `<i class="bi ${validTheme === "light" ? "bi-moon-stars" : "bi-sun"}"></i>`;
+      themeBtn.setAttribute("title", validTheme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode");
+    }
+  }
+
+  function toggleTheme() {
+    const current = getTheme();
+    const next = current === "light" ? "dark" : "light";
+    setTheme(next);
+    showToast(`Switched to ${next === "light" ? "Light" : "Dark"} Mode`, "info");
+  }
+
+  /* -----------------------------------------------------------------------
+     4. SIDEBAR RENDERING & VISIBILITY STATE (Shown by default)
+     ----------------------------------------------------------------------- */
+  function isSidebarHidden() {
+    try {
+      return localStorage.getItem(SIDEBAR_HIDDEN_KEY) === "true";
+    } catch (_) {
+      return false; // Default: Shown
+    }
+  }
+
+  function setSidebarHidden(hidden) {
+    try {
+      localStorage.setItem(SIDEBAR_HIDDEN_KEY, hidden ? "true" : "false");
+    } catch (_) {}
+  }
+
+  function applySidebarState() {
+    const app = qs(".tl-app");
+    if (!app) return;
+
+    if (window.innerWidth >= 992) {
+      app.classList.remove("is-sidebar-mobile-open");
+      if (isSidebarHidden()) {
+        app.classList.add("is-sidebar-hidden");
+      } else {
+        app.classList.remove("is-sidebar-hidden");
+      }
+    } else {
+      app.classList.remove("is-sidebar-hidden");
+    }
+  }
+
   function buildSidebarHtml(activePage) {
+    const { name: userName, role: userRole, initial: userInitial } = getUserInfo();
+
     const groups = NAV_SECTIONS.map((section) => {
       const links = section.items
         .map((item) => {
@@ -93,32 +169,39 @@
     }).join("");
 
     return `
-      <div class="offcanvas-header d-lg-none">
-        <span class="tl-visually-hidden">Navigation</span>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tlSidebar" aria-label="Close navigation"></button>
+      <div class="tl-sidebar__brand">
+        <img src="${LOGO_PATH}" alt="Tailora">
+        <span class="tl-sidebar__wordmark tl-body">Tailora</span>
+        <button type="button" class="tl-sidebar-close" id="tlSidebarCloseBtn" aria-label="Close sidebar">
+          <i class="bi bi-x-lg"></i>
+        </button>
       </div>
-      <div class="offcanvas-body d-flex flex-column p-0">
-        <div class="tl-sidebar__brand">
-          <img src="${LOGO_PATH}" alt="Tailora">
-          <span class="tl-sidebar__wordmark tl-body">Tailora</span>
-        </div>
-        <nav class="tl-sidebar__nav" aria-label="Primary">
-          ${groups}
-        </nav>
-        <div class="tl-sidebar__footer">
-          <div class="tl-admin-card">
-            <div class="tl-avatar">A</div>
-            <div class="tl-admin-card__meta">
-              <div class="name">Admin</div>
-              <div class="role">Administrator</div>
-            </div>
+      <nav class="tl-sidebar__nav" aria-label="Primary">
+        ${groups}
+      </nav>
+      <div class="tl-sidebar__footer">
+        <div class="tl-admin-card">
+          <div class="tl-avatar">${escapeHtml(userInitial)}</div>
+          <div class="tl-admin-card__meta">
+            <div class="name">${escapeHtml(userName)}</div>
+            <div class="role">${escapeHtml(userRole)}</div>
           </div>
-          <button type="button" class="tl-btn tl-btn--outline tl-btn--sm tl-logout-btn" id="tlLogoutBtn">
-            <i class="bi bi-box-arrow-right"></i>
-            <span>Log out</span>
-          </button>
         </div>
+        <button type="button" class="tl-btn tl-btn--outline tl-btn--sm tl-logout-btn" id="tlLogoutBtn">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Log out</span>
+        </button>
       </div>`;
+  }
+
+  function ensureBackdrop() {
+    let backdrop = qs(".tl-sidebar-backdrop");
+    if (!backdrop) {
+      backdrop = document.createElement("div");
+      backdrop.className = "tl-sidebar-backdrop";
+      document.body.appendChild(backdrop);
+    }
+    return backdrop;
   }
 
   function renderSidebar(activePage) {
@@ -128,9 +211,12 @@
   }
 
   /* -----------------------------------------------------------------------
-     4. TOPBAR RENDERING
+     5. TOPBAR RENDERING
      ----------------------------------------------------------------------- */
   function buildTopbarHtml(pageTitle, breadcrumbTrail) {
+    const { name: userName, initial: userInitial } = getUserInfo();
+    const currentTheme = getTheme();
+
     const trail = (breadcrumbTrail || [])
       .map((crumb, i, arr) => {
         const isLast = i === arr.length - 1;
@@ -140,7 +226,7 @@
 
     return `
       <div class="tl-topbar__left">
-        <button type="button" class="tl-sidebar-toggle" id="tlSidebarToggle" aria-label="Toggle navigation" data-bs-toggle="offcanvas" data-bs-target="#tlSidebar" aria-controls="tlSidebar">
+        <button type="button" class="tl-sidebar-toggle" id="tlSidebarToggle" aria-label="Toggle navigation" title="Toggle Sidebar">
           <i class="bi bi-list"></i>
         </button>
         <div class="tl-breadcrumb">
@@ -149,20 +235,29 @@
         </div>
       </div>
       <div class="tl-topbar__right">
+        <!-- Theme Switcher -->
+        <button type="button" class="tl-icon-btn" id="tlThemeToggle" aria-label="Toggle Theme" title="${currentTheme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}">
+          <i class="bi ${currentTheme === 'light' ? 'bi-moon-stars' : 'bi-sun'}"></i>
+        </button>
+
+        <!-- Notification Bell -->
         <button type="button" class="tl-icon-btn" id="tlNotificationBtn" aria-label="Notifications">
           <i class="bi bi-bell"></i>
           <span class="tl-icon-btn__dot" id="tlNotificationDot"></span>
         </button>
+
+        <!-- User Profile Dropdown -->
         <div class="dropdown">
           <button type="button" class="tl-profile-trigger" data-bs-toggle="dropdown" aria-expanded="false">
-            <div class="tl-avatar">A</div>
-            <span class="tl-profile-name tl-body">Admin</span>
+            <div class="tl-avatar">${escapeHtml(userInitial)}</div>
+            <span class="tl-profile-name tl-body">${escapeHtml(userName)}</span>
             <i class="bi bi-chevron-down"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end tl-dropdown-menu">
-            <li><a class="dropdown-item text-light" href="settings.html"><i class="bi bi-gear me-2"></i>Settings</a></li>
+            <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2"></i>Settings</a></li>
+            <li><button class="dropdown-item" type="button" id="tlThemeToggleMenu"><i class="bi bi-circle-half me-2"></i>Toggle Theme</button></li>
             <li><hr class="dropdown-divider"></li>
-            <li><button class="dropdown-item text-light" type="button" id="tlLogoutBtnTop"><i class="bi bi-box-arrow-right me-2"></i>Log out</button></li>
+            <li><button class="dropdown-item" type="button" id="tlLogoutBtnTop"><i class="bi bi-box-arrow-right me-2"></i>Log out</button></li>
           </ul>
         </div>
       </div>`;
@@ -175,49 +270,78 @@
   }
 
   /* -----------------------------------------------------------------------
-     5. DESKTOP COLLAPSE TOGGLE
-     Below lg, the same toggle button opens the Bootstrap Offcanvas
-     (handled declaratively by its data-bs-* attributes). At lg and
-     above there is no offcanvas behavior, so we collapse the rail
-     to icons instead.
+     6. WIRE SIDEBAR & THEME LISTENERS
      ----------------------------------------------------------------------- */
-  function wireCollapseToggle() {
+  function wireEventListeners() {
     document.addEventListener("click", function (e) {
-      const btn = e.target.closest("#tlSidebarToggle");
-      if (!btn) return;
-      if (window.innerWidth >= 992) {
-        // Bootstrap's offcanvas JS still fires for the data attributes even
-        // at desktop width; harmless since our CSS keeps it visible. We
-        // additionally toggle the collapsed rail state for desktop users.
-        qs(".tl-app").classList.toggle("is-collapsed");
+      // Toggle button in Topbar
+      const toggleBtn = e.target.closest("#tlSidebarToggle");
+      if (toggleBtn) {
+        const app = qs(".tl-app");
+        if (!app) return;
+
+        if (window.innerWidth >= 992) {
+          const isHiddenNow = app.classList.toggle("is-sidebar-hidden");
+          setSidebarHidden(isHiddenNow);
+        } else {
+          app.classList.toggle("is-sidebar-mobile-open");
+        }
+        return;
       }
+
+      // Close button or Mobile Backdrop click
+      const closeTarget = e.target.closest("#tlSidebarCloseBtn, .tl-sidebar-backdrop");
+      if (closeTarget) {
+        const app = qs(".tl-app");
+        if (app) {
+          app.classList.remove("is-sidebar-mobile-open");
+        }
+        return;
+      }
+
+      // Theme Toggle Buttons
+      const themeBtn = e.target.closest("#tlThemeToggle, #tlThemeToggleMenu");
+      if (themeBtn) {
+        toggleTheme();
+        return;
+      }
+    });
+
+    window.addEventListener("resize", function () {
+      applySidebarState();
     });
   }
 
   /* -----------------------------------------------------------------------
-     6. LOADING OVERLAY
+     7. LOADING OVERLAY
      ----------------------------------------------------------------------- */
   function ensureLoadingOverlay() {
-    if (qs("#tlLoadingOverlay")) return;
-    const el = document.createElement("div");
-    el.id = "tlLoadingOverlay";
-    el.className = "tl-loading-overlay";
-    el.innerHTML = '<div class="tl-spinner" role="status" aria-label="Loading"></div>';
-    document.body.appendChild(el);
+    let el = qs("#tlLoadingOverlay");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "tlLoadingOverlay";
+      el.className = "tl-loading-overlay";
+      el.innerHTML = '<div class="tl-spinner" role="status" aria-label="Loading"></div>';
+      document.body.appendChild(el);
+    }
+    return el;
   }
 
   function showLoading() {
-    ensureLoadingOverlay();
-    qs("#tlLoadingOverlay").classList.add("is-visible");
+    const el = ensureLoadingOverlay();
+    el.classList.add("is-visible");
   }
 
   function hideLoading() {
     const el = qs("#tlLoadingOverlay");
-    if (el) el.classList.remove("is-visible");
+    if (el) {
+      el.classList.remove("is-visible");
+    }
+    document.querySelectorAll(".tl-loading-overlay.is-visible").forEach(o => o.classList.remove("is-visible"));
   }
 
   /* -----------------------------------------------------------------------
-     7. TOAST SYSTEM (Bootstrap 5 Toast, Tailora-styled)
+     8. TOAST SYSTEM
      ----------------------------------------------------------------------- */
   const TOAST_META = {
     success: { icon: "bi-check-lg", cls: "tl-toast--success" },
@@ -255,28 +379,33 @@
 
     container.appendChild(toastEl);
 
-    const instance = new bootstrap.Toast(toastEl, { delay: 4200 });
-    instance.show();
-    toastEl.addEventListener("hidden.bs.toast", function () {
-      toastEl.remove();
-    });
+    if (window.bootstrap && window.bootstrap.Toast) {
+      const instance = new window.bootstrap.Toast(toastEl, { delay: 4200 });
+      instance.show();
+      toastEl.addEventListener("hidden.bs.toast", function () {
+        toastEl.remove();
+      });
+    }
   }
 
   /* -----------------------------------------------------------------------
-     8. INIT
-     Reads <body data-page="dashboard" data-page-title="Dashboard"
-     data-breadcrumb="Overview,Dashboard"> to render the shell.
+     9. INIT
      ----------------------------------------------------------------------- */
   function init() {
+    // Apply saved theme immediately
+    setTheme(getTheme());
+
     const body = document.body;
     const activePage = body.dataset.page || "";
     const pageTitle = body.dataset.pageTitle || "";
     const breadcrumb = (body.dataset.breadcrumb || "").split(",").map((s) => s.trim()).filter(Boolean);
 
+    ensureBackdrop();
     renderSidebar(activePage);
     renderTopbar(pageTitle, breadcrumb);
-    wireCollapseToggle();
-    ensureLoadingOverlay();
+    applySidebarState();
+    wireEventListeners();
+    hideLoading();
   }
 
   if (document.readyState === "loading") {
@@ -290,4 +419,13 @@
   window.TL.showLoading = showLoading;
   window.TL.hideLoading = hideLoading;
   window.TL.showToast = showToast;
+  window.TL.toggleTheme = toggleTheme;
+  window.TL.setTheme = setTheme;
+  window.TL.getTheme = getTheme;
+  window.TL.renderShell = function() {
+    const body = document.body;
+    renderSidebar(body.dataset.page || "");
+    renderTopbar(body.dataset.pageTitle || "", (body.dataset.breadcrumb || "").split(",").map((s) => s.trim()).filter(Boolean));
+    applySidebarState();
+  };
 })();

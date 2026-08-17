@@ -4,123 +4,344 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Destinations — Tailora Admin</title>
-  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <link rel="icon" type="image/png" href="images/logo.png">
+
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body data-page="destinations" data-page-title="Destinations" data-breadcrumb="Management,Destinations" data-requires-auth="true">
+
+<body
+  data-page="destinations"
+  data-page-title="Destinations"
+  data-breadcrumb="Management, Destinations"
+  data-requires-auth="true"
+>
+
   <div class="tl-app">
-    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <aside class="tl-sidebar" id="tlSidebar" aria-label="Sidebar navigation"></aside>
+
     <div class="tl-main">
       <header class="tl-topbar" id="tlTopbar"></header>
-      <main class="tl-content">
-        
-<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-geo-alt"></i> Destinations</span></div><h1 class="tl-page-title">Destinations</h1><p class="tl-text-secondary">Manage documented city and attraction operations. Countries CRUD is not available in the Admin API.</p></div></div>
-<div class="tl-card tl-card--accent" style="margin-bottom:20px;"><div class="tl-flex tl-gap-md"><div class="tl-empty__icon" style="margin:0;"><i class="bi bi-globe2"></i></div><div><div class="tl-section-title">Countries</div><p class="tl-text-secondary mb-0">No Countries CRUD endpoint is documented in the Admin API. No country list or fake records are rendered.</p></div></div></div>
-<div class="row g-4">
-<div class="col-xl-6"><section class="tl-card"><div class="tl-card__head"><div><div class="tl-section-title">Cities</div><div class="tl-metadata">POST / PUT / DELETE · multipart/form-data</div></div></div>
-<div class="tl-tabs"><button class="tl-btn tl-btn--outline tl-btn--sm active" data-bs-toggle="collapse" data-bs-target="#cityCreate">Create</button><button class="tl-btn tl-btn--outline tl-btn--sm" data-bs-toggle="collapse" data-bs-target="#cityManage">Update / Delete by ID</button></div>
-<div id="cityCreate" class="collapse show mt-3"><form id="cityCreateForm"><div class="tl-field">
-<label for="city_country_id">Country ID</label>
-<input id="city_country_id" name="city_country_id" type="number" class="tl-input" placeholder="" required >
-<div class="tl-field-error" data-error-for="city_country_id"></div>
-</div><div class="tl-field">
-<label for="city_name">Name</label>
-<input id="city_name" name="city_name" type="text" class="tl-input" placeholder="City name" required >
-<div class="tl-field-error" data-error-for="city_name"></div>
-</div><div class="tl-field"><label for="city_description">Description</label><textarea id="city_description" name="city_description" class="tl-textarea" rows="4" placeholder=""></textarea><div class="tl-field-error" data-error-for="city_description"></div></div><div class="tl-field">
-<label for="city_image">Image</label>
-<input id="city_image" name="city_image" type="file" class="tl-input" placeholder="" accept="image/*">
-<div class="tl-field-error" data-error-for="city_image"></div>
-</div><button class="tl-btn tl-btn--primary" type="submit">Create city</button></form></div>
-<div id="cityManage" class="collapse mt-3"><form id="cityManageForm"><div class="tl-field">
-<label for="city_id">City ID</label>
-<input id="city_id" name="city_id" type="number" class="tl-input" placeholder="ID" required >
-<div class="tl-field-error" data-error-for="city_id"></div>
-</div><div class="tl-field">
-<label for="city_update_country_id">Country ID</label>
-<input id="city_update_country_id" name="city_update_country_id" type="number" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="city_update_country_id"></div>
-</div><div class="tl-field">
-<label for="city_update_name">Name</label>
-<input id="city_update_name" name="city_update_name" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="city_update_name"></div>
-</div><div class="tl-field"><label for="city_update_description">Description</label><textarea id="city_update_description" name="city_update_description" class="tl-textarea" rows="4" placeholder=""></textarea><div class="tl-field-error" data-error-for="city_update_description"></div></div><div class="tl-field">
-<label for="city_update_image">Image</label>
-<input id="city_update_image" name="city_update_image" type="file" class="tl-input" placeholder="" accept="image/*">
-<div class="tl-field-error" data-error-for="city_update_image"></div>
-</div><div class="tl-flex tl-gap-sm"><button class="tl-btn tl-btn--primary" type="submit">Update city</button><button type="button" class="tl-btn tl-btn--danger" id="cityDeleteBtn">Delete city</button></div></form></div></section></div>
-<div class="col-xl-6"><section class="tl-card"><div class="tl-card__head"><div><div class="tl-section-title">Attractions</div><div class="tl-metadata">POST / PUT / DELETE · multipart/form-data</div></div></div>
-<div id="attractionCreate" class="mt-3"><form id="attractionCreateForm"><div class="tl-field">
-<label for="att_city_id">City ID</label>
-<input id="att_city_id" name="att_city_id" type="number" class="tl-input" placeholder="City ID" required >
-<div class="tl-field-error" data-error-for="att_city_id"></div>
-</div><div class="tl-field">
-<label for="att_name">Name</label>
-<input id="att_name" name="att_name" type="text" class="tl-input" placeholder="Attraction name" required >
-<div class="tl-field-error" data-error-for="att_name"></div>
-</div><div class="tl-field"><label for="att_description">Description</label><textarea id="att_description" name="att_description" class="tl-textarea" rows="4" placeholder=""></textarea><div class="tl-field-error" data-error-for="att_description"></div></div><div class="tl-field">
-<label for="att_latitude">Latitude</label>
-<input id="att_latitude" name="att_latitude" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_latitude"></div>
-</div><div class="tl-field">
-<label for="att_longitude">Longitude</label>
-<input id="att_longitude" name="att_longitude" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_longitude"></div>
-</div><div class="tl-field">
-<label for="att_price">Price</label>
-<input id="att_price" name="att_price" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_price"></div>
-</div><div class="tl-field">
-<label for="att_image">Image</label>
-<input id="att_image" name="att_image" type="file" class="tl-input" placeholder="" accept="image/*">
-<div class="tl-field-error" data-error-for="att_image"></div>
-</div><div class="tl-field"><label for="att_categories">Categories</label><textarea id="att_categories" name="att_categories" class="tl-textarea" rows="4" placeholder="Documented as a text field"></textarea><div class="tl-field-error" data-error-for="att_categories"></div></div><button class="tl-btn tl-btn--primary" type="submit">Create attraction</button></form></div>
-<hr class="tl-divider"><form id="attractionManageForm"><div class="tl-field">
-<label for="att_id">Attraction ID</label>
-<input id="att_id" name="att_id" type="number" class="tl-input" placeholder="ID" required >
-<div class="tl-field-error" data-error-for="att_id"></div>
-</div><div class="tl-field">
-<label for="att_update_city_id">City ID</label>
-<input id="att_update_city_id" name="att_update_city_id" type="number" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_update_city_id"></div>
-</div><div class="tl-field">
-<label for="att_update_name">Name</label>
-<input id="att_update_name" name="att_update_name" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_update_name"></div>
-</div><div class="tl-field"><label for="att_update_description">Description</label><textarea id="att_update_description" name="att_update_description" class="tl-textarea" rows="4" placeholder=""></textarea><div class="tl-field-error" data-error-for="att_update_description"></div></div><div class="tl-field">
-<label for="att_update_latitude">Latitude</label>
-<input id="att_update_latitude" name="att_update_latitude" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_update_latitude"></div>
-</div><div class="tl-field">
-<label for="att_update_longitude">Longitude</label>
-<input id="att_update_longitude" name="att_update_longitude" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_update_longitude"></div>
-</div><div class="tl-field">
-<label for="att_update_price">Price</label>
-<input id="att_update_price" name="att_update_price" type="text" class="tl-input" placeholder="" >
-<div class="tl-field-error" data-error-for="att_update_price"></div>
-</div><div class="tl-field">
-<label for="att_update_image">Image</label>
-<input id="att_update_image" name="att_update_image" type="file" class="tl-input" placeholder="" accept="image/*">
-<div class="tl-field-error" data-error-for="att_update_image"></div>
-</div><div class="tl-field"><label for="att_update_categories">Categories</label><textarea id="att_update_categories" name="att_update_categories" class="tl-textarea" rows="4" placeholder="Documented as a text field"></textarea><div class="tl-field-error" data-error-for="att_update_categories"></div></div><div class="tl-flex tl-gap-sm"><button class="tl-btn tl-btn--primary" type="submit">Update attraction</button><button type="button" class="tl-btn tl-btn--danger" id="attractionDeleteBtn">Delete attraction</button></div></form></section></div>
-</div>
 
+      <main class="tl-content">
+        <!-- Page Header -->
+        <div class="tl-page-header">
+          <div>
+            <div class="tl-eyebrow">
+              <span class="tl-badge tl-badge--info">
+                <i class="bi bi-geo-alt"></i> Destination Hub
+              </span>
+            </div>
+            <h1 class="tl-page-title">Destinations</h1>
+            <p class="tl-text-secondary">
+              Manage documented city and attraction operations matching the Admin API.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2-Column Layout: Cities & Attractions -->
+        <div class="row g-4">
+          <!-- Cities Column -->
+          <div class="col-xl-6">
+            <section class="tl-card tl-card--accent">
+              <div class="tl-card__head">
+                <div>
+                  <h2 class="tl-section-title">Cities</h2>
+                  <span class="tl-metadata">POST / PUT / DELETE /cities · multipart/form-data</span>
+                </div>
+                <i class="bi bi-buildings tl-card-icon"></i>
+              </div>
+
+              <!-- Create City Form -->
+              <div class="mb-4">
+                <span class="tl-label d-block mb-3">Create New City</span>
+                <form id="cityCreateForm" novalidate>
+                  <div class="tl-field">
+                    <label for="city_country_id">Country ID</label>
+                    <input id="city_country_id" name="city_country_id" type="number" class="tl-input" placeholder="e.g. 1" required>
+                    <div class="tl-field-error" data-error-for="city_country_id"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_name">City Name</label>
+                    <input id="city_name" name="city_name" type="text" class="tl-input" placeholder="e.g. Paris" required>
+                    <div class="tl-field-error" data-error-for="city_name"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_description">Description</label>
+                    <textarea id="city_description" name="city_description" class="tl-textarea" rows="3" placeholder="Brief description of the city"></textarea>
+                    <div class="tl-field-error" data-error-for="city_description"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_image">City Image</label>
+                    <input id="city_image" name="city_image" type="file" class="tl-input" accept="image/*">
+                    <div class="tl-field-error" data-error-for="city_image"></div>
+                  </div>
+
+                  <button class="tl-btn tl-btn--primary" type="submit">
+                    <i class="bi bi-plus-circle"></i> Create City
+                  </button>
+                </form>
+              </div>
+
+              <hr class="tl-divider">
+
+              <!-- Update / Delete City Form -->
+              <div>
+                <span class="tl-label d-block mb-3">Update or Delete City by ID</span>
+                <form id="cityManageForm" novalidate>
+                  <div class="tl-field">
+                    <label for="city_id">Target City ID</label>
+                    <input id="city_id" name="city_id" type="number" class="tl-input" placeholder="Enter City ID" required>
+                    <div class="tl-field-error" data-error-for="city_id"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_update_country_id">Country ID</label>
+                    <input id="city_update_country_id" name="city_update_country_id" type="number" class="tl-input" placeholder="">
+                    <div class="tl-field-error" data-error-for="city_update_country_id"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_update_name">City Name</label>
+                    <input id="city_update_name" name="city_update_name" type="text" class="tl-input" placeholder="">
+                    <div class="tl-field-error" data-error-for="city_update_name"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_update_description">Description</label>
+                    <textarea id="city_update_description" name="city_update_description" class="tl-textarea" rows="3" placeholder=""></textarea>
+                    <div class="tl-field-error" data-error-for="city_update_description"></div>
+                  </div>
+
+                  <div class="tl-field">
+                    <label for="city_update_image">New City Image</label>
+                    <input id="city_update_image" name="city_update_image" type="file" class="tl-input" accept="image/*">
+                    <div class="tl-field-error" data-error-for="city_update_image"></div>
+                  </div>
+
+                  <div class="tl-flex tl-gap-sm flex-wrap">
+                    <button class="tl-btn tl-btn--primary" type="submit">
+                      <i class="bi bi-pencil"></i> Update City
+                    </button>
+                    <button type="button" class="tl-btn tl-btn--danger" id="cityDeleteBtn">
+                      <i class="bi bi-trash"></i> Delete City
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          </div>
+
+          <!-- Attractions Column -->
+          <div class="col-xl-6">
+            <section class="tl-card tl-card--accent">
+              <div class="tl-card__head">
+                <div>
+                  <h2 class="tl-section-title">Attractions</h2>
+                  <span class="tl-metadata">POST / PUT / DELETE /attractions · multipart/form-data</span>
+                </div>
+                <i class="bi bi-compass tl-card-icon"></i>
+              </div>
+
+              <!-- Create Attraction Form -->
+              <div class="mb-4">
+                <span class="tl-label d-block mb-3">Create New Attraction</span>
+                <form id="attractionCreateForm" novalidate>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_city_id">City ID</label>
+                        <input id="att_city_id" name="att_city_id" type="number" class="tl-input" placeholder="e.g. 1" required>
+                        <div class="tl-field-error" data-error-for="att_city_id"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_name">Attraction Name</label>
+                        <input id="att_name" name="att_name" type="text" class="tl-input" placeholder="e.g. Eiffel Tower" required>
+                        <div class="tl-field-error" data-error-for="att_name"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="tl-field">
+                        <label for="att_description">Description</label>
+                        <textarea id="att_description" name="att_description" class="tl-textarea" rows="3" placeholder="Attraction overview"></textarea>
+                        <div class="tl-field-error" data-error-for="att_description"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_latitude">Latitude</label>
+                        <input id="att_latitude" name="att_latitude" type="text" class="tl-input" placeholder="e.g. 48.8584">
+                        <div class="tl-field-error" data-error-for="att_latitude"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_longitude">Longitude</label>
+                        <input id="att_longitude" name="att_longitude" type="text" class="tl-input" placeholder="e.g. 2.2945">
+                        <div class="tl-field-error" data-error-for="att_longitude"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_price">Price</label>
+                        <input id="att_price" name="att_price" type="text" class="tl-input" placeholder="e.g. 25">
+                        <div class="tl-field-error" data-error-for="att_price"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_image">Image</label>
+                        <input id="att_image" name="att_image" type="file" class="tl-input" accept="image/*">
+                        <div class="tl-field-error" data-error-for="att_image"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="tl-field">
+                        <label for="att_categories">Categories</label>
+                        <textarea id="att_categories" name="att_categories" class="tl-textarea" rows="2" placeholder="e.g. Monument, Historic"></textarea>
+                        <div class="tl-field-error" data-error-for="att_categories"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button class="tl-btn tl-btn--primary mt-2" type="submit">
+                    <i class="bi bi-plus-circle"></i> Create Attraction
+                  </button>
+                </form>
+              </div>
+
+              <hr class="tl-divider">
+
+              <!-- Update / Delete Attraction Form -->
+              <div>
+                <span class="tl-label d-block mb-3">Update or Delete Attraction by ID</span>
+                <form id="attractionManageForm" novalidate>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_id">Target Attraction ID</label>
+                        <input id="att_id" name="att_id" type="number" class="tl-input" placeholder="Enter ID" required>
+                        <div class="tl-field-error" data-error-for="att_id"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_city_id">City ID</label>
+                        <input id="att_update_city_id" name="att_update_city_id" type="number" class="tl-input" placeholder="">
+                        <div class="tl-field-error" data-error-for="att_update_city_id"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_name">Name</label>
+                        <input id="att_update_name" name="att_update_name" type="text" class="tl-input" placeholder="">
+                        <div class="tl-field-error" data-error-for="att_update_name"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_price">Price</label>
+                        <input id="att_update_price" name="att_update_price" type="text" class="tl-input" placeholder="">
+                        <div class="tl-field-error" data-error-for="att_update_price"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="tl-field">
+                        <label for="att_update_description">Description</label>
+                        <textarea id="att_update_description" name="att_update_description" class="tl-textarea" rows="3" placeholder=""></textarea>
+                        <div class="tl-field-error" data-error-for="att_update_description"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_latitude">Latitude</label>
+                        <input id="att_update_latitude" name="att_update_latitude" type="text" class="tl-input" placeholder="">
+                        <div class="tl-field-error" data-error-for="att_update_latitude"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_longitude">Longitude</label>
+                        <input id="att_update_longitude" name="att_update_longitude" type="text" class="tl-input" placeholder="">
+                        <div class="tl-field-error" data-error-for="att_update_longitude"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_image">New Image</label>
+                        <input id="att_update_image" name="att_update_image" type="file" class="tl-input" accept="image/*">
+                        <div class="tl-field-error" data-error-for="att_update_image"></div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="tl-field">
+                        <label for="att_update_categories">Categories</label>
+                        <textarea id="att_update_categories" name="att_update_categories" class="tl-textarea" rows="2" placeholder=""></textarea>
+                        <div class="tl-field-error" data-error-for="att_update_categories"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tl-flex tl-gap-sm flex-wrap mt-3">
+                    <button class="tl-btn tl-btn--primary" type="submit">
+                      <i class="bi bi-pencil"></i> Update Attraction
+                    </button>
+                    <button type="button" class="tl-btn tl-btn--danger" id="attractionDeleteBtn">
+                      <i class="bi bi-trash"></i> Delete Attraction
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          </div>
+        </div>
       </main>
     </div>
   </div>
+
+  <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core API Modules -->
   <script src="assets/js/api/api.js"></script>
   <script src="assets/js/api/auth.js"></script>
   <script src="assets/js/api/cities.js"></script>
   <script src="assets/js/api/attractions.js"></script>
+
+  <!-- Shared App & Pages -->
   <script src="assets/js/app.js"></script>
   <script src="assets/js/pages/utils.js"></script>
   <script src="assets/js/pages/destinations.js"></script>

@@ -16,11 +16,11 @@
 (function () {
   "use strict";
 
-  // GET /admin/trips-admin
+  // GET /trips-admin
   // `query` is passed through as-is (e.g. { page: 2 }) if the caller has
   // confirmed real param names against the backend; omit it otherwise.
   function getTrips(query) {
-    return window.TL.Api.get("/admin/trips-admin", query);
+    return window.TL.Api.get("/trips-admin", query);
   }
 
   // GET /admin/trips-admin/statistics

@@ -1,77 +1,130 @@
 /* ==========================================================================
    TAILORA ADMIN — style.css
-   Global design tokens, typography, background, and layout foundation.
+   Global design tokens, typography, Dark & Light theme tokens, background aura.
    ========================================================================== */
 
 /* -------------------------------------------------------------------------
-   1. DESIGN TOKENS
+   1. DESIGN TOKENS (Default: Dark Theme)
    ------------------------------------------------------------------------- */
 :root {
-  /* Backgrounds */
+  /* Theme: Dark (Default) */
   --tl-bg-primary: #0B132B;
-  --tl-bg-secondary: #131A33;
+  --tl-bg-secondary: #101835;
+  --tl-bg-elevated: #162044;
 
   /* Aura accents */
   --tl-teal: #20E3C2;
+  --tl-teal-dark: #129E85;
   --tl-purple: #8A5CF6;
+  --tl-purple-dark: #6D28D9;
   --tl-blue: #4DA3FF;
+  --tl-blue-dark: #2563EB;
 
   /* Text */
   --tl-text-primary: #F8FAFC;
-  --tl-text-secondary: rgba(248, 250, 252, 0.65);
-  --tl-text-muted: rgba(248, 250, 252, 0.4);
+  --tl-text-secondary: rgba(248, 250, 252, 0.72);
+  --tl-text-muted: rgba(248, 250, 252, 0.45);
 
   /* Status */
   --tl-success: #22C55E;
+  --tl-success-bg: rgba(34, 197, 94, 0.12);
+  --tl-success-border: rgba(34, 197, 94, 0.28);
   --tl-warning: #F59E0B;
+  --tl-warning-bg: rgba(245, 158, 11, 0.12);
+  --tl-warning-border: rgba(245, 158, 11, 0.28);
   --tl-danger: #EF4444;
+  --tl-danger-bg: rgba(239, 68, 68, 0.12);
+  --tl-danger-border: rgba(239, 68, 68, 0.28);
   --tl-info: #4DA3FF;
+  --tl-info-bg: rgba(77, 163, 255, 0.12);
+  --tl-info-border: rgba(77, 163, 255, 0.28);
 
-  /* Surfaces */
+  /* Surfaces & Borders */
   --tl-border: rgba(255, 255, 255, 0.08);
-  --tl-border-strong: rgba(255, 255, 255, 0.14);
-  --tl-card: rgba(255, 255, 255, 0.035);
-  --tl-card-hover: rgba(255, 255, 255, 0.06);
-  --tl-overlay: rgba(11, 19, 43, 0.72);
+  --tl-border-strong: rgba(255, 255, 255, 0.16);
+  --tl-border-focus: rgba(32, 227, 194, 0.6);
+  --tl-card: rgba(16, 24, 53, 0.65);
+  --tl-card-hover: rgba(22, 32, 68, 0.75);
+  --tl-overlay: rgba(11, 19, 43, 0.75);
 
   /* Gradients */
   --tl-gradient-aura: linear-gradient(135deg, var(--tl-teal) 0%, var(--tl-blue) 100%);
   --tl-gradient-violet: linear-gradient(135deg, var(--tl-purple) 0%, var(--tl-blue) 100%);
-  --tl-gradient-spectrum: linear-gradient(135deg, var(--tl-teal) 0%, var(--tl-purple) 100%);
-  --tl-gradient-text: linear-gradient(90deg, var(--tl-teal), var(--tl-blue) 55%, var(--tl-purple));
+  --tl-gradient-spectrum: linear-gradient(135deg, var(--tl-teal) 0%, var(--tl-blue) 50%, var(--tl-purple) 100%);
+  --tl-gradient-text: linear-gradient(90deg, #20E3C2 0%, #4DA3FF 50%, #8A5CF6 100%);
 
   /* Radius */
+  --tl-radius-xs: 6px;
   --tl-radius-sm: 10px;
-  --tl-radius-md: 16px;
-  --tl-radius-lg: 20px;
+  --tl-radius-md: 14px;
+  --tl-radius-lg: 18px;
   --tl-radius-xl: 24px;
   --tl-radius-pill: 999px;
 
-  /* Shadow */
-  --tl-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.25);
-  --tl-shadow-md: 0 8px 30px rgba(0, 0, 0, 0.35);
-  --tl-shadow-glow-teal: 0 0 0 1px rgba(32, 227, 194, 0.25), 0 8px 24px rgba(32, 227, 194, 0.15);
-  --tl-shadow-glow-purple: 0 0 0 1px rgba(138, 92, 246, 0.25), 0 8px 24px rgba(138, 92, 246, 0.15);
+  /* Shadows */
+  --tl-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --tl-shadow-md: 0 6px 24px rgba(0, 0, 0, 0.35);
+  --tl-shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --tl-shadow-glow-teal: 0 0 0 1px rgba(32, 227, 194, 0.3), 0 6px 20px rgba(32, 227, 194, 0.18);
+  --tl-shadow-glow-purple: 0 0 0 1px rgba(138, 92, 246, 0.3), 0 6px 20px rgba(138, 92, 246, 0.18);
 
-  /* Layout */
-  --tl-sidebar-width: 272px;
-  --tl-sidebar-collapsed: 84px;
-  --tl-topbar-height: 72px;
+  /* Layout Dimensions */
+  --tl-sidebar-width: 260px;
+  --tl-topbar-height: 68px;
 
   /* Motion */
   --tl-ease: cubic-bezier(0.4, 0, 0.2, 1);
   --tl-duration-fast: 150ms;
-  --tl-duration-base: 240ms;
-  --tl-duration-slow: 420ms;
+  --tl-duration-base: 260ms;
+  --tl-duration-slow: 380ms;
 
-  /* Font */
-  --tl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Typography */
+  --tl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --tl-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* -------------------------------------------------------------------------
+   LIGHT THEME TOKENS
+   ------------------------------------------------------------------------- */
+[data-theme="light"] {
+  --tl-bg-primary: #F4F6FB;
+  --tl-bg-secondary: #FFFFFF;
+  --tl-bg-elevated: #EDF2F7;
+
+  /* Text */
+  --tl-text-primary: #0F172A;
+  --tl-text-secondary: #475569;
+  --tl-text-muted: #64748B;
+
+  /* Surfaces & Borders */
+  --tl-border: rgba(15, 23, 42, 0.08);
+  --tl-border-strong: rgba(15, 23, 42, 0.16);
+  --tl-border-focus: rgba(18, 158, 133, 0.6);
+  --tl-card: #FFFFFF;
+  --tl-card-hover: #F8FAFC;
+  --tl-overlay: rgba(15, 23, 42, 0.45);
+
+  /* Shadows */
+  --tl-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --tl-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --tl-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --tl-shadow-glow-teal: 0 0 0 1px rgba(18, 158, 133, 0.3), 0 4px 14px rgba(18, 158, 133, 0.15);
+
+  /* Status Colors in Light Mode */
+  --tl-success-bg: rgba(34, 197, 94, 0.1);
+  --tl-success-border: rgba(34, 197, 94, 0.22);
+  --tl-warning-bg: rgba(245, 158, 11, 0.1);
+  --tl-warning-border: rgba(245, 158, 11, 0.22);
+  --tl-danger-bg: rgba(239, 68, 68, 0.1);
+  --tl-danger-border: rgba(239, 68, 68, 0.22);
+  --tl-info-bg: rgba(77, 163, 255, 0.1);
+  --tl-info-border: rgba(77, 163, 255, 0.22);
 }
 
 /* -------------------------------------------------------------------------
    2. RESET & BASE
    ------------------------------------------------------------------------- */
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -86,15 +139,15 @@ body {
   font-family: var(--tl-font);
   background-color: var(--tl-bg-primary);
   color: var(--tl-text-primary);
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.5;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background-color var(--tl-duration-base) var(--tl-ease),
+              color var(--tl-duration-base) var(--tl-ease);
 }
 
-/* Ambient aura backdrop — fixed, sits behind every authenticated screen.
-   This is Tailora's signature atmosphere: three soft light sources that
-   never move, echoing the brand's "aura" concept without becoming noise. */
+/* Ambient background aura */
 body::before {
   content: "";
   position: fixed;
@@ -102,56 +155,50 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(680px circle at 8% -6%, rgba(32, 227, 194, 0.16), transparent 60%),
-    radial-gradient(720px circle at 108% 8%, rgba(138, 92, 246, 0.14), transparent 60%),
-    radial-gradient(900px circle at 50% 118%, rgba(77, 163, 255, 0.10), transparent 60%);
+    radial-gradient(650px circle at 5% -5%, rgba(32, 227, 194, 0.12), transparent 60%),
+    radial-gradient(700px circle at 95% 10%, rgba(138, 92, 246, 0.11), transparent 60%),
+    radial-gradient(800px circle at 50% 110%, rgba(77, 163, 255, 0.08), transparent 60%);
+  transition: opacity var(--tl-duration-base) var(--tl-ease);
+}
+
+[data-theme="light"] body::before {
+  background:
+    radial-gradient(650px circle at 5% -5%, rgba(32, 227, 194, 0.06), transparent 60%),
+    radial-gradient(700px circle at 95% 10%, rgba(138, 92, 246, 0.05), transparent 60%),
+    radial-gradient(800px circle at 50% 110%, rgba(77, 163, 255, 0.04), transparent 60%);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color var(--tl-duration-fast) var(--tl-ease);
 }
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
 ::selection {
-  background: rgba(32, 227, 194, 0.3);
-  color: var(--tl-text-primary);
+  background: rgba(32, 227, 194, 0.35);
+  color: inherit;
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(248, 250, 252, 0.14);
+  background: var(--tl-border-strong);
   border-radius: var(--tl-radius-pill);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(248, 250, 252, 0.24);
-}
-
-/* Focus visibility — accessibility floor, never removed */
-:focus-visible {
-  outline: 2px solid var(--tl-teal);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
+  background: var(--tl-text-muted);
 }
 
 /* -------------------------------------------------------------------------
@@ -160,74 +207,73 @@ img {
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   color: var(--tl-text-primary);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .tl-page-title {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
   color: var(--tl-text-primary);
+  line-height: 1.25;
 }
 
 .tl-section-title {
-  font-size: 17px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--tl-text-primary);
+  letter-spacing: -0.015em;
 }
 
 .tl-card-title {
-  font-size: 15px;
+  font-size: 14.5px;
   font-weight: 600;
   color: var(--tl-text-primary);
 }
 
 .tl-body {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 400;
   color: var(--tl-text-primary);
 }
 
 .tl-text-secondary {
-  color: var(--tl-text-secondary);
+  color: var(--tl-text-secondary) !important;
   font-weight: 400;
 }
 
 .tl-metadata {
   font-size: 12px;
-  color: var(--tl-text-muted);
+  color: var(--tl-text-muted) !important;
   font-weight: 500;
 }
 
 .tl-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
   color: var(--tl-text-muted);
 }
-
-.Social-Media-Links{
-  margin-top: 20px;
-}
-
 
 .tl-gradient-text {
   background: var(--tl-gradient-text);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
 /* -------------------------------------------------------------------------
-   4. AUTHENTICATED SHELL LAYOUT
+   4. AUTHENTICATED SHELL LAYOUT & SIDEBAR TOGGLE
    ------------------------------------------------------------------------- */
 .tl-app {
   position: relative;
   z-index: 1;
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
 .tl-main {
@@ -240,13 +286,14 @@ h1, h2, h3, h4, h5, h6 {
   transition: margin-left var(--tl-duration-base) var(--tl-ease);
 }
 
-.tl-app.is-collapsed .tl-main {
-  margin-left: var(--tl-sidebar-collapsed);
+/* When the sidebar is hidden by the user on desktop */
+.tl-app.is-sidebar-hidden .tl-main {
+  margin-left: 0 !important;
 }
 
 .tl-content {
   flex: 1;
-  padding: 28px 32px 48px;
+  padding: 24px 32px 40px;
   width: 100%;
 }
 
@@ -256,7 +303,7 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .tl-page-header .tl-eyebrow {
@@ -268,10 +315,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .tl-page-header p {
   margin: 4px 0 0;
+  font-size: 13.5px;
 }
 
 /* -------------------------------------------------------------------------
-   5. UTILITIES
+   5. UTILITIES & GRIDS
    ------------------------------------------------------------------------- */
 .tl-flex { display: flex; }
 .tl-flex-center { display: flex; align-items: center; justify-content: center; }
@@ -279,11 +327,23 @@ h1, h2, h3, h4, h5, h6 {
 .tl-gap-xs { gap: 6px; }
 .tl-gap-sm { gap: 10px; }
 .tl-gap-md { gap: 16px; }
-.tl-gap-lg { gap: 24px; }
+.tl-gap-lg { gap: 20px; }
 
 .tl-grid {
   display: grid;
-  gap: 20px;
+  gap: 18px;
+}
+
+.tl-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.tl-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.tl-grid--kpi {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .tl-divider {
@@ -291,7 +351,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   background: var(--tl-border);
   border: none;
-  margin: 20px 0;
+  margin: 18px 0;
 }
 
 .tl-visually-hidden {
@@ -302,51 +362,4 @@ h1, h2, h3, h4, h5, h6 {
   clip: rect(0,0,0,0);
   white-space: nowrap;
   border: 0;
-}
-.tl-input::file-selector-button,
-#homepage_banner::file-selector-button {
-    margin-right: 12px;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #22d3ee, #3b82f6);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.tl-input::file-selector-button:hover,
-#homepage_banner::file-selector-button:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-/* Logo file input - same transparent style as Homepage Banner */
-.tl-input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid var(--tl-border-strong);
-  border-radius: 10px;
-  
-  color: var(--tl-text-primary);
-  cursor: pointer;
-  font-weight: 500;
-}
-
-/* Choose File button */
-.tl-input::file-selector-button {
-    margin-right: 12px;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #22d3ee, #3b82f6);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    
-}
-
-/* Hover */
-.tl-input::file-selector-button:hover {
-  background: rgba(255, 255, 255, 0.08);
 }
