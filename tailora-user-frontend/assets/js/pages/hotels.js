@@ -191,7 +191,7 @@
     const grid = document.getElementById("hotels-grid");
     grid.innerHTML = window.TL.Util.skeletonCards(9);
     try {
-      const response = await window.TL.Hotels.all(page);
+      const response = await window.TL.Hotels.all({ page });
       state.items = window.TL.Util.list(response);
       state.page = response.meta?.current_page || page;
       state.lastPage = response.meta?.last_page || 1;

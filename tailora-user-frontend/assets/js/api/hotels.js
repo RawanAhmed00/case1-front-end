@@ -14,8 +14,8 @@
   "use strict";
 
   const Hotels = {
-    all() {
-      return window.TL.Api.get("/hotels");
+    all(query = {}) {
+      return window.TL.Api.get("/hotels", query);
     },
 
     get(id) {
@@ -28,8 +28,8 @@
   };
 
   const Restaurants = {
-    all() {
-      return window.TL.Api.get("/restaurants");
+    all(query = {}) {
+      return window.TL.Api.get("/restaurants", query);
     },
 
     get(id) {

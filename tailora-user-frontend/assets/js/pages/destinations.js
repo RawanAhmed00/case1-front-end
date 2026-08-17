@@ -8,6 +8,9 @@
     query: "",
     region: "",
     items: [],
+    // when the API returns a full unpaginated list we store it here
+    fullItems: null,
+    perPage: 20,
     page: 1,
     lastPage: 1,
     total: 0,
@@ -81,16 +84,25 @@
 
     // client-side filter within the currently loaded page only
     // (search isn't wired to the backend yet)
-    const filtered = state.items.filter((item) => {
+    const source = Array.isArray(state.fullItems) && state.fullItems.length ? state.fullItems : state.items;
+
+    const filtered = source.filter((item) => {
       const name = window.TL.Util.name(item).toLowerCase();
       const region = window.TL.Util.pick(item, ["region", "country.region"], "");
       const matchesQuery = !state.query || name.includes(state.query.toLowerCase());
       const matchesRegion = !state.region || region === state.region;
       return matchesQuery && matchesRegion;
     });
+    let toRender = filtered;
+    // if we have a full list client-side, slice it per page
+    if (Array.isArray(state.fullItems) && state.fullItems.length) {
+      const start = (state.page - 1) * state.perPage;
+      const end = start + state.perPage;
+      toRender = filtered.slice(start, end);
+    }
 
-    grid.innerHTML = filtered.length
-      ? filtered.map((item) => cardHtml(item, state.view)).join("")
+    grid.innerHTML = toRender.length
+      ? toRender.map((item) => cardHtml(item, state.view)).join("")
       : window.TL.Util.emptyState("No destinations found", "Try a different search term or region.");
 
     const pagerHtml = paginationControls();
@@ -166,12 +178,28 @@
     grid.innerHTML = window.TL.Util.skeletonCards(9);
     try {
       const fetcher = state.view === "cities" ? window.TL.Cities.all : window.TL.Countries.all;
-      const response = await fetcher(page);
+      const response = await fetcher({ page });
 
-      state.items = window.TL.Util.list(response);
-      state.page = response.meta?.current_page || page;
-      state.lastPage = response.meta?.last_page || 1;
-      state.total = response.meta?.total || state.items.length;
+      const items = window.TL.Util.list(response);
+
+      // If the backend supplies pagination meta, use it (server-side paging).
+      if (response && response.meta) {
+        state.fullItems = null;
+        state.items = items;
+        state.page = response.meta?.current_page || page;
+        state.lastPage = response.meta?.last_page || 1;
+        state.total = response.meta?.total || state.items.length;
+      } else {
+        // Backend returned a full unpaginated list: enable client-side paging
+        state.fullItems = items;
+        state.total = items.length;
+        state.lastPage = Math.max(1, Math.ceil(state.total / state.perPage));
+        state.page = Math.min(page, state.lastPage);
+        const start = (state.page - 1) * state.perPage;
+        const end = start + state.perPage;
+        state.items = state.fullItems.slice(start, end);
+      }
+
       state.pages[state.view] = state.page;
 
       render();
