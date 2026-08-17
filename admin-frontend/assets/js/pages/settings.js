@@ -127,11 +127,9 @@ addSocialBtn.addEventListener("click", function () {
 
 socialContainer.addEventListener("click", function (event) {
 
-    if (
-        event.target.classList.contains(
-            "remove-social-btn"
-        )
-    ) {
+    const btn = event.target.closest(".remove-social-btn");
+
+    if (btn) {
 
         const rows =
             socialContainer.querySelectorAll(
@@ -140,7 +138,7 @@ socialContainer.addEventListener("click", function (event) {
 
         // Don't remove the last row
         if (rows.length > 1) {
-            event.target.closest(
+            btn.closest(
                 ".social-media-row"
             ).remove();
 

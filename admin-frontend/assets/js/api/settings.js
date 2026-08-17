@@ -48,9 +48,13 @@
     }
 
     function updateWebsiteSettings(websiteSettingId, fields) {
-        return window.TL.Api.putForm(
+        // Laravel cannot parse FormData from a true PUT request body.
+        // Use POST with _method=PUT spoofing so Laravel reads the multipart fields.
+        const fd = toFormData(fields);
+        fd.append("_method", "PUT");
+        return window.TL.Api.postForm(
             `/website-settings/${encodeURIComponent(websiteSettingId)}`,
-            toFormData(fields)
+            fd
         );
     }
 

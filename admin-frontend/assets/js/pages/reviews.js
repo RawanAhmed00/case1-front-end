@@ -91,28 +91,28 @@
 
                 ${rows.map(function (review) {
 
-                  const user =
-                    review.user?.name ??
-                    review.user ??
-                    review.user_name ??
-                    "—";
+          const user =
+            review.user?.name ??
+            review.user ??
+            review.user_name ??
+            "—";
 
-                  const content =
-                    review.review_text ??
-                    review.comment ??
-                    review.content ??
-                    "—";
+          const content =
+            review.review_text ??
+            review.comment ??
+            review.content ??
+            "—";
 
-                  const rating =
-                    review.rating ??
-                    "—";
+          const rating =
+            review.rating ??
+            "—";
 
-                  const status =
-                    review.status ??
-                    "—";
+          const status =
+            review.status ??
+            "—";
 
 
-                  return `
+          return `
                     <tr>
 
                       <td>
@@ -167,7 +167,7 @@
                     </tr>
                   `;
 
-                }).join("")}
+        }).join("")}
 
               </tbody>
 

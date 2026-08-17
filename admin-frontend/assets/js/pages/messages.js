@@ -50,7 +50,7 @@
               </thead>
               <tbody>
                 ${rows.map(function (m) {
-                  return `
+          return `
                     <tr>
                       <td><strong>#${P.escape(P.display(m.id))}</strong></td>
                       <td>${P.escape(P.display(m.user_id))}</td>
@@ -81,7 +81,7 @@
                       </td>
                     </tr>
                   `;
-                }).join("")}
+        }).join("")}
               </tbody>
             </table>
           </div>

@@ -113,18 +113,19 @@
 
           const idInput = document.getElementById("category_id");
           const nameInput = document.getElementById("category_update_name");
+          const imageInput = document.getElementById("category_update_image");
+          const form = document.getElementById("categoryManageForm");
 
           if (idInput) idInput.value = id;
-          if (nameInput) {
-            nameInput.value = name;
-            nameInput.focus();
-          }
+          if (nameInput) nameInput.value = name;
+          if (imageInput) imageInput.value = "";
+          if (form) P.clearErrors(form);
 
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
-          });
-          TL.showToast("Category selected for update.", "info");
+          const modalEl = document.getElementById("categoryEditModal");
+          if (modalEl) {
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+          }
         });
       });
 
@@ -145,7 +146,7 @@
       });
     }
 
-    async function submit(form, fn, message) {
+    async function submit(form, fn, message, closeModalId) {
       P.clearErrors(form);
       const button = form.querySelector('button[type="submit"]');
       P.setBusy(button, true);
@@ -154,6 +155,10 @@
         await fn();
         TL.showToast(message, "success");
         form.reset();
+        if (closeModalId) {
+          const modalEl = document.getElementById(closeModalId);
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
         await loadCategories();
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
@@ -206,12 +211,13 @@
         submit(
           form,
           () => TL.Categories.updateCategory(id, data),
-          "Category updated successfully."
+          "Category updated successfully.",
+          "categoryEditModal"
         );
       });
     }
 
-    // DELETE from manual ID form
+    // DELETE from modal
     const deleteButton = document.getElementById("categoryDeleteBtn");
     if (deleteButton) {
       deleteButton.addEventListener("click", async function () {
@@ -226,6 +232,8 @@
         try {
           await TL.Categories.deleteCategory(id);
           TL.showToast("Category deleted.", "success");
+          const modalEl = document.getElementById("categoryEditModal");
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
           manageForm?.reset();
           await loadCategories();
         } catch (e) {

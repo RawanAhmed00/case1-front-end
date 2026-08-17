@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,8 @@
   <!-- Bootstrap 5 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
   <!-- Tailora Design System -->
   <link rel="stylesheet" href="assets/css/style.css">
@@ -23,12 +25,8 @@
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 
-<body
-  data-page="messages"
-  data-page-title="Contact Messages"
-  data-breadcrumb="Management, Contact Messages"
-  data-requires-auth="true"
->
+<body data-page="messages" data-page-title="Contact Messages" data-breadcrumb="Management, Contact Messages"
+  data-requires-auth="true">
 
   <div class="tl-app">
     <aside class="tl-sidebar" id="tlSidebar" aria-label="Sidebar navigation"></aside>
@@ -86,7 +84,8 @@
                   <input type="hidden" id="msg_id">
                   <div class="tl-field">
                     <label for="msg_status">Update Status (PUT /contact-messages/{id})</label>
-                    <input id="msg_status" type="text" class="tl-input" placeholder="e.g. read, resolved, pending" required>
+                    <input id="msg_status" type="text" class="tl-input" placeholder="e.g. read, resolved, pending"
+                      required>
                   </div>
                   <div class="tl-flex tl-gap-sm">
                     <button class="tl-btn tl-btn--primary" type="submit">Update Status</button>
@@ -114,4 +113,5 @@
   <script src="assets/js/pages/utils.js"></script>
   <script src="assets/js/pages/messages.js"></script>
 </body>
+
 </html>

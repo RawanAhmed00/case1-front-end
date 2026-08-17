@@ -28,7 +28,7 @@
       return response || {};
     }
 
-    async function submit(form, fn, msg) {
+    async function submit(form, fn, msg, closeModalId) {
       P.clearErrors(form);
       const button = form.querySelector("button[type=submit]");
       P.setBusy(button, true);
@@ -37,6 +37,10 @@
         await fn();
         TL.showToast(msg, "success");
         form.reset();
+        if (closeModalId) {
+          const modalEl = document.getElementById(closeModalId);
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
         await loadHotels();
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
@@ -190,8 +194,12 @@
         if (form.hotel_u_amenities) form.hotel_u_amenities.value = hotel.amenities ?? "";
         if (form.hotel_u_available_rooms) form.hotel_u_available_rooms.value = hotel.available_rooms ?? "";
 
-        form.scrollIntoView({ behavior: "smooth", block: "start" });
-        TL.showToast("Hotel loaded into edit form.", "info");
+        P.clearErrors(form);
+        const modalEl = document.getElementById("hotelEditModal");
+        if (modalEl) {
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          modal.show();
+        }
       } catch (e) {
         TL.showToast(e.message || "Failed to load hotel.", "error");
       }
@@ -222,12 +230,13 @@
         submit(
           form,
           () => TL.Hotels.updateHotel(id, values(form, "hotel_u_")),
-          "Hotel updated successfully."
+          "Hotel updated successfully.",
+          "hotelEditModal"
         );
       });
     }
 
-    // Delete Button from Manage Form
+    // Delete Button from Manage Form (inside modal)
     const deleteButton = document.getElementById("hotelDeleteBtn");
     if (deleteButton) {
       deleteButton.addEventListener("click", async function () {
@@ -238,6 +247,8 @@
         try {
           await TL.Hotels.deleteHotel(id);
           TL.showToast("Hotel deleted successfully.", "success");
+          const modalEl = document.getElementById("hotelEditModal");
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
           if (manageForm) manageForm.reset();
           await loadHotels();
         } catch (e) {

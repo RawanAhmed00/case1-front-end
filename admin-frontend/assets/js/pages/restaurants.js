@@ -29,7 +29,7 @@
       return response || {};
     }
 
-    async function submit(form, fn, msg) {
+    async function submit(form, fn, msg, closeModalId) {
       P.clearErrors(form);
       const button = form.querySelector("button[type=submit]");
       P.setBusy(button, true);
@@ -38,6 +38,10 @@
         await fn();
         TL.showToast(msg, "success");
         form.reset();
+        if (closeModalId) {
+          const modalEl = document.getElementById(closeModalId);
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
         await loadRestaurants();
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
@@ -199,8 +203,12 @@
         if (form.restaurant_u_rating) form.restaurant_u_rating.value = restaurant.rating ?? "";
         if (form.restaurant_u_votes) form.restaurant_u_votes.value = restaurant.votes ?? "";
 
-        form.scrollIntoView({ behavior: "smooth", block: "start" });
-        TL.showToast("Restaurant loaded into edit form.", "info");
+        P.clearErrors(form);
+        const modalEl = document.getElementById("restaurantEditModal");
+        if (modalEl) {
+          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          modal.show();
+        }
       } catch (e) {
         TL.showToast(e.message || "Failed to load restaurant.", "error");
       }
@@ -231,12 +239,13 @@
         submit(
           form,
           () => TL.Restaurants.updateRestaurant(id, vals(form, "restaurant_u_")),
-          "Restaurant updated successfully."
+          "Restaurant updated successfully.",
+          "restaurantEditModal"
         );
       });
     }
 
-    // Delete Button from Manage Form
+    // Delete Button from Manage Form (inside modal)
     const deleteButton = document.getElementById("restaurantDeleteBtn");
     if (deleteButton) {
       deleteButton.addEventListener("click", async function () {
@@ -247,6 +256,8 @@
         try {
           await TL.Restaurants.deleteRestaurant(id);
           TL.showToast("Restaurant deleted successfully.", "success");
+          const modalEl = document.getElementById("restaurantEditModal");
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
           if (manageForm) manageForm.reset();
           await loadRestaurants();
         } catch (e) {
