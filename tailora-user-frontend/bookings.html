@@ -1,92 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Booking — Tailora</title>
-<link rel="icon" href="assets/images/logo.png">
-<link rel="stylesheet" href="assets/css/tailora.css">
-<link rel="stylesheet" href="assets/css/nav.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/responsive.css">
-<style>
-  .tl-booking-item { display: flex; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--tl-border); }
-  .tl-booking-item:last-of-type { border-bottom: none; }
-  .tl-booking-item img { width: 72px; height: 72px; border-radius: var(--tl-radius-sm); object-fit: cover; flex-shrink: 0; background: var(--tl-surface-solid); }
-  .tl-booking-item-body { flex: 1; min-width: 0; }
-  .tl-booking-item-body strong { display: block; font-size: 15px; margin-bottom: 4px; }
-  .tl-booking-item-body span { font-size: 13px; color: var(--tl-text-secondary); }
-  .tl-booking-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tl-text-muted); margin-bottom: 4px; }
-  .tl-tour-guide-row { display: flex; align-items: center; gap: 12px; padding: 18px 0; }
-  .tl-tour-guide-row input { width: 20px; height: 20px; accent-color: var(--tl-cyan); }
-  .tl-total-row { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; margin-top: 8px; border-top: 1px solid var(--tl-border-strong); }
-  .tl-total-row strong:last-child { font-size: 20px; font-family: var(--tl-font-display); }
-  .tl-existing-booking { padding: 18px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Your Booking — Tailora</title>
+
+  <link
+    rel="icon"
+    href="assets/images/logo.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/tailora.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/nav.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/components.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/responsive.css"
+  >
+
+  <style>
+    .tl-booking-item {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--tl-border);
+    }
+
+    .tl-booking-item:last-of-type {
+      border-bottom: none;
+    }
+
+    .tl-booking-item img {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--tl-radius-sm);
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--tl-surface-solid);
+    }
+
+    .tl-booking-item-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .tl-booking-item-body strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .tl-booking-item-body span {
+      font-size: 13px;
+      color: var(--tl-text-secondary);
+    }
+
+    .tl-booking-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--tl-text-muted);
+      margin-bottom: 4px;
+    }
+
+    .tl-tour-guide-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 0;
+    }
+
+    .tl-tour-guide-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .tl-tour-guide-option input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--tl-cyan);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .tl-tour-guide-option label {
+      cursor: pointer;
+    }
+
+    .tl-tour-guide-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--tl-cyan);
+      white-space: nowrap;
+    }
+
+    .tl-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      margin-top: 8px;
+      border-top: 1px solid var(--tl-border-strong);
+    }
+
+    .tl-total-row strong:last-child {
+      font-size: 20px;
+      font-family: var(--tl-font-display);
+    }
+
+    .tl-existing-booking {
+      padding: 18px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+      .tl-tour-guide-row {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
+
+
 <body>
 
-<div id="tl-nav-mount"></div>
+  <div id="tl-nav-mount"></div>
 
-<main>
-  <section class="tl-hero" style="padding-bottom:20px;">
-    <div class="tl-hero-bg"></div>
-    <div class="tl-container">
-      <span class="tl-eyebrow">Booking</span>
-      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Your Trip</h1>
-      <p class="tl-hero-sub">Everything you've selected for this trip, in one place.</p>
-    </div>
-  </section>
 
-  <section class="tl-section tl-section--tight">
-    <div class="tl-container">
+  <main>
 
-      <div id="booking-signed-out" class="tl-card tl-state tl-hidden">
-        <div class="tl-state-icon">🔒</div>
-        <h3>Sign in to view your booking</h3>
-        <p>Your selected flight, hotel, and add-ons live here once you're signed in.</p>
-        <a href="signin.html?next=bookings.html" class="tl-btn tl-btn--primary">Sign In</a>
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section
+      class="tl-hero"
+      style="padding-bottom:20px;"
+    >
+
+      <div class="tl-hero-bg"></div>
+
+      <div class="tl-container">
+
+        <span class="tl-eyebrow">
+          Booking
+        </span>
+
+        <h1
+          class="tl-display tl-mt-8"
+          style="
+            font-size:clamp(30px,4.5vw,48px);
+            max-width:640px;
+          "
+        >
+          Your Trip
+        </h1>
+
+        <p class="tl-hero-sub">
+          Everything you've selected for this trip, in one place.
+        </p>
+
       </div>
 
-      <div id="booking-shell" class="tl-hidden">
-        <div class="tl-card" style="padding:32px;margin-bottom:24px;">
-          <div class="tl-booking-section-title">Flight</div>
-          <div id="booking-flight"></div>
+    </section>
 
-          <div class="tl-booking-section-title tl-mt-24">Hotel</div>
-          <div id="booking-hotel"></div>
 
-          <div class="tl-booking-section-title tl-mt-24">Tour Guide</div>
-          <div class="tl-tour-guide-row">
-            <input type="checkbox" id="tour-guide-checkbox">
-            <label for="tour-guide-checkbox">I want a tour guide for this trip</label>
+    <!-- =====================================================
+         BOOKING
+    ====================================================== -->
+
+    <section class="tl-section tl-section--tight">
+
+      <div class="tl-container">
+
+
+        <!-- =================================================
+             SIGNED OUT
+        ================================================== -->
+
+        <div
+          id="booking-signed-out"
+          class="tl-card tl-state tl-hidden"
+        >
+
+          <div class="tl-state-icon">
+            🔒
           </div>
 
-          <div id="booking-total"></div>
+          <h3>
+            Sign in to view your booking
+          </h3>
 
-          <div id="booking-error" class="tl-hidden tl-mt-16"></div>
+          <p>
+            Your selected flight, hotel, and add-ons live here once you're signed in.
+          </p>
 
-          <button type="button" class="tl-btn tl-btn--primary tl-btn--block tl-mt-24" id="continue-to-payment-btn">Continue to Payment</button>
+          <a
+            href="signin.html?next=bookings.html"
+            class="tl-btn tl-btn--primary"
+          >
+            Sign In
+          </a>
+
         </div>
 
-        <div class="tl-card" style="padding:32px;margin-bottom:24px;" id="booking-restaurants-experiences"></div>
 
-        <div class="tl-card" style="padding:32px;">
-          <h3 style="margin-bottom:16px;">Your Bookings</h3>
-          <div id="existing-bookings"></div>
+        <!-- =================================================
+             BOOKING SHELL
+        ================================================== -->
+
+        <div
+          id="booking-shell"
+          class="tl-hidden"
+        >
+
+
+          <!-- =================================================
+               MAIN BOOKING CARD
+          ================================================== -->
+
+          <div
+            class="tl-card"
+            style="
+              padding:32px;
+              margin-bottom:24px;
+            "
+          >
+
+
+            <!-- ===============================================
+                 FLIGHT
+            ================================================ -->
+
+            <div class="tl-booking-section-title">
+              Flight
+            </div>
+
+            <div id="booking-flight"></div>
+
+
+            <!-- ===============================================
+                 HOTEL
+            ================================================ -->
+
+            <div class="tl-booking-section-title tl-mt-24">
+              Hotel
+            </div>
+
+            <div id="booking-hotel"></div>
+
+
+            <!-- ===============================================
+                 TOUR GUIDE
+            ================================================ -->
+
+            <div class="tl-booking-section-title tl-mt-24">
+              Tour Guide
+            </div>
+
+            <div class="tl-tour-guide-row">
+
+              <div class="tl-tour-guide-option">
+
+                <input
+                  type="checkbox"
+                  id="tour-guide-checkbox"
+                >
+
+                <label for="tour-guide-checkbox">
+                  I want a tour guide for this trip
+                </label>
+
+              </div>
+
+              <span class="tl-tour-guide-price">
+                +$100
+              </span>
+
+            </div>
+
+
+            <!-- ===============================================
+                 TOTAL
+            ================================================ -->
+
+            <div id="booking-total">
+
+              <div class="tl-total-row">
+
+                <strong>
+                  Estimated Total
+                </strong>
+
+                <strong id="booking-total-value">
+                  $0
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <!-- ===============================================
+                 ERROR
+            ================================================ -->
+
+            <div
+              id="booking-error"
+              class="tl-hidden tl-mt-16"
+            ></div>
+
+
+            <!-- ===============================================
+                 PAYMENT
+            ================================================ -->
+
+            <button
+              type="button"
+              class="
+                tl-btn
+                tl-btn--primary
+                tl-btn--block
+                tl-mt-24
+              "
+              id="continue-to-payment-btn"
+            >
+              Continue to Payment
+            </button>
+
+          </div>
+
+
+          <!-- =================================================
+               RESTAURANTS / EXPERIENCES
+          ================================================== -->
+
+          <div
+            class="tl-card"
+            style="
+              padding:32px;
+              margin-bottom:24px;
+            "
+            id="booking-restaurants-experiences"
+          ></div>
+
+
+          <!-- =================================================
+               EXISTING BOOKINGS
+          ================================================== -->
+
+          <div
+            class="tl-card"
+            style="padding:32px;"
+          >
+
+            <h3 style="margin-bottom:16px;">
+              Your Bookings
+            </h3>
+
+            <div id="existing-bookings"></div>
+
+          </div>
+
         </div>
+
       </div>
-    </div>
-  </section>
-</main>
 
-<div id="tl-footer-mount"></div>
+    </section>
 
-<script src="assets/js/api/api.js"></script>
-<script src="assets/js/api/auth.js"></script>
-<script src="assets/js/api/favorites.js"></script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/cart.js"></script>
-<script src="assets/js/pages/bookings.js"></script>
+  </main>
+
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <div id="tl-footer-mount"></div>
+
+
+  <!-- =====================================================
+       SCRIPTS
+  ====================================================== -->
+
+  <script src="assets/js/api/api.js"></script>
+
+  <script src="assets/js/api/auth.js"></script>
+
+  <script src="assets/js/api/favorites.js"></script>
+
+  <script src="assets/js/app.js"></script>
+
+  <script src="assets/js/cart.js"></script>
+
+  <script src="assets/js/pages/bookings.js"></script>
+
+
 </body>
+
 </html>

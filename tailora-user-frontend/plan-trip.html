@@ -1,775 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
 
-<title>Plan a Trip — Tailora</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-<link rel="icon" href="assets/images/logo.png">
+  <title>Plan a Trip — Tailora</title>
 
-<link rel="stylesheet" href="assets/css/tailora.css">
-<link rel="stylesheet" href="assets/css/nav.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/responsive.css">
+  <link
+    rel="icon"
+    href="assets/images/logo.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/tailora.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/nav.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/components.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/responsive.css"
+  >
 </head>
 
 <body>
 
-<div id="tl-nav-mount"></div>
+  <div id="tl-nav-mount"></div>
 
-<main>
+  <main>
 
-  <!-- =====================================================
-       HERO
-  ====================================================== -->
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
 
-  <section
-    class="tl-hero"
-    style="padding-bottom:20px;"
-  >
+    <section
+      class="tl-hero"
+      style="padding-bottom:20px;"
+    >
 
-    <div class="tl-hero-bg"></div>
+      <div class="tl-hero-bg"></div>
 
-    <div class="tl-container">
+      <div class="tl-container">
 
-      <span class="tl-eyebrow">
-        AI Travel Planner
-      </span>
+        <span class="tl-eyebrow">
+          AI Travel Planner
+        </span>
 
-      <h1
-        class="tl-display tl-mt-8"
-        style="
-          font-size:clamp(30px,4.5vw,48px);
-          max-width:640px;
-        "
-      >
-        Let's build your journey
-      </h1>
+        <h1
+          class="tl-display tl-mt-8"
+          style="
+            font-size:clamp(30px,4.5vw,48px);
+            max-width:640px;
+          "
+        >
+          Let's build your journey
+        </h1>
 
-      <p class="tl-hero-sub">
-        Choose your country, dates, cities and experiences.
-      </p>
-
-    </div>
-
-  </section>
-
-
-  <!-- =====================================================
-       PLANNER SECTION
-  ====================================================== -->
-
-  <section class="tl-section tl-section--tight">
-
-    <div class="tl-container">
-
-      <!-- =====================================================
-           SIGNED OUT
-      ====================================================== -->
-
-      <div
-        id="planner-signed-out"
-        class="tl-card tl-state tl-hidden"
-      >
-
-        <div class="tl-state-icon">
-          🔒
-        </div>
-
-        <h3>
-          Sign in to start planning
-        </h3>
-
-        <p>
-          Creating a trip requires a Tailora account.
+        <p class="tl-hero-sub">
+          Choose your country, dates, cities and experiences.
         </p>
 
-        <a
-          href="signin.html?next=plan-trip.html"
-          class="tl-btn tl-btn--primary"
-        >
-          Sign In
-        </a>
-
       </div>
 
+    </section>
 
-      <!-- =====================================================
-           PLANNER
-      ====================================================== -->
+    <!-- =====================================================
+         PLANNER SECTION
+    ====================================================== -->
 
-      <div
-        class="tl-planner"
-        id="planner-shell"
-      >
+    <section class="tl-section tl-section--tight">
 
-        <!-- ===================================================
-             STEPS
-        ==================================================== -->
+      <div class="tl-container">
+
+        <!-- =====================================================
+             SIGNED OUT
+        ====================================================== -->
 
         <div
-          class="tl-planner-steps"
-          id="planner-steps"
+          id="planner-signed-out"
+          class="tl-card tl-state tl-hidden"
         >
 
-          <div
-            class="tl-planner-step is-active"
-            data-step="1"
-          >
-            <span class="tl-planner-step-num">1</span>
-            <span>Country</span>
+          <div class="tl-state-icon">
+            🔒
           </div>
 
+          <h3>
+            Sign in to start planning
+          </h3>
 
-          <div
-            class="tl-planner-step"
-            data-step="2"
+          <p>
+            Creating a trip requires a Tailora account.
+          </p>
+
+          <a
+            href="signin.html?next=plan-trip.html"
+            class="tl-btn tl-btn--primary"
           >
-            <span class="tl-planner-step-num">2</span>
-            <span>Dates</span>
-          </div>
-
-
-          <div
-            class="tl-planner-step"
-            data-step="3"
-          >
-            <span class="tl-planner-step-num">3</span>
-            <span>Cities</span>
-          </div>
-
-
-          <div
-            class="tl-planner-step"
-            data-step="4"
-          >
-            <span class="tl-planner-step-num">4</span>
-            <span>Attractions</span>
-          </div>
-
-
-          <div
-            class="tl-planner-step"
-            data-step="5"
-          >
-            <span class="tl-planner-step-num">5</span>
-            <span>Preferences</span>
-          </div>
+            Sign In
+          </a>
 
         </div>
 
+        <!-- =====================================================
+             PLANNER
+        ====================================================== -->
 
-        <!-- ===================================================
-             PLANNER PANEL
-        ==================================================== -->
+        <div
+          class="tl-planner"
+          id="planner-shell"
+        >
 
-        <div class="tl-card tl-planner-panel">
-
-
-          <!-- =================================================
-               STEP 1 — COUNTRY
-          ================================================== -->
+          <!-- ===================================================
+               STEPS
+          ==================================================== -->
 
           <div
-            class="tl-planner-content"
-            data-content="1"
+            class="tl-planner-steps"
+            id="planner-steps"
           >
 
-            <h2>
-              Which country do you want to visit?
-            </h2>
-
-            <p class="tl-hint">
-              Choose a destination country.
-            </p>
-
-
             <div
-              class="tl-field"
-              style="position:relative;"
+              class="tl-planner-step is-active"
+              data-step="1"
             >
-
-              <label for="plan-country">
-                Country
-              </label>
-
-              <input
-                class="tl-input"
-                id="plan-country"
-                type="text"
-                placeholder="Search a country..."
-                autocomplete="off"
-              >
-
-              <div
-                class="tl-search-suggest"
-                id="plan-country-suggest"
-              ></div>
-
+              <span class="tl-planner-step-num">1</span>
+              <span>Country</span>
             </div>
 
+            <div
+              class="tl-planner-step"
+              data-step="2"
+            >
+              <span class="tl-planner-step-num">2</span>
+              <span>Dates</span>
+            </div>
 
-            <div id="plan-country-selected"></div>
+            <div
+              class="tl-planner-step"
+              data-step="3"
+            >
+              <span class="tl-planner-step-num">3</span>
+              <span>Cities</span>
+            </div>
+
+            <div
+              class="tl-planner-step"
+              data-step="4"
+            >
+              <span class="tl-planner-step-num">4</span>
+              <span>Attractions</span>
+            </div>
+
+            <div
+              class="tl-planner-step"
+              data-step="5"
+            >
+              <span class="tl-planner-step-num">5</span>
+              <span>Preferences</span>
+            </div>
 
           </div>
 
+          <!-- ===================================================
+               PLANNER PANEL
+          ==================================================== -->
 
-          <!-- =================================================
-               STEP 2 — DATES
-          ================================================== -->
+          <div class="tl-card tl-planner-panel">
 
-          <div
-            class="tl-planner-content tl-hidden"
-            data-content="2"
-          >
+            <!-- =================================================
+                 STEP 1 — COUNTRY
+            ================================================== -->
 
-            <h2>
-              When are you traveling?
-            </h2>
+            <div
+              class="tl-planner-content"
+              data-content="1"
+            >
 
-            <p class="tl-hint">
-              Choose the start and end dates.
-            </p>
+              <h2>
+                Which country do you want to visit?
+              </h2>
 
-
-            <div class="tl-flex tl-gap-16">
+              <p class="tl-hint">
+                Choose a destination country.
+              </p>
 
               <div
                 class="tl-field"
-                style="flex:1;"
+                style="position:relative;"
               >
 
-                <label for="plan-start">
-                  Start date
+                <label for="plan-country">
+                  Country
                 </label>
 
                 <input
                   class="tl-input"
-                  id="plan-start"
-                  type="date"
+                  id="plan-country"
+                  type="text"
+                  placeholder="Search a country..."
+                  autocomplete="off"
                 >
+
+                <div
+                  class="tl-search-suggest"
+                  id="plan-country-suggest"
+                ></div>
 
               </div>
 
+              <div id="plan-country-selected"></div>
+
+            </div>
+
+            <!-- =================================================
+                 STEP 2 — DATES
+            ================================================== -->
+
+            <div
+              class="tl-planner-content tl-hidden"
+              data-content="2"
+            >
+
+              <h2>
+                When are you traveling?
+              </h2>
+
+              <p class="tl-hint">
+                Choose the start and end dates.
+              </p>
+
+              <div class="tl-flex tl-gap-16">
+
+                <div
+                  class="tl-field"
+                  style="flex:1;"
+                >
+
+                  <label for="plan-start">
+                    Start date
+                  </label>
+
+                  <input
+                    class="tl-input"
+                    id="plan-start"
+                    type="date"
+                  >
+
+                </div>
+
+                <div
+                  class="tl-field"
+                  style="flex:1;"
+                >
+
+                  <label for="plan-end">
+                    End date
+                  </label>
+
+                  <input
+                    class="tl-input"
+                    id="plan-end"
+                    type="date"
+                  >
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- =================================================
+                 STEP 3 — CITIES
+            ================================================== -->
+
+            <div
+              class="tl-planner-content tl-hidden"
+              data-content="3"
+            >
+
+              <h2>
+                Choose your cities
+              </h2>
+
+              <p class="tl-hint">
+                Select a city for each day of your trip.
+              </p>
+
+              <div id="plan-city-days"></div>
+
+            </div>
+
+            <!-- =================================================
+                 STEP 4 — ATTRACTIONS
+            ================================================== -->
+
+            <div
+              class="tl-planner-content tl-hidden"
+              data-content="4"
+            >
+
+              <h2>
+                Choose your attractions
+              </h2>
+
+              <p class="tl-hint">
+                Pick experiences for each day.
+              </p>
+
+              <div id="plan-attraction-days"></div>
+
+            </div>
+
+            <!-- =================================================
+                 STEP 5 — PREFERENCES
+            ================================================== -->
+
+            <div
+              class="tl-planner-content tl-hidden"
+              data-content="5"
+            >
+
+              <h2>
+                Trip preferences
+              </h2>
+
+              <p class="tl-hint">
+                Tell us how you like to travel.
+              </p>
+
+              <h3 class="tl-mt-16">
+                Budget
+              </h3>
 
               <div
-                class="tl-field"
-                style="flex:1;"
+                class="tl-option-cards"
+                id="plan-budget-cards"
               >
 
-                <label for="plan-end">
-                  End date
-                </label>
-
-                <input
-                  class="tl-input"
-                  id="plan-end"
-                  type="date"
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-budget="1"
                 >
+                  <span class="tl-icon">💵</span>
+                  <strong>Budget</strong>
+                  <p>Smart spending and affordable stays</p>
+                </button>
+
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-budget="2"
+                >
+                  <span class="tl-icon">💳</span>
+                  <strong>Moderate</strong>
+                  <p>Comfortable and balanced</p>
+                </button>
+
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-budget="3"
+                >
+                  <span class="tl-icon">💎</span>
+                  <strong>Luxury</strong>
+                  <p>Premium travel experiences</p>
+                </button>
 
               </div>
 
-            </div>
+              <h3 class="tl-mt-32">
+                Travelers
+              </h3>
 
-          </div>
+              <div class="tl-traveler-row">
 
-
-          <!-- =================================================
-               STEP 3 — CITIES
-          ================================================== -->
-
-          <div
-            class="tl-planner-content tl-hidden"
-            data-content="3"
-          >
-
-            <h2>
-              Choose your cities
-            </h2>
-
-            <p class="tl-hint">
-              Select a city for each day of your trip.
-            </p>
-
-            <div id="plan-city-days"></div>
-
-          </div>
-
-
-          <!-- =================================================
-               STEP 4 — ATTRACTIONS
-          ================================================== -->
-
-          <div
-            class="tl-planner-content tl-hidden"
-            data-content="4"
-          >
-
-            <h2>
-              Choose your attractions
-            </h2>
-
-            <p class="tl-hint">
-              Pick experiences for each day.
-            </p>
-
-            <div id="plan-attraction-days"></div>
-
-          </div>
-
-
-          <!-- =================================================
-               STEP 5 — PREFERENCES
-          ================================================== -->
-
-          <div
-            class="tl-planner-content tl-hidden"
-            data-content="5"
-          >
-
-            <h2>
-              Trip preferences
-            </h2>
-
-            <p class="tl-hint">
-              Tell us how you like to travel.
-            </p>
-
-
-            <!-- =================================================
-                 BUDGET
-            ================================================== -->
-
-            <h3 class="tl-mt-16">
-              Budget
-            </h3>
-
-
-            <div
-              class="tl-option-cards"
-              id="plan-budget-cards"
-            >
-
-              <!-- Budget -->
-
-              <button
-                type="button"
-                class="tl-option-card"
-                data-budget="1"
-              >
-
-                <span class="tl-icon">
-                  💵
+                <span>
+                  Number of travelers
                 </span>
 
-                <strong>
-                  Budget
-                </strong>
+                <div class="tl-stepper-input">
 
-                <p>
-                  Smart spending and affordable stays
-                </p>
+                  <button
+                    type="button"
+                    data-adjust="travelers"
+                    data-dir="-1"
+                    aria-label="Decrease travelers"
+                  >
+                    −
+                  </button>
 
-              </button>
+                  <span id="plan-travelers-count">
+                    1
+                  </span>
 
+                  <button
+                    type="button"
+                    data-adjust="travelers"
+                    data-dir="1"
+                    aria-label="Increase travelers"
+                  >
+                    +
+                  </button>
 
-              <!-- Moderate -->
+                </div>
 
-              <button
-                type="button"
-                class="tl-option-card"
-                data-budget="2"
+              </div>
+
+              <h3 class="tl-mt-32">
+                Travel Style
+              </h3>
+
+              <div
+                class="tl-option-cards"
+                id="plan-style-cards"
               >
-
-                <span class="tl-icon">
-                  💳
-                </span>
-
-                <strong>
-                  Moderate
-                </strong>
-
-                <p>
-                  Comfortable and balanced
-                </p>
-
-              </button>
-
-
-              <!-- Luxury -->
-
-              <button
-                type="button"
-                class="tl-option-card"
-                data-budget="3"
-              >
-
-                <span class="tl-icon">
-                  💎
-                </span>
-
-                <strong>
-                  Luxury
-                </strong>
-
-                <p>
-                  Premium travel experiences
-                </p>
-
-              </button>
-
-            </div>
-
-
-            <!-- =================================================
-                 TRAVELERS
-            ================================================== -->
-
-            <h3 class="tl-mt-32">
-              Travelers
-            </h3>
-
-
-            <div class="tl-traveler-row">
-
-              <span>
-                Number of travelers
-              </span>
-
-
-              <div class="tl-stepper-input">
 
                 <button
                   type="button"
-                  data-adjust="travelers"
-                  data-dir="-1"
-                  aria-label="Decrease travelers"
+                  class="tl-option-card"
+                  data-style="Adventure"
                 >
-                  −
+                  <span class="tl-icon">🧗</span>
+                  <strong>Adventure</strong>
                 </button>
 
-
-                <span id="plan-travelers-count">
-                  1
-                </span>
-
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-style="Relaxation"
+                >
+                  <span class="tl-icon">🌴</span>
+                  <strong>Relaxation</strong>
+                </button>
 
                 <button
                   type="button"
-                  data-adjust="travelers"
-                  data-dir="1"
-                  aria-label="Increase travelers"
+                  class="tl-option-card"
+                  data-style="Culture"
                 >
-                  +
+                  <span class="tl-icon">🏛️</span>
+                  <strong>Culture</strong>
+                </button>
+
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-style="Food"
+                >
+                  <span class="tl-icon">🍜</span>
+                  <strong>Food</strong>
+                </button>
+
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-style="Luxury"
+                >
+                  <span class="tl-icon">✨</span>
+                  <strong>Luxury</strong>
+                </button>
+
+                <button
+                  type="button"
+                  class="tl-option-card"
+                  data-style="Nature"
+                >
+                  <span class="tl-icon">🌲</span>
+                  <strong>Nature</strong>
                 </button>
 
               </div>
 
             </div>
 
-
             <!-- =================================================
-                 TRAVEL STYLE
+                 ACTIONS
             ================================================== -->
 
-            <h3 class="tl-mt-32">
-              Travel Style
-            </h3>
-
-
-            <div
-              class="tl-option-cards"
-              id="plan-style-cards"
-            >
-
-              <!-- Adventure -->
+            <div class="tl-planner-actions">
 
               <button
                 type="button"
-                class="tl-option-card"
-                data-style="Adventure"
+                class="tl-btn tl-btn--ghost"
+                id="planner-back"
               >
-
-                <span class="tl-icon">
-                  🧗
-                </span>
-
-                <strong>
-                  Adventure
-                </strong>
-
+                Back
               </button>
 
-
-              <!-- Relaxation -->
-
               <button
                 type="button"
-                class="tl-option-card"
-                data-style="Relaxation"
+                class="tl-btn tl-btn--primary"
+                id="planner-next"
               >
-
-                <span class="tl-icon">
-                  🌴
-                </span>
-
-                <strong>
-                  Relaxation
-                </strong>
-
-              </button>
-
-
-              <!-- Culture -->
-
-              <button
-                type="button"
-                class="tl-option-card"
-                data-style="Culture"
-              >
-
-                <span class="tl-icon">
-                  🏛️
-                </span>
-
-                <strong>
-                  Culture
-                </strong>
-
-              </button>
-
-
-              <!-- Food -->
-
-              <button
-                type="button"
-                class="tl-option-card"
-                data-style="Food"
-              >
-
-                <span class="tl-icon">
-                  🍜
-                </span>
-
-                <strong>
-                  Food
-                </strong>
-
-              </button>
-
-
-              <!-- Luxury -->
-
-              <button
-                type="button"
-                class="tl-option-card"
-                data-style="Luxury"
-              >
-
-                <span class="tl-icon">
-                  ✨
-                </span>
-
-                <strong>
-                  Luxury
-                </strong>
-
-              </button>
-
-
-              <!-- Nature -->
-
-              <button
-                type="button"
-                class="tl-option-card"
-                data-style="Nature"
-              >
-
-                <span class="tl-icon">
-                  🌲
-                </span>
-
-                <strong>
-                  Nature
-                </strong>
-
+                Continue
               </button>
 
             </div>
 
           </div>
 
-
-          <!-- =================================================
-               ACTIONS
-          ================================================== -->
-
-          <div class="tl-planner-actions">
-
-            <button
-              type="button"
-              class="tl-btn tl-btn--ghost"
-              id="planner-back"
-            >
-              Back
-            </button>
-
-
-            <button
-              type="button"
-              class="tl-btn tl-btn--primary"
-              id="planner-next"
-            >
-              Continue
-            </button>
-
-          </div>
-
         </div>
 
-      </div>
-
-
-      <!-- =====================================================
-           AI TRAVEL ASSISTANT
-      ====================================================== -->
-
-      <div
-        class="tl-card tl-mt-32"
-        id="ai-assistant-card"
-        style="padding:28px;"
-      >
-
-        <!-- AI Header -->
+        <!-- =====================================================
+             AI TRAVEL ASSISTANT
+        ====================================================== -->
 
         <div
-          class="tl-flex tl-items-center tl-gap-12"
-          style="
-            margin-bottom:18px;
-            flex-wrap:wrap;
-          "
+          class="tl-card tl-mt-32"
+          id="ai-assistant-card"
+          style="padding:28px;"
         >
 
-          <span class="tl-badge">
-            ✦ AI Travel Assistant
-          </span>
+          <!-- ===================================================
+               AI HEADER
+          ==================================================== -->
 
-          <span
-            class="tl-text-secondary"
-            style="font-size:13px;"
+          <div
+            class="tl-flex tl-items-center tl-gap-12"
+            style="
+              margin-bottom:18px;
+              flex-wrap:wrap;
+            "
           >
-            Ask anything to refine your plan in your own words.
-          </span>
 
-        </div>
+            <span class="tl-badge">
+              ✦ AI Travel Assistant
+            </span>
 
+            <span
+              class="tl-text-secondary"
+              style="font-size:13px;"
+            >
+              Ask anything to refine your plan in your own words.
+            </span>
 
-        <!-- AI Messages -->
-
-        <div
-          id="ai-messages"
-          style="
-            display:flex;
-            flex-direction:column;
-            gap:12px;
-            max-height:320px;
-            overflow-y:auto;
-            margin-bottom:16px;
-          "
-        >
-
-          <div class="tl-ai-msg tl-ai-msg--ai">
-            👋 Tell me what kind of trip you're looking for.
-            I can help you refine your destination, activities,
-            budget and travel style.
           </div>
 
-        </div>
+          <!-- ===================================================
+               AI MESSAGES
+          ==================================================== -->
 
+          <div
+            id="ai-messages"
+            data-ai-response
+            aria-live="polite"
+            style="
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              max-height:320px;
+              overflow-y:auto;
+              margin-bottom:16px;
+            "
+          >
 
-        <!-- AI Form -->
+            <div
+              class="tl-ai-msg tl-ai-msg--ai"
+            >
+              👋 Tell me what kind of trip you're looking for.
+              I can help you refine your destination, activities,
+              budget and travel style.
+            </div>
 
-        <form
-          id="ai-form"
-          class="tl-flex tl-gap-12"
-        >
+          </div>
 
-          <input
-            class="tl-input"
-            id="ai-input"
-            type="text"
-            placeholder="e.g. I want a relaxed 5-day trip with great food..."
+          <!-- ===================================================
+               AI FORM
+          ==================================================== -->
+
+          <form
+            id="ai-form"
+            class="tl-flex tl-gap-12"
             autocomplete="off"
           >
 
+            <input
+              class="tl-input"
+              id="ai-input"
+              data-ai-input
+              type="text"
+              placeholder="e.g. I want a relaxed 5-day trip with great food..."
+              autocomplete="off"
+            >
 
-          <button
-            type="submit"
-            class="tl-btn tl-btn--primary"
-            id="ai-send"
-          >
-            Send
-          </button>
+            <button
+              type="submit"
+              class="tl-btn tl-btn--primary"
+              id="ai-send"
+              data-ai-send
+            >
+              Send
+            </button>
 
-        </form>
+          </form>
 
+          <!-- ===================================================
+               GENERATED AI PLANS
+          ==================================================== -->
 
-        <!-- AI Plan Actions -->
-
-        <div
-          class="tl-flex tl-gap-12 tl-mt-16 tl-hidden"
-          id="ai-plan-actions"
-        >
-
-          <button
-            type="button"
-            class="tl-btn tl-btn--outline tl-btn--sm"
-            id="ai-generate-plans"
-          >
-            ✦ Generate Travel Plans
-          </button>
+          <div
+            id="ai-plans"
+            class="tl-mt-32"
+          ></div>
 
         </div>
 
+        <!-- END AI ASSISTANT -->
+
       </div>
 
-      <!-- END AI ASSISTANT -->
+    </section>
 
+  </main>
 
-    </div>
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
 
-  </section>
+  <div id="tl-footer-mount"></div>
 
-</main>
+  <!-- =====================================================
+       SCRIPTS
+  ====================================================== -->
 
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/catalog.js"></script>
+  <script src="assets/js/api/trips.js"></script>
 
-<!-- =====================================================
-     FOOTER
-====================================================== -->
+  <script src="assets/js/api/ai.js"></script>
 
-<div id="tl-footer-mount"></div>
-
-
-<!-- =========================================================
-     SCRIPTS
-========================================================= -->
-
-<script src="assets/js/api/api.js"></script>
-
-<script src="assets/js/api/auth.js"></script>
-
-<script src="assets/js/api/catalog.js"></script>
-
-<script src="assets/js/api/trips.js"></script>
-
-<!-- AI API -->
-<script src="assets/js/api/ai.js"></script>
-
-<script src="assets/js/app.js"></script>
-
-<script src="assets/js/pages/plan-trip.js"></script>
-
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages/plan-trip.js"></script>
 
 </body>
+
 </html>

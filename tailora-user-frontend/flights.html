@@ -1,199 +1,973 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flights — Tailora</title>
-<link rel="icon" href="assets/images/logo.png">
-<link rel="stylesheet" href="assets/css/tailora.css">
-<link rel="stylesheet" href="assets/css/nav.css">
-<link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/responsive.css">
-<style>
-  .tl-flight-form { padding: 28px; margin-bottom: 32px; }
-  .tl-flight-modes { display: flex; gap: 6px; border-bottom: 1px solid var(--tl-border); margin-bottom: 26px; overflow-x: auto; }
-  .tl-flight-modes button {
-    padding: 12px 18px; background: none; border: none; color: var(--tl-text-secondary);
-    font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; white-space: nowrap;
-  }
-  .tl-flight-modes button.is-active { color: var(--tl-text); border-bottom-color: var(--tl-cyan); }
-  .tl-flight-panel { display: none; }
-  .tl-flight-panel.is-active { display: block; }
-  .tl-flight-row { display: grid; grid-template-columns: 1fr 1fr 1fr 100px 130px; gap: 12px; align-items: end; }
-  .tl-flight-row--rt { grid-template-columns: 1fr 1fr 1fr 1fr 100px 130px; }
-  .tl-airport-field { position: relative; }
-  .tl-leg { border: 1px dashed var(--tl-border-strong); border-radius: var(--tl-radius-md); padding: 16px; margin-bottom: 14px; position: relative; }
-  .tl-leg-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
-  .tl-leg-remove {
-    width: 28px; height: 28px; border-radius: 50%; background: var(--tl-surface); border: 1px solid var(--tl-border);
-    color: var(--tl-danger); font-size: 14px; line-height: 1;
-  }
-  .tl-flight-submit-row { display: flex; justify-content: flex-end; margin-top: 18px; gap: 12px; flex-wrap: wrap; }
-  .tl-flight-extra-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; max-width: 420px; }
-  .tl-flight-result { padding: 20px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-  .tl-flight-result-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-  .tl-flight-route { display: flex; align-items: center; gap: 14px; font-size: 15px; }
-  .tl-flight-route strong { font-size: 17px; }
-  .tl-flight-arrow { color: var(--tl-text-muted); }
-  .tl-flight-meta-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .tl-flight-price-col { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-  .tl-flight-result.is-selected { border-color: var(--tl-cyan); box-shadow: var(--tl-glow-cyan); }
-  @media (max-width: 900px) {
-    .tl-flight-row, .tl-flight-row--rt { grid-template-columns: 1fr 1fr; }
-    .tl-leg-row { grid-template-columns: 1fr 1fr; }
-    .tl-flight-price-col { align-items: flex-start; text-align: left; }
-  }
-</style>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Flights — Tailora</title>
+
+  <link
+    rel="icon"
+    href="assets/images/logo.png"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/tailora.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/nav.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/components.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/responsive.css"
+  >
+
+  <style>
+    .tl-flight-form {
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+
+    .tl-flight-modes {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--tl-border);
+      margin-bottom: 26px;
+      overflow-x: auto;
+    }
+
+    .tl-flight-modes button {
+      padding: 12px 18px;
+      background: none;
+      border: none;
+      color: var(--tl-text-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .tl-flight-modes button.is-active {
+      color: var(--tl-text);
+      border-bottom-color: var(--tl-cyan);
+    }
+
+    .tl-flight-panel {
+      display: none;
+    }
+
+    .tl-flight-panel.is-active {
+      display: block;
+    }
+
+    .tl-flight-row {
+      display: grid;
+      grid-template-columns:
+        1fr
+        1fr
+        1fr
+        100px
+        150px;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .tl-flight-row--rt {
+      grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1fr
+        100px
+        150px;
+    }
+
+    .tl-leg {
+      border: 1px dashed var(--tl-border-strong);
+      border-radius: var(--tl-radius-md);
+      padding: 18px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .tl-leg-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .tl-leg-row {
+      display: grid;
+      grid-template-columns:
+        1fr
+        1fr
+        1fr
+        150px;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .tl-leg-time-row {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0, 1fr)
+        );
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .tl-leg-remove {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--tl-border);
+      background: var(--tl-surface);
+      color: var(--tl-danger);
+      cursor: pointer;
+    }
+
+    .tl-flight-extra-row {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          4,
+          minmax(0, 1fr)
+        );
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .tl-flight-extra-row--three {
+      grid-template-columns:
+        repeat(
+          3,
+          minmax(0, 1fr)
+        );
+    }
+
+    .tl-flight-extra-row--two {
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+    }
+
+    .tl-flight-section-title {
+      margin-top: 26px;
+      margin-bottom: 14px;
+    }
+
+    .tl-flight-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      cursor: pointer;
+    }
+
+    .tl-flight-submit-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tl-flight-result {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tl-flight-result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tl-flight-route {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 15px;
+      flex-wrap: wrap;
+    }
+
+    .tl-flight-route strong {
+      font-size: 17px;
+    }
+
+    .tl-flight-arrow {
+      color: var(--tl-text-muted);
+    }
+
+    .tl-flight-meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tl-flight-price-col {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .tl-flight-result.is-selected {
+      border-color: var(--tl-cyan);
+      box-shadow: var(--tl-glow-cyan);
+    }
+
+    @media (max-width: 1100px) {
+      .tl-flight-row,
+      .tl-flight-row--rt,
+      .tl-leg-row {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .tl-leg-time-row,
+      .tl-flight-extra-row,
+      .tl-flight-extra-row--three {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    @media (max-width: 650px) {
+      .tl-flight-row,
+      .tl-flight-row--rt,
+      .tl-leg-row,
+      .tl-leg-time-row,
+      .tl-flight-extra-row,
+      .tl-flight-extra-row--three,
+      .tl-flight-extra-row--two {
+        grid-template-columns: 1fr;
+      }
+
+      .tl-flight-submit-row {
+        justify-content: stretch;
+      }
+
+      .tl-flight-submit-row .tl-btn {
+        width: 100%;
+      }
+
+      .tl-flight-price-col {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div id="tl-nav-mount"></div>
+  <div id="tl-nav-mount"></div>
 
-<main>
-  <section class="tl-hero" style="padding-bottom:20px;">
-    <div class="tl-hero-bg"></div>
-    <div class="tl-container">
-      <span class="tl-eyebrow">Fly</span>
-      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Find your next flight</h1>
-      <p class="tl-hero-sub">Search one-way, round trip, or build a multi-city route — then lock in the fare you like.</p>
-    </div>
-  </section>
+  <main>
 
-  <section class="tl-section tl-section--tight">
-    <div class="tl-container">
+    <section
+      class="tl-hero"
+      style="padding-bottom:20px;"
+    >
+      <div class="tl-hero-bg"></div>
 
-      <div class="tl-card tl-flight-form">
-        <div class="tl-flight-modes" id="flight-modes">
-          <button type="button" class="is-active" data-mode="one-way">One Way</button>
-          <button type="button" data-mode="round-trip">Round Trip</button>
-          <button type="button" data-mode="multi-city">Multi City</button>
+      <div class="tl-container">
+
+        <span class="tl-eyebrow">
+          Fly
+        </span>
+
+        <h1
+          class="tl-display tl-mt-8"
+          style="
+            font-size:clamp(
+              30px,
+              4.5vw,
+              48px
+            );
+            max-width:640px;
+          "
+        >
+          Find your next flight
+        </h1>
+
+        <p class="tl-hero-sub">
+          Search one-way, round trip, or build a multi-city route.
+        </p>
+
+      </div>
+    </section>
+
+
+    <section
+      class="tl-section tl-section--tight"
+    >
+
+      <div class="tl-container">
+
+        <div
+          class="tl-card tl-flight-form"
+        >
+
+          <div
+            class="tl-flight-modes"
+            id="flight-modes"
+          >
+
+            <button
+              type="button"
+              class="is-active"
+              data-mode="one-way"
+            >
+              One Way
+            </button>
+
+            <button
+              type="button"
+              data-mode="round-trip"
+            >
+              Round Trip
+            </button>
+
+            <button
+              type="button"
+              data-mode="multi-city"
+            >
+              Multi City
+            </button>
+
+          </div>
+
+
+          <!-- ONE WAY -->
+
+          <form
+            class="tl-flight-panel is-active"
+            data-panel="one-way"
+            id="form-one-way"
+            autocomplete="off"
+          >
+
+            <div class="tl-flight-row">
+
+              <div class="tl-field">
+
+                <label for="ow-origin">
+                  From
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="ow-origin"
+                  placeholder="e.g. CAI"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="ow-destination">
+                  To
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="ow-destination"
+                  placeholder="e.g. DXB"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="ow-departure">
+                  Departure
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="date"
+                  id="ow-departure"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="ow-adults">
+                  Adults
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="ow-adults"
+                  min="1"
+                  value="1"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="ow-cabin">
+                  Cabin
+                </label>
+
+                <select
+                  class="tl-select tl-input"
+                  id="ow-cabin"
+                >
+
+                  <option value="economy">
+                    Economy
+                  </option>
+
+                  <option value="premium_economy">
+                    Premium Economy
+                  </option>
+
+                  <option value="business">
+                    Business
+                  </option>
+
+                  <option value="first">
+                    First
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <div class="tl-flight-submit-row">
+
+              <button
+                type="submit"
+                class="tl-btn tl-btn--primary"
+                id="ow-search-btn"
+              >
+                Search Flights
+              </button>
+
+            </div>
+
+          </form>
+
+
+          <!-- ROUND TRIP -->
+
+          <form
+            class="tl-flight-panel"
+            data-panel="round-trip"
+            id="form-round-trip"
+            autocomplete="off"
+          >
+
+            <div
+              class="tl-flight-row tl-flight-row--rt"
+            >
+
+              <div class="tl-field">
+
+                <label for="rt-origin">
+                  From
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="rt-origin"
+                  placeholder="e.g. CAI"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="rt-destination">
+                  To
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="rt-destination"
+                  placeholder="e.g. DXB"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="rt-departure">
+                  Departure
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="date"
+                  id="rt-departure"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="rt-return">
+                  Return
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="date"
+                  id="rt-return"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="rt-adults">
+                  Adults
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="rt-adults"
+                  min="1"
+                  value="1"
+                  required
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="rt-cabin">
+                  Cabin
+                </label>
+
+                <select
+                  class="tl-select tl-input"
+                  id="rt-cabin"
+                >
+
+                  <option value="economy">
+                    Economy
+                  </option>
+
+                  <option value="premium_economy">
+                    Premium Economy
+                  </option>
+
+                  <option value="business">
+                    Business
+                  </option>
+
+                  <option value="first">
+                    First
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <div class="tl-flight-submit-row">
+
+              <button
+                type="submit"
+                class="tl-btn tl-btn--primary"
+                id="rt-search-btn"
+              >
+                Search Flights
+              </button>
+
+            </div>
+
+          </form>
+
+
+          <!-- MULTI CITY -->
+
+          <form
+            class="tl-flight-panel"
+            data-panel="multi-city"
+            id="form-multi-city"
+            autocomplete="off"
+          >
+
+            <div id="mc-legs"></div>
+
+
+            <button
+              type="button"
+              class="tl-btn tl-btn--ghost tl-btn--sm"
+              id="mc-add-leg"
+            >
+              + Add Another Flight
+            </button>
+
+
+            <h3 class="tl-flight-section-title">
+              Passengers
+            </h3>
+
+
+            <div class="tl-flight-extra-row">
+
+              <div class="tl-field">
+
+                <label for="mc-adults">
+                  Adults
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-adults"
+                  min="1"
+                  value="1"
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-children">
+                  Children
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-children"
+                  min="0"
+                  value="0"
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-infants-seat">
+                  Infants in seat
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-infants-seat"
+                  min="0"
+                  value="0"
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-infants-lap">
+                  Infants on lap
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-infants-lap"
+                  min="0"
+                  value="0"
+                >
+
+              </div>
+
+            </div>
+
+
+            <h3 class="tl-flight-section-title">
+              Flight Options
+            </h3>
+
+
+            <div
+              class="tl-flight-extra-row tl-flight-extra-row--three"
+            >
+
+              <div class="tl-field">
+
+                <label for="mc-cabin">
+                  Cabin
+                </label>
+
+                <select
+                  class="tl-select tl-input"
+                  id="mc-cabin"
+                >
+
+                  <option value="economy">
+                    Economy
+                  </option>
+
+                  <option value="premium_economy">
+                    Premium Economy
+                  </option>
+
+                  <option value="business">
+                    Business
+                  </option>
+
+                  <option value="first">
+                    First
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-max-price">
+                  Max Price
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-max-price"
+                  min="0"
+                  value="0"
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-market">
+                  Market
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="mc-market"
+                  placeholder="e.g. US"
+                  value="US"
+                >
+
+              </div>
+
+            </div>
+
+
+            <h3 class="tl-flight-section-title">
+              Baggage
+            </h3>
+
+
+            <div
+              class="tl-flight-extra-row tl-flight-extra-row--two"
+            >
+
+              <div class="tl-field">
+
+                <label for="mc-carry-on">
+                  Minimum Carry-on Bags
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-carry-on"
+                  min="0"
+                  value="0"
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-checked-bags">
+                  Minimum Checked Bags
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="number"
+                  id="mc-checked-bags"
+                  min="0"
+                  value="0"
+                >
+
+              </div>
+
+            </div>
+
+
+            <h3 class="tl-flight-section-title">
+              Airlines
+            </h3>
+
+
+            <div
+              class="tl-flight-extra-row tl-flight-extra-row--two"
+            >
+
+              <div class="tl-field">
+
+                <label for="mc-airlines-include">
+                  Include Airlines
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="mc-airlines-include"
+                  placeholder="e.g. MS, EK, QR"
+                >
+
+              </div>
+
+
+              <div class="tl-field">
+
+                <label for="mc-airlines-exclude">
+                  Exclude Airlines
+                </label>
+
+                <input
+                  class="tl-input"
+                  type="text"
+                  id="mc-airlines-exclude"
+                  placeholder="e.g. AA, BA"
+                >
+
+              </div>
+
+            </div>
+
+
+            <label class="tl-flight-checkbox">
+
+              <input
+                type="checkbox"
+                id="mc-self-transfer"
+                checked
+              >
+
+              <span>
+                Allow self-transfer flights
+              </span>
+
+            </label>
+
+
+            <div class="tl-flight-submit-row">
+
+              <button
+                type="submit"
+                class="tl-btn tl-btn--primary"
+                id="mc-search-btn"
+              >
+                Search Flights
+              </button>
+
+            </div>
+
+          </form>
+
         </div>
 
-        <!-- ONE WAY -->
-        <form class="tl-flight-panel is-active" data-panel="one-way" id="form-one-way">
-          <div class="tl-flight-row">
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>From</label>
-              <select class="tl-select tl-input tl-city-select" id="ow-origin" required>
-                <option value="" disabled selected>Loading cities…</option>
-              </select>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>To</label>
-              <select class="tl-select tl-input tl-city-select" id="ow-destination" required>
-                <option value="" disabled selected>Loading cities…</option>
-              </select>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Departure</label>
-              <input class="tl-input" type="date" id="ow-departure" required>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Adults</label>
-              <input class="tl-input" type="number" id="ow-adults" min="1" value="1" required>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Cabin</label>
-              <select class="tl-select tl-input" id="ow-cabin">
-                <option value="economy">Economy</option>
-                <option value="premium_economy">Premium Economy</option>
-                <option value="business">Business</option>
-                <option value="first">First</option>
-              </select>
-            </div>
-          </div>
-          <div class="tl-flight-submit-row">
-            <button type="submit" class="tl-btn tl-btn--primary">Search Flights</button>
-          </div>
-        </form>
 
-        <!-- ROUND TRIP -->
-        <form class="tl-flight-panel" data-panel="round-trip" id="form-round-trip">
-          <div class="tl-flight-row tl-flight-row--rt">
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>From</label>
-              <select class="tl-select tl-input tl-city-select" id="rt-origin" required>
-                <option value="" disabled selected>Loading cities…</option>
-              </select>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>To</label>
-              <select class="tl-select tl-input tl-city-select" id="rt-destination" required>
-                <option value="" disabled selected>Loading cities…</option>
-              </select>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Departure</label>
-              <input class="tl-input" type="date" id="rt-departure" required>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Return</label>
-              <input class="tl-input" type="date" id="rt-return" required>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Adults</label>
-              <input class="tl-input" type="number" id="rt-adults" min="1" value="1" required>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Cabin</label>
-              <select class="tl-select tl-input" id="rt-cabin">
-                <option value="economy">Economy</option>
-                <option value="premium_economy">Premium Economy</option>
-                <option value="business">Business</option>
-                <option value="first">First</option>
-              </select>
-            </div>
-          </div>
-          <div class="tl-flight-submit-row">
-            <button type="submit" class="tl-btn tl-btn--primary">Search Flights</button>
-          </div>
-        </form>
+        <div id="flight-selected-banner"></div>
 
-        <!-- MULTI CITY -->
-        <form class="tl-flight-panel" data-panel="multi-city" id="form-multi-city">
-          <div id="mc-legs"></div>
-          <button type="button" class="tl-btn tl-btn--ghost tl-btn--sm" id="mc-add-leg">+ Add Another Flight</button>
+        <div id="flights-results"></div>
 
-          <div class="tl-flight-extra-row">
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Adults</label>
-              <input class="tl-input" type="number" id="mc-adults" min="1" value="1" required>
-            </div>
-            <div class="tl-field" style="margin-bottom:0;">
-              <label>Children</label>
-              <input class="tl-input" type="number" id="mc-children" min="0" value="0">
-            </div>
-          </div>
-          <div class="tl-field" style="max-width:220px;">
-            <label>Cabin</label>
-            <select class="tl-select tl-input" id="mc-cabin">
-              <option value="economy">Economy</option>
-              <option value="premium_economy">Premium Economy</option>
-              <option value="business">Business</option>
-              <option value="first">First</option>
-            </select>
-          </div>
-
-          <div class="tl-flight-submit-row">
-            <button type="submit" class="tl-btn tl-btn--primary">Search Flights</button>
-          </div>
-        </form>
       </div>
 
-      <div id="flight-selected-banner"></div>
+    </section>
 
-      <div id="flights-results"></div>
-    </div>
-  </section>
-</main>
+  </main>
 
-<div id="tl-footer-mount"></div>
 
-<script src="assets/js/api/api.js"></script>
-<script src="assets/js/api/auth.js"></script>
-<script src="assets/js/api/flights.js"></script>
-<script src="assets/js/app.js"></script>
-<script src="assets/js/cart.js"></script>
-<script src="assets/js/pages/flights.js"></script>
+  <div id="tl-footer-mount"></div>
+
+
+  <script src="assets/js/api/api.js"></script>
+
+  <script src="assets/js/api/auth.js"></script>
+
+  <script src="assets/js/api/flights.js"></script>
+
+  <script src="assets/js/app.js"></script>
+
+  <script src="assets/js/cart.js"></script>
+
+  <script src="assets/js/pages/flights.js"></script>
+
 </body>
+
 </html>
