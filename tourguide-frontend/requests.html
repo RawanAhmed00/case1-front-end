@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Requests — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="requests" data-page-title="Tour Guide Requests" data-breadcrumb="Tour Operations, Booking Requests" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--warning"><i class="bi bi-inbox"></i> Booking Requests</span>
+          </div>
+          <h1 class="tl-page-title">
+            Traveler <span class="tl-gradient-text">Booking Requests</span>
+          </h1>
+          <p class="tl-text-secondary">Review request details, verify dates and traveler notes, and respond with accept or reject.</p>
+        </div>
+      </div>
+
+      <!-- FILTER CONTROLS BAR -->
+      <div class="tl-card p-3 mb-4">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+          <!-- Status Filter Tabs -->
+          <div class="btn-group gap-2" role="group">
+            <button type="button" class="tl-btn tl-btn--primary tl-btn--sm active" data-filter="all">All Requests</button>
+            <button type="button" class="tl-btn tl-btn--ghost tl-btn--sm" data-filter="pending"><i class="bi bi-hourglass-split me-1 text-warning"></i> Pending</button>
+            <button type="button" class="tl-btn tl-btn--ghost tl-btn--sm" data-filter="accepted"><i class="bi bi-check-circle me-1 text-success"></i> Accepted</button>
+            <button type="button" class="tl-btn tl-btn--ghost tl-btn--sm" data-filter="rejected"><i class="bi bi-x-circle me-1 text-danger"></i> Rejected</button>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="tl-input-group style-search" style="max-width: 320px; width: 100%;">
+            <i class="bi bi-search tl-input-icon"></i>
+            <input type="text" id="requestsSearchInput" class="tl-input" placeholder="Search traveler, location...">
+          </div>
+        </div>
+      </div>
+
+      <!-- REQUESTS CARDS GRID -->
+      <div class="row g-4" id="requestsGrid">
+        <div class="col-12 text-center py-5 text-secondary">
+          <div class="spinner-border text-teal" role="status"></div>
+          <p class="mt-2">Loading booking requests...</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- REQUEST DETAIL MODAL -->
+<div class="modal fade" id="requestDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content tl-modal-dialog">
+      <div class="modal-header tl-modal-header">
+        <h5 class="modal-title text-light fw-bold"><i class="bi bi-card-checklist me-2 text-teal"></i> Request Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body tl-modal-body" id="requestModalBody">
+        <!-- Injected dynamically by requests.js -->
+      </div>
+      <div class="modal-footer tl-modal-footer" id="requestModalFooter">
+        <!-- Injected dynamically by requests.js -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/requests.js"></script>
+
+</body>
+</html>

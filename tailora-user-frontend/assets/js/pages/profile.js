@@ -93,7 +93,8 @@
       } catch (e) {
         response = await window.TL.Trips.all();
       }
-      const trips = window.TL.Util.list(response);
+      const rawTrips = window.TL.Util.list(response);
+      const trips = window.TL.Util.uniqueBy(rawTrips, (t) => window.TL.Util.id(t));
       if (!trips.length) {
         const empty = window.TL.Util.emptyState("No trips yet", "Start planning to see your trips here.") +
           `<div class="tl-text-center"><a class="tl-btn tl-btn--primary tl-btn--sm" href="plan-trip.html">Plan a Trip</a></div>`;
@@ -138,7 +139,13 @@
       } catch (e) {
         response = await window.TL.Favorites.all();
       }
-      const favorites = window.TL.Util.list(response);
+      const rawFavorites = window.TL.Util.list(response);
+      const favorites = window.TL.Util.uniqueBy(rawFavorites, (f) => {
+        const item = window.TL.Util.pick(f, ["favoritable", "item"], f);
+        const favoritableId = window.TL.Util.pick(f, ["favoritable_id"], window.TL.Util.id(item));
+        const type = window.TL.Util.pick(f, ["favoritable_type", "type"], "");
+        return `${type}_${favoritableId}`;
+      });
       grid.innerHTML = favorites.length
         ? favorites.map(favoriteCard).join("")
         : window.TL.Util.emptyState("No favorites yet", "Save destinations, hotels, and experiences you love.");
@@ -174,7 +181,8 @@
       } catch (e) {
         response = await window.TL.Bookings.all();
       }
-      const bookings = window.TL.Util.list(response);
+      const rawBookings = window.TL.Util.list(response);
+      const bookings = window.TL.Util.uniqueBy(rawBookings, (b) => window.TL.Util.id(b));
       grid.innerHTML = bookings.length
         ? bookings.map(bookingCard).join("")
         : window.TL.Util.emptyState("No bookings yet", "Bookings you make will show up here.");

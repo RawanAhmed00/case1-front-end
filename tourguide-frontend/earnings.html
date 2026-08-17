@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earnings & Financials — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="earnings" data-page-title="Earnings & Financials" data-breadcrumb="Growth & Messages, Earnings" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--success"><i class="bi bi-cash-stack"></i> Financial Analytics</span>
+          </div>
+          <h1 class="tl-page-title">
+            Earnings & <span class="tl-gradient-text">Payout History</span>
+          </h1>
+          <p class="tl-text-secondary">Track revenue from completed tour bookings, and transaction statements.</p>
+        </div>
+      </div>
+
+      <!-- METRICS CARDS -->
+      <section class="tl-grid tl-grid--kpi">
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">Total Revenue</span>
+            <div class="tl-card-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--tl-success);"><i class="bi bi-wallet2"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-success mb-1" id="earnTotal">$0.00</p>
+          <p class="tl-metadata">Lifetime earnings earned</p>
+        </div>
+
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">This Month</span>
+            <div class="tl-card-icon"><i class="bi bi-graph-up-arrow"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-teal mb-1" id="earnThisMonth">$0.00</p>
+          <p class="tl-metadata">Income for current billing cycle</p>
+        </div>
+
+    
+
+        <div class="tl-card tl-card--hover">
+          <div class="tl-card__head">
+            <span class="tl-label">Completed Tours</span>
+            <div class="tl-card-icon" style="background: rgba(138, 92, 246, 0.1); color: var(--tl-purple);"><i class="bi bi-check-all"></i></div>
+          </div>
+          <p class="tl-card-title fs-3 fw-bold text-light mb-1" id="earnCompleted">0</p>
+          <p class="tl-metadata">Successfully delivered tours</p>
+        </div>
+      </section>
+
+      <!-- TRANSACTION HISTORY TABLE -->
+      <div class="tl-card">
+        <div class="tl-card__head border-bottom border-secondary border-opacity-25 pb-3">
+          <div>
+            <h5 class="tl-card-title text-light mb-1"><i class="bi bi-list-ul me-2 text-teal"></i>Payout & Earnings Statements</h5>
+            <span class="tl-metadata">Detailed breakdown of individual tour payouts</span>
+          </div>
+        </div>
+
+        <div class="tl-table-wrap mt-3">
+          <table class="tl-table">
+            
+<thead>
+  <tr>
+    <th>Statement ID</th>
+    <th>Date</th>
+    <th>Traveler</th>
+    <th>Amount ($)</th>
+    <th>Status</th>
+    <th class="text-end">Action</th>
+  </tr>
+</thead>
+            <tbody id="earningsTableBody">
+              <tr>
+                <td colspan="6" class="text-center py-4 text-secondary">
+                  <div class="spinner-border spinner-border-sm me-2"></div> Loading transaction history...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/earnings.js"></script>
+
+</body>
+</html>

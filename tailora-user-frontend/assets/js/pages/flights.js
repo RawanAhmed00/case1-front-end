@@ -466,45 +466,40 @@
       return [];
     }
 
+    let list = [];
     if (
       Array.isArray(
         response?.data?.itineraries
       )
     ) {
-      return response.data.itineraries;
-    }
-
-    if (
+      list = response.data.itineraries;
+    } else if (
       Array.isArray(
         response?.itineraries
       )
     ) {
-      return response.itineraries;
-    }
-
-    if (
+      list = response.itineraries;
+    } else if (
       Array.isArray(
         response?.data?.flights
       )
     ) {
-      return response.data.flights;
-    }
-
-    if (
+      list = response.data.flights;
+    } else if (
       Array.isArray(
         response?.flights
       )
     ) {
-      return response.flights;
-    }
-
-    if (
+      list = response.flights;
+    } else if (
       Array.isArray(response)
     ) {
-      return response;
+      list = response;
     }
 
-    return [];
+    return (window.TL && window.TL.Util && typeof window.TL.Util.uniqueBy === "function")
+      ? window.TL.Util.uniqueBy(list, (item) => flightIgnavId(item) || `${item?.id}_${item?.origin}_${item?.destination}_${item?.departure_date}`)
+      : list;
   }
 
   /* =========================================================

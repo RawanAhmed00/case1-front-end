@@ -99,7 +99,8 @@
     grid.innerHTML = window.TL.Util.skeletonCards(9);
     try {
       const [attractionsRes, categoriesRes] = await Promise.all([window.TL.Attractions.all(), window.TL.Categories.all().catch(() => [])]);
-      state.items = window.TL.Util.list(attractionsRes);
+      const rawAttractions = window.TL.Util.list(attractionsRes);
+      state.items = window.TL.Util.uniqueBy(rawAttractions, (a) => window.TL.Util.name(a));
       populateCategories(categoriesRes);
       render();
     } catch (err) {

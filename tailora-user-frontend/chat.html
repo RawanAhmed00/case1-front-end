@@ -3,94 +3,96 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chat — Tailora</title>
-  <link rel="icon" href="assets/images/logo.png">
+  <title>Chat & Messages — Tailora</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
   <link rel="stylesheet" href="assets/css/tailora.css">
   <link rel="stylesheet" href="assets/css/nav.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
   <link rel="stylesheet" href="assets/css/chat.css">
-  <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
->
 </head>
-<body>
+<body data-page="chat" data-page-title="Messages & Chat" data-requires-auth="true">
 
 <div id="tl-nav-mount"></div>
 
 <main class="tl-chat-page">
+  <!-- HERO HEADER -->
   <section class="tl-chat-hero">
     <div class="tl-container">
-      <span class="tl-eyebrow">Travel Support</span>
-      <h1 class="tl-display tl-mt-8">Your conversations</h1>
-      <p class="tl-hero-sub">Talk to your Tailora guide and keep your trip conversations in one place.</p>
+      <span class="tl-eyebrow"><i class="bi bi-chat-dots me-1"></i> Live Travel Support</span>
+      <h1 class="tl-display tl-mt-8">Your <span class="tl-gradient-text">Conversations</span></h1>
+      <p class="tl-hero-sub">Connect directly with your Tailora tour guides and keep all your journey communications in one place.</p>
     </div>
   </section>
 
-  <section class="tl-section tl-section--tight">
+  <!-- CHAT CONTAINER -->
+  <section class="tl-section tl-section--tight tl-pb-40">
     <div class="tl-container">
-      <div class="tl-chat-shell">
+      <div class="tl-chat-shell tl-chat-layout" id="chatContainerLayout">
 
+        <!-- CHAT SIDEBAR (Conversations list) -->
         <aside class="tl-chat-sidebar">
-          <div class="tl-chat-sidebar-head">
+          <div class="tl-chat-sidebar-head tl-chat-sidebar__header">
             <div>
-              <div class="tl-section-title">Chats</div>
-              <p class="tl-text-secondary">Your recent conversations</p>
+              <div class="tl-section-title d-flex align-items-center gap-2">
+                <i class="bi bi-chat-left-text text-teal"></i> Active Conversations
+              </div>
+              <p class="tl-text-secondary">Your recent chats with guides</p>
             </div>
-            <span class="tl-chat-unread" id="chat-unread-count" hidden>0</span>
+            <span class="tl-chat-badge" id="chatTotalUnreadBadge" style="display:none;">0</span>
           </div>
 
-          <div id="chat-list" class="tl-chat-list">
-            <div class="tl-chat-loading">Loading conversations...</div>
+          <div id="chatListContainer" class="tl-chat-list">
+            <div class="tl-chat-loading text-center py-4 text-secondary">
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span> Loading chats...
+            </div>
           </div>
         </aside>
 
-        <section class="tl-chat-main" aria-label="Conversation">
-          <div id="chat-empty" class="tl-chat-empty">
-            <div class="tl-chat-empty-icon">✦</div>
-            <h2>Select a conversation</h2>
-            <p>Choose a chat from the left to view messages and continue your conversation.</p>
+        <!-- CHAT MAIN (Message Thread & Form) -->
+        <section class="tl-chat-main" aria-label="Conversation Thread">
+          <!-- Active Chat Header -->
+          <header class="tl-chat-header" id="activeChatHeaderTitle">
+            <span class="tl-metadata text-secondary">Select a tour guide from the sidebar to start messaging</span>
+          </header>
+
+          <!-- Message Thread -->
+          <div class="tl-chat-thread tl-chat-messages" id="chatMessagesThread" aria-live="polite">
+            <div class="tl-chat-empty my-auto text-center" id="chat-empty">
+              <div class="tl-chat-empty-icon">✦</div>
+              <h2>Select a conversation</h2>
+              <p>Choose a conversation from the left to view message history and chat in real time.</p>
+            </div>
           </div>
 
-          <div id="chat-conversation" class="tl-chat-conversation" hidden>
-           <header class="tl-chat-header">
+          <!-- Message Input Form -->
+          <form class="tl-chat-composer tl-chat-input-bar" id="chatSendForm">
+            <div class="tl-input-group flex-grow-1">
+              <input
+                type="text"
+                id="chatInputText"
+                class="tl-input"
+                placeholder="Type your message to tour guide..."
+                required
+                autocomplete="off"
+                maxlength="2000"
+              >
+            </div>
 
-  <button
-    type="button"
-    id="chat-back-btn"
-    class="tl-chat-back-btn"
-    aria-label="Back to chats"
-  >
-    <i class="bi bi-arrow-left"></i>
-  </button>
-
-  <div class="tl-chat-person">
-    <div class="tl-chat-avatar" id="chat-avatar">TG</div>
-
-    <div>
-      <h2 id="chat-title">Tour Guide</h2>
-      <span id="chat-status">Tailora Travel Guide</span>
-    </div>
-
-</header>
-    <div>
-      <h2 id="chat-title">Tour Guide</h2>
-      <span id="chat-status">Tailora Travel Guide</span>
-    </div>
-  </div>
-</header>
-    </div>
-
-</header>
-
-            <div id="chat-messages" class="tl-chat-messages" aria-live="polite"></div>
-
-            <form id="chat-form" class="tl-chat-composer">
-              <textarea id="chat-input" rows="1" maxlength="2000" placeholder="Write a message..." required></textarea>
-              <button type="submit" class="tl-btn tl-btn--primary" id="chat-send-btn">Send</button>
-            </form>
-          </div>
+            <button type="submit" class="tl-btn tl-btn--primary" id="chatSendBtn">
+              <i class="bi bi-send-fill"></i> <span>Send</span>
+            </button>
+          </form>
         </section>
 
       </div>
@@ -100,10 +102,9 @@
 
 <div id="tl-footer-mount"></div>
 
+<!-- API & Script Architecture -->
 <script src="assets/js/api/api.js"></script>
 <script src="assets/js/api/auth.js"></script>
-<script src="assets/js/api/catalog.js"></script>
-<script src="assets/js/api/favorites.js"></script>
 <script src="assets/js/api/chats.js"></script>
 <script src="assets/js/app.js"></script>
 <script src="assets/js/pages/chat.js"></script>

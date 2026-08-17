@@ -146,9 +146,13 @@
       <div class="tl-skel" style="height:60px;"></div>`;
     try {
       const response = await window.TL.Favorites.all();
-      const favorites = window.TL.Util.list(response).filter((f) => {
+      const rawFavorites = window.TL.Util.list(response).filter((f) => {
         const type = String(window.TL.Util.pick(f, ["favoritable_type", "type"], "")).toLowerCase();
         return type.includes("restaurant") || type.includes("attraction") || type.includes("experience");
+      });
+      const favorites = window.TL.Util.uniqueBy(rawFavorites, (f) => {
+        const item = window.TL.Util.pick(f, ["favoritable", "item"], f);
+        return window.TL.Util.name(item);
       });
       if (!favorites.length) {
         mount.querySelector(".tl-skel").outerHTML = `<p class="tl-text-secondary" style="font-size:13px;">No saved restaurants or experiences yet.</p>`;
@@ -193,7 +197,8 @@
     mount.innerHTML = window.TL.Util.skeletonCards(2);
     try {
       const response = await window.TL.Bookings.all();
-      const bookings = window.TL.Util.list(response);
+      const rawBookings = window.TL.Util.list(response);
+      const bookings = window.TL.Util.uniqueBy(rawBookings, (b) => window.TL.Util.id(b));
       mount.innerHTML = bookings.length
         ? bookings.map(existingBookingRow).join("")
         : window.TL.Util.emptyState("No bookings yet", "Create your first booking above.");

@@ -1,6 +1,6 @@
 /**
- * TAILORA USER — CHAT API SERVICE
- * Authenticated endpoints matching Chat API documentation:
+ * TAILORA TOUR GUIDE — CHAT API SERVICE
+ * Connects frontend strictly to real Chat API endpoints based on API Documentation.md:
  * - GET /chats
  * - GET /chats/{id}
  * - POST /chats/{id}/messages
@@ -8,6 +8,7 @@
  * - GET /chats/unread-count
  * - DELETE /chats/messages/{id}
  */
+
 (function () {
   "use strict";
 
@@ -16,29 +17,20 @@
     async getChats() {
       return await window.TL.Api.get("/chats");
     },
-    all() {
-      return this.getChats();
-    },
 
     // GET /chats/{id}
     async getChatMessages(id) {
       return await window.TL.Api.get(`/chats/${id}`);
     },
-    messages(id) {
-      return this.getChatMessages(id);
-    },
 
     // POST /chats/{id}/messages
-    async sendMessage(id, messageText, tripId = null) {
+    async sendMessage(id, messageText) {
       const payload = {
         message: messageText,
         receiver_id: id,
         user_id: id,
         recipient_id: id
       };
-      if (tripId) {
-        payload.trip_id = tripId;
-      }
       return await window.TL.Api.post(`/chats/${id}/messages`, payload);
     },
 
@@ -46,16 +38,10 @@
     async markAsRead(id) {
       return await window.TL.Api.put(`/chats/${id}/read`);
     },
-    markRead(id) {
-      return this.markAsRead(id);
-    },
 
     // GET /chats/unread-count
     async getUnreadCount() {
       return await window.TL.Api.get("/chats/unread-count");
-    },
-    unreadCount() {
-      return this.getUnreadCount();
     },
 
     // DELETE /chats/messages/{id}
@@ -66,5 +52,4 @@
 
   window.TL = window.TL || {};
   window.TL.ChatApi = ChatApi;
-  window.TL.Chats = ChatApi;
 })();

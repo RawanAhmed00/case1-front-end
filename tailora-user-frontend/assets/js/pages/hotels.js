@@ -192,7 +192,8 @@
     grid.innerHTML = window.TL.Util.skeletonCards(9);
     try {
       const response = await window.TL.Hotels.all({ page });
-      state.items = window.TL.Util.list(response);
+      const rawHotels = window.TL.Util.list(response);
+      state.items = window.TL.Util.uniqueBy(rawHotels, (h) => `${window.TL.Util.name(h)}_${window.TL.Util.city(h)}`);
       state.page = response.meta?.current_page || page;
       state.lastPage = response.meta?.last_page || 1;
       state.total = response.meta?.total || state.items.length;

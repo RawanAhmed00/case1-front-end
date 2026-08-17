@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tour Schedule — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="schedule" data-page-title="Tour Schedule" data-breadcrumb="Tour Operations, Tour Schedule" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--info"><i class="bi bi-calendar3"></i> Tour Itineraries</span>
+          </div>
+          <h1 class="tl-page-title">
+            Tour Guide <span class="tl-gradient-text">Schedule & Calendar</span>
+          </h1>
+          <p class="tl-text-secondary">View your upcoming confirmed tour appointments, meeting locations, and traveler contact info.</p>
+        </div>
+      </div>
+
+      <!-- CALENDAR COMPONENT CONTAINER -->
+      <div class="tl-card mb-4" id="scheduleCalendarContainer">
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-calendar3 fs-4 text-teal"></i>
+            <h5 class="mb-0 text-light" id="calendarMonthYear">Month Year</h5>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="tl-btn tl-btn--outline tl-btn--sm" id="calPrevBtn" title="Previous Month">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button type="button" class="tl-btn tl-btn--outline tl-btn--sm" id="calTodayBtn">Today</button>
+            <button type="button" class="tl-btn tl-btn--outline tl-btn--sm" id="calNextBtn" title="Next Month">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="tl-calendar-grid mb-2">
+          <div class="tl-calendar-header">Sun</div>
+          <div class="tl-calendar-header">Mon</div>
+          <div class="tl-calendar-header">Tue</div>
+          <div class="tl-calendar-header">Wed</div>
+          <div class="tl-calendar-header">Thu</div>
+          <div class="tl-calendar-header">Fri</div>
+          <div class="tl-calendar-header">Sat</div>
+        </div>
+        <div class="tl-calendar-grid" id="calendarDaysGrid"></div>
+      </div>
+
+      <!-- SCHEDULE LIST CONTAINER -->
+      <div id="scheduleList">
+        <div class="text-center py-5 text-secondary">
+          <div class="spinner-border text-teal" role="status"></div>
+          <p class="mt-2">Loading tour schedule...</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/schedule.js"></script>
+
+<!-- TOUR SCHEDULE DETAIL MODAL -->
+<div class="modal fade" id="scheduleDetailModal" tabindex="-1" aria-labelledby="scheduleDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header border-bottom border-secondary border-opacity-25 pb-3">
+        <h5 class="modal-title d-flex align-items-center gap-2 text-light" id="scheduleDetailModalLabel">
+          <i class="bi bi-map text-teal fs-4"></i> Trip & Tour Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4" id="scheduleDetailModalBody">
+        <!-- Dynamically injected -->
+      </div>
+      <div class="modal-footer border-top border-secondary border-opacity-25 pt-3" id="scheduleDetailModalFooter">
+        <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

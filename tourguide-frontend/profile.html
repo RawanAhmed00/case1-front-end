@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile & Settings — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="profile" data-page-title="Profile & Settings" data-breadcrumb="Account, Profile Settings" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--info"><i class="bi bi-person-badge"></i> Account Settings</span>
+          </div>
+          <h1 class="tl-page-title">
+            Tour Guide <span class="tl-gradient-text">Profile & Preferences</span>
+          </h1>
+          <p class="tl-text-secondary">Update your public guide bio, hourly rate, tour specialties, and security settings.</p>
+        </div>
+      </div>
+
+      <!-- استخدام align-items-stretch لتوحيد ارتفاع الكاردين -->
+      <div class="row g-4 align-items-stretch">
+        <!-- Profile Form Card (Left Column) -->
+        <div class="col-lg-7 d-flex">
+          <div class="tl-card w-100 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="tl-card__head border-bottom border-secondary border-opacity-25 pb-3 mb-4">
+                <h5 class="tl-card-title text-light mb-0"><i class="bi bi-person-lines-fill me-2 text-teal"></i> Public Guide Profile</h5>
+              </div>
+
+              <form id="profileForm">
+                <div class="row g-3">
+                  <!-- Full Name -->
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="profileNameInput">Full Name</label>
+                      <input type="text" id="profileNameInput" class="tl-input" required>
+                    </div>
+                  </div>
+
+                  <!-- Email Address -->
+                  <div class="col-md-6">
+                    <div class="tl-field">
+                      <label for="profileEmailInput">Email Address</label>
+                      <input type="email" id="profileEmailInput" class="tl-input" required>
+                    </div>
+                  </div>
+
+                  <!-- Age -->
+                  <div class="col-md-3">
+                    <div class="tl-field">
+                      <label for="profileAgeInput">Age</label>
+                      <input type="number" id="profileAgeInput" class="tl-input" required>
+                    </div>
+                  </div>
+
+                  <!-- Country -->
+                  <div class="col-md-3">
+                    <div class="tl-field">
+                      <label for="profileCountryInput">Country</label>
+                      <input type="text" id="profileCountryInput" class="tl-input" required>
+                    </div>
+                  </div>
+
+                  <!-- Phone Number -->
+                  <div class="col-md-3">
+                    <div class="tl-field">
+                      <label for="profilePhoneInput">Phone Number</label>
+                      <input type="text" id="profilePhoneInput" class="tl-input" required>
+                    </div>
+                  </div>
+
+                  <!-- Gender -->
+                  <div class="col-md-3">
+                    <div class="tl-field">
+                      <label for="profileGenderInput">Gender</label>
+                      <select id="profileGenderInput" class="tl-input" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="pt-3 mt-4 border-top border-secondary border-opacity-25 text-end">
+              <button type="submit" form="profileForm" class="tl-btn tl-btn--primary"><i class="bi bi-check-lg me-1"></i> Save Profile Changes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Settings (Right Column) -->
+        <div class="col-lg-5 d-flex">
+          <div class="tl-card w-100 h-100 d-flex flex-column justify-content-between">
+            <div>
+              <div class="tl-card__head border-bottom border-secondary border-opacity-25 pb-3 mb-3">
+                <h5 class="tl-card-title text-light mb-0"><i class="bi bi-shield-lock me-2 text-purple"></i> Security Settings</h5>
+              </div>
+
+              <form id="securityForm">
+                <div class="tl-field">
+                  <label for="currPassInput">Current Password</label>
+                  <input type="password" id="currPassInput" class="tl-input" placeholder="••••••••" required>
+                </div>
+
+                <div class="tl-field">
+                  <label for="newPassInput">New Password</label>
+                  <input type="password" id="newPassInput" class="tl-input" placeholder="••••••••" required>
+                </div>
+
+                <div class="tl-field">
+                  <label for="confirmPassInput">Confirm New Password</label>
+                  <input type="password" id="confirmPassInput" class="tl-input" placeholder="••••••••" required>
+                </div>
+              </form>
+            </div>
+
+            <div class="pt-2 mt-4 text-end">
+              <button type="submit" form="securityForm" class="tl-btn tl-btn--violet"><i class="bi bi-key me-1"></i> Change Password</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/profile.js"></script>
+
+</body>
+</html>

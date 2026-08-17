@@ -1,735 +1,575 @@
+/**
+ * TAILORA USER — MESSAGES / CHAT CONTROLLER
+ * Full management of chat threads, tour guide conversation lookup, and real-time messaging.
+ * Mirrors all capabilities and architecture from the Tour Guide chat center.
+ */
+
 (function () {
   "use strict";
 
-  // ============================================================
-  // STATE
-  // ============================================================
+  let activeChatId = null;
+  let chats = [];
+  let pollInterval = null;
 
-  const state = {
-    currentUserId: null,
-    activeChatId: null,
-    chats: [],
-    messages: []
-  };
-
-  // ============================================================
-  // HELPERS
-  // ============================================================
-
-  function list(response) {
-    if (Array.isArray(response)) {
-      return response;
+  function getCurrentUser() {
+    if (window.TL && window.TL.Auth && typeof window.TL.Auth.getCachedUser === "function") {
+      return window.TL.Auth.getCachedUser() || {};
     }
-
-    if (response && Array.isArray(response.data)) {
-      return response.data;
+    if (window.TL && window.TL.Auth && typeof window.TL.Auth.user === "function") {
+      return window.TL.Auth.user() || {};
     }
-
-    if (
-      response &&
-      response.data &&
-      Array.isArray(response.data.data)
-    ) {
-      return response.data.data;
+    try {
+      const stored = localStorage.getItem("tailora_user_profile");
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
     }
+  }
 
+  function getPartnerUserId(c) {
+    if (!c) return null;
+    const currentUser = getCurrentUser();
+    const currentUserId = String(currentUser.id || "");
+
+    const partner = c.partner || c.guide || c.tour_guide || c.user || c.traveler || {};
+    if (partner.id && String(partner.id) !== currentUserId) return String(partner.id);
+    if (partner.user_id && String(partner.user_id) !== currentUserId) return String(partner.user_id);
+    if (c.guide_id && String(c.guide_id) !== currentUserId) return String(c.guide_id);
+    if (c.user_id && String(c.user_id) !== currentUserId) return String(c.user_id);
+    if (c.traveler_id && String(c.traveler_id) !== currentUserId) return String(c.traveler_id);
+    if (c.sender_id && String(c.sender_id) !== currentUserId) return String(c.sender_id);
+    if (c.receiver_id && String(c.receiver_id) !== currentUserId) return String(c.receiver_id);
+    return String(c.id);
+  }
+
+  function findChatForUser(targetId) {
+    if (!targetId || !Array.isArray(chats) || chats.length === 0) return null;
+    const targetStr = String(targetId);
+
+    return chats.find((c) => {
+      if (getPartnerUserId(c) === targetStr) return true;
+      if (String(c.id) === targetStr) return true;
+      if (c.guide_id && String(c.guide_id) === targetStr) return true;
+      if (c.user_id && String(c.user_id) === targetStr) return true;
+      if (c.traveler_id && String(c.traveler_id) === targetStr) return true;
+      if (c.partner && (String(c.partner.id) === targetStr || String(c.partner.user_id) === targetStr)) return true;
+      if (c.guide && (String(c.guide.id) === targetStr || String(c.guide.user_id) === targetStr)) return true;
+      if (c.user && String(c.user.id) === targetStr) return true;
+      return false;
+    });
+  }
+
+  function extractArray(res) {
+    if (!res) return [];
+    if (Array.isArray(res)) return res;
+    if (Array.isArray(res.data)) return res.data;
+    if (res.data && Array.isArray(res.data.data)) return res.data.data;
+    if (res.data && Array.isArray(res.data.messages)) return res.data.messages;
+    if (Array.isArray(res.messages)) return res.messages;
     return [];
   }
 
-  function object(response) {
-    if (!response) {
-      return {};
-    }
-
-    if (
-      response.data &&
-      !Array.isArray(response.data)
-    ) {
-      return response.data;
-    }
-
-    return response;
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str == null ? "" : String(str);
+    return div.innerHTML;
   }
 
-  function escape(value) {
-    if (value === null || value === undefined) {
-      return "";
+  function showToast(message, type = "success") {
+    if (window.TL && typeof window.TL.showToast === "function") {
+      window.TL.showToast(message, type);
+    } else if (window.TL && typeof window.TL.toast === "function") {
+      window.TL.toast(message, type);
     }
-
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
   }
 
-  function initials(name) {
-    const value = String(name || "Tailora Guide").trim();
+  /**
+   * Evaluates messages in a conversation to determine:
+   * 1. The last unopened message sent by tour guide (and not opened by user) OR
+   *    the last unopened message sent by user (and not opened by tour guide).
+   * 2. The accurate unread incoming message count for the user.
+   */
+  function processConversationMessages(c, msgs, currentUserId, currentActiveId) {
+    const partnerId = getPartnerUserId(c);
+    const isActive = currentActiveId && (String(partnerId) === String(currentActiveId) || String(c.id) === String(currentActiveId));
 
-    if (!value) {
-      return "TG";
+    let unreadIncomingCount = 0;
+    let lastUnopenedMessage = null;
+
+    if (Array.isArray(msgs) && msgs.length > 0) {
+      msgs.forEach((m) => {
+        const mSenderId = String(m.sender_id || m.sender?.id || m.from_id || "");
+        const isRead =
+          m.is_read === true ||
+          m.is_read === 1 ||
+          String(m.is_read) === "1" ||
+          String(m.is_read) === "true" ||
+          m.read === true ||
+          m.read === 1 ||
+          m.status === "read" ||
+          m.seen === true ||
+          Boolean(m.read_at);
+        const isUnread = !isRead;
+
+        // 1. Tour guide sent message and user (traveler) did not open yet
+        if (mSenderId !== currentUserId && isUnread) {
+          unreadIncomingCount++;
+          lastUnopenedMessage = m.message || m.content || lastUnopenedMessage;
+        }
+        // 2. User sent message and tour guide did not open yet
+        else if (mSenderId === currentUserId && isUnread) {
+          lastUnopenedMessage = m.message || m.content || lastUnopenedMessage;
+        }
+      });
+
+      // Update the preview message: unopened message takes priority, otherwise latest message
+      if (lastUnopenedMessage) {
+        c.last_message = lastUnopenedMessage;
+      } else {
+        const lastMsg = msgs[msgs.length - 1];
+        if (lastMsg && (lastMsg.message || lastMsg.content)) {
+          c.last_message = lastMsg.message || lastMsg.content;
+        }
+      }
     }
 
-    const parts = value.split(/\s+/);
-
-    if (parts.length === 1) {
-      return parts[0].substring(0, 2).toUpperCase();
-    }
-
-    return (
-      parts[0].charAt(0) +
-      parts[1].charAt(0)
-    ).toUpperCase();
+    c.unread_count = isActive ? 0 : unreadIncomingCount;
+    return c.unread_count;
   }
 
-  function getCurrentUserId() {
-    const user =
-      window.TL &&
-      window.TL.Auth &&
-      typeof window.TL.Auth.user === "function"
-        ? window.TL.Auth.user()
-        : null;
+  async function loadChatList() {
+    try {
+      const res = await window.TL.ChatApi.getChats();
+      chats = extractArray(res);
 
-    if (user && user.id) {
-      return Number(user.id);
+      const currentUser = getCurrentUser();
+      const currentUserId = String(currentUser.id || "");
+
+      let totalUnread = 0;
+
+      // Populate exact unread counts and last unopened message previews per conversation
+      await Promise.all(
+        chats.map(async (c) => {
+          const partnerId = getPartnerUserId(c);
+          try {
+            const msgRes = await window.TL.ChatApi.getChatMessages(partnerId);
+            const msgs = extractArray(msgRes);
+            const unread = processConversationMessages(c, msgs, currentUserId, activeChatId);
+            totalUnread += unread;
+          } catch {
+            // Fallback unread count if message fetch fails
+            if (activeChatId && (String(partnerId) === String(activeChatId) || String(c.id) === String(activeChatId))) {
+              c.unread_count = 0;
+            }
+          }
+        })
+      );
+
+      // Handle URL query parameters to jump straight to a guide's chat
+      const urlParams = new URLSearchParams(window.location.search);
+      const targetUserId =
+        urlParams.get("guide_id") ||
+        urlParams.get("guideId") ||
+        urlParams.get("user_id") ||
+        urlParams.get("userId") ||
+        urlParams.get("chat_id") ||
+        urlParams.get("id");
+      const targetName = urlParams.get("name") || urlParams.get("username") || urlParams.get("guide_name");
+
+      if (targetUserId) {
+        const existing = findChatForUser(targetUserId);
+        if (!existing) {
+          chats.unshift({
+            id: targetUserId,
+            user_id: targetUserId,
+            guide_id: targetUserId,
+            partner: { id: targetUserId, name: targetName || "Tour Guide" },
+            name: targetName || "Tour Guide",
+            last_message: "Start a conversation"
+          });
+        }
+      }
+
+      let chatToSelect = null;
+      let nameToSelect = null;
+
+      if (targetUserId) {
+        const existing = findChatForUser(targetUserId);
+        chatToSelect = existing ? getPartnerUserId(existing) : targetUserId;
+        nameToSelect = targetName;
+      }
+
+      renderChatSidebar();
+      updateTotalUnreadBadge(totalUnread);
+
+      if (chatToSelect) {
+        await selectChat(chatToSelect, nameToSelect);
+      }
+    } catch (err) {
+      showToast("Failed to load chats: " + err.message, "error");
     }
-
-    return null;
   }
 
-  // ============================================================
-  // RENDER CHAT LIST
-  // ============================================================
+  function updateTotalUnreadBadge(count) {
+    const badge = document.getElementById("chatTotalUnreadBadge");
+    if (!badge) return;
+    if (count > 0) {
+      badge.textContent = String(count);
+      badge.style.display = "inline-flex";
+    } else {
+      badge.style.display = "none";
+    }
+  }
 
-  function renderChatList() {
-    const listEl = document.getElementById("chat-list");
+  function renderChatSidebar() {
+    const listContainer = document.getElementById("chatListContainer") || document.getElementById("chat-list");
+    if (!listContainer) return;
 
-    if (!listEl) {
+    if (!Array.isArray(chats) || chats.length === 0) {
+      listContainer.innerHTML = `
+        <div class="tl-chat-empty p-4 text-center">
+          <div class="tl-chat-empty-icon mb-2">💬</div>
+          <p class="tl-text-secondary small mb-0">No active conversations yet.</p>
+        </div>`;
       return;
     }
 
-    if (!state.chats.length) {
-      listEl.innerHTML = `
-        <div class="tl-chat-empty">
-          No conversations yet.
-        </div>
-      `;
-      return;
-    }
+    const currentUser = getCurrentUser();
+    const currentUserId = String(currentUser.id || "");
 
-    listEl.innerHTML = state.chats
-      .map((chat) => {
-        const id = chat.id;
+    listContainer.innerHTML = chats
+      .map((c) => {
+        const partner = c.partner || c.guide || c.tour_guide || c.user || c.traveler || {};
+        const partnerId = getPartnerUserId(c);
+        const displayName = partner.name || c.name || c.guide_name || c.traveler_name || "Tour Guide";
+        const avatar = displayName.length > 0 ? displayName.charAt(0).toUpperCase() : "G";
+        const chatId = partnerId;
 
-        /*
-         * ChatController index() returns the latest MessageResource.
-         * Depending on MessageResource structure, the other user can
-         * be sender or receiver.
-         */
+        const isActive = String(chatId) === String(activeChatId) || String(c.id) === String(activeChatId);
 
-        let otherUser = null;
-
-        if (
-          chat.sender &&
-          Number(chat.sender.id) !== Number(state.currentUserId)
-        ) {
-          otherUser = chat.sender;
-        } else if (
-          chat.receiver &&
-          Number(chat.receiver.id) !== Number(state.currentUserId)
-        ) {
-          otherUser = chat.receiver;
+        // Unread count check
+        let rawUnread = 0;
+        const senderId = String(c.sender_id || c.last_message_sender_id || c.from_id || "");
+        if (currentUserId && senderId === currentUserId) {
+          rawUnread = 0;
+        } else {
+          if (c.unread_count !== undefined && c.unread_count !== null && c.unread_count > 0) {
+            rawUnread = parseInt(c.unread_count, 10);
+          } else if (c.unreadCount !== undefined && c.unreadCount !== null && c.unreadCount > 0) {
+            rawUnread = parseInt(c.unreadCount, 10);
+          } else if (c.unread_messages_count !== undefined && c.unread_messages_count !== null && c.unread_messages_count > 0) {
+            rawUnread = parseInt(c.unread_messages_count, 10);
+          } else if (
+            c.is_read === false ||
+            c.is_read === 0 ||
+            String(c.is_read) === "0" ||
+            String(c.is_read) === "false" ||
+            c.read === false ||
+            c.unread === true ||
+            c.has_unread === true
+          ) {
+            rawUnread = 1;
+          } else if (typeof c.unread === "number" && c.unread > 0) {
+            rawUnread = c.unread;
+          }
         }
 
-        const name =
-          chat.name ||
-          (otherUser &&
-            (otherUser.name ||
-              otherUser.full_name ||
-              otherUser.username)) ||
-          "Tailora Guide";
-
-        const preview =
-          chat.message ||
-          chat.content ||
-          "Start a conversation";
-
-        const active =
-          Number(state.activeChatId) === Number(id)
-            ? " active"
-            : "";
+        const unreadVal = isActive ? 0 : parseInt(rawUnread, 10) || 0;
 
         return `
-          <button
-            type="button"
-            class="tl-chat-item${active}"
-            data-chat-id="${escape(id)}"
-          >
-            <div class="tl-chat-avatar">
-              ${escape(initials(name))}
-            </div>
-
-            <div class="tl-chat-item-content">
-              <div class="tl-chat-item-name">
-                ${escape(name)}
+          <div class="tl-chat-item ${isActive ? "is-active" : ""}" data-chat-id="${escapeHtml(chatId)}" data-partner-id="${escapeHtml(partnerId)}" data-name="${escapeHtml(displayName)}">
+            <div class="tl-avatar">${escapeHtml(avatar)}</div>
+            <div class="tl-chat-item__info">
+              <div class="tl-chat-item__name">
+                <span class="text-truncate">${escapeHtml(displayName)}</span>
+                ${unreadVal > 0 ? `<span class="tl-chat-badge" title="${unreadVal} unread message${unreadVal > 1 ? "s" : ""}">${unreadVal}</span>` : ""}
               </div>
-
-              <div class="tl-chat-item-preview">
-                ${escape(preview)}
-              </div>
-            </div>
-          </button>
-        `;
-      })
-      .join("");
-
-    listEl
-      .querySelectorAll("[data-chat-id]")
-      .forEach((item) => {
-        item.addEventListener("click", function () {
-          openChat(this.dataset.chatId);
-        });
-      });
-  }
-
-  // ============================================================
-  // SHOW CONVERSATION
-  // ============================================================
-
-  function showConversation(chat) {
-    function closeChat() {
-  const shell = document.querySelector(".tl-chat-shell");
-  const sidebar = document.querySelector(".tl-chat-sidebar");
-  const main = document.querySelector(".tl-chat-main");
-  const conversation = document.getElementById("chat-conversation");
-  const empty = document.getElementById("chat-empty");
-
-  state.activeChatId = null;
-  state.messages = [];
-
-  // Close mobile chat mode
-  if (shell) {
-    shell.classList.remove("chat-open");
-  }
-
-  // Show sidebar
-  if (sidebar) {
-    sidebar.classList.remove("is-hidden");
-  }
-
-  // Remove active conversation state
-  if (main) {
-    main.classList.remove("is-active");
-  }
-
-  // Hide conversation
-  if (conversation) {
-    conversation.hidden = true;
-  }
-
-  // Show empty state
-  if (empty) {
-    empty.hidden = false;
-  }
-
-  // Re-render list so active chat is removed
-  renderChatList();
-}
-    const empty =
-      document.getElementById("chat-empty");
-
-    const conversation =
-      document.getElementById("chat-conversation");
-
-    if (empty) {
-      empty.hidden = true;
-    }
-
-    if (conversation) {
-      conversation.hidden = false;
-    }
-
-    const chatName =
-      chat.name || "Tailora Guide";
-
-    const title =
-      document.getElementById("chat-title");
-
-    if (title) {
-      title.textContent = chatName;
-    }
-
-    const avatar =
-      document.getElementById("chat-avatar");
-
-    if (avatar) {
-      avatar.textContent = initials(chatName);
-    }
-
-    const status =
-      document.getElementById("chat-status");
-
-    if (status) {
-      status.textContent = "Tailora Travel Guide";
-    }
-  }
-
-  // ============================================================
-  // RENDER MESSAGES
-  // ============================================================
-
-  function renderMessages() {
-    const messagesEl =
-      document.getElementById("chat-messages");
-
-    if (!messagesEl) {
-      return;
-    }
-
-    if (!state.messages.length) {
-      messagesEl.innerHTML = `
-        <div class="tl-chat-empty">
-          No messages yet. Start the conversation.
-        </div>
-      `;
-      return;
-    }
-
-    messagesEl.innerHTML = state.messages
-      .map((message) => {
-        const senderId =
-          message.sender_id ??
-          (message.sender && message.sender.id);
-
-        const mine =
-          Number(senderId) === Number(state.currentUserId);
-
-        const messageText =
-          message.message ||
-          message.content ||
-          "";
-
-        const createdAt =
-          message.created_at || "";
-
-        return `
-          <div class="tl-chat-message-row ${mine ? "mine" : "theirs"}">
-            <div class="tl-chat-message">
-              <div class="tl-chat-message-text">
-                ${escape(messageText)}
-              </div>
-
-              ${
-                createdAt
-                  ? `
-                    <div class="tl-chat-message-time">
-                      ${escape(createdAt)}
-                    </div>
-                  `
-                  : ""
-              }
-
-              ${
-                mine && message.id
-                  ? `
-                    <button
-                      type="button"
-                      class="tl-chat-delete"
-                      data-message-id="${escape(message.id)}"
-                    >
-                      Delete
-                    </button>
-                  `
-                  : ""
-              }
+              <div class="tl-chat-item__preview">${escapeHtml(c.last_message || c.message || "No messages yet")}</div>
             </div>
           </div>
         `;
       })
       .join("");
 
-    messagesEl
-      .querySelectorAll("[data-message-id]")
-      .forEach((button) => {
-        button.addEventListener("click", function () {
-          deleteMessage(this.dataset.messageId);
-        });
+    listContainer.querySelectorAll(".tl-chat-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const idToUse = item.getAttribute("data-partner-id") || item.getAttribute("data-chat-id");
+        selectChat(idToUse, item.getAttribute("data-name"));
       });
-
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
   }
 
-  // ============================================================
-  // OPEN CHAT
-  // ============================================================
+  async function selectChat(id, nameOverride = null) {
+    if (!id) return;
 
-  async function openChat(id) {
-    const chat = state.chats.find(
-      (item) => Number(item.id) === Number(id)
-    );
+    const existingChat = findChatForUser(id);
+    const targetGuideId = existingChat ? getPartnerUserId(existingChat) : String(id);
+    activeChatId = targetGuideId;
 
-    if (!chat) {
-      return;
+    if (existingChat) {
+      existingChat.unread_count = 0;
+      existingChat.unreadCount = 0;
+      existingChat.unread = 0;
     }
 
-    state.activeChatId = Number(id);
-    state.messages = [];
-
-    const shell = document.querySelector(".tl-chat-shell");
-
-if (shell) {
-    shell.classList.add("chat-open");
-}
-
-    renderChatList();
-    showConversation(chat);
-
-    const messagesEl =
-      document.getElementById("chat-messages");
-
-    if (!messagesEl) {
-      return;
+    let displayName = nameOverride;
+    if (existingChat && !displayName) {
+      const partner = existingChat.partner || existingChat.guide || existingChat.tour_guide || existingChat.user || {};
+      displayName = partner.name || existingChat.name || existingChat.guide_name;
     }
 
-    messagesEl.innerHTML =
-      '<div class="tl-chat-loading">Loading messages...</div>';
+    if (!displayName) {
+      const activeItem = document.querySelector(`.tl-chat-item[data-partner-id="${id}"], .tl-chat-item[data-chat-id="${id}"]`);
+      displayName = activeItem ? activeItem.getAttribute("data-name") : "Tour Guide";
+    }
+
+    renderChatSidebar();
+
+    const headerTitle = document.getElementById("activeChatHeaderTitle");
+    const layout = document.querySelector(".tl-chat-layout") || document.querySelector(".tl-chat-shell");
+    const thread = document.getElementById("chatMessagesThread") || document.getElementById("chat-messages");
+
+    // Immediately isolate conversation state and display spinner
+    if (thread) {
+      thread.innerHTML =
+        '<div class="text-center py-5 text-secondary"><div class="spinner-border spinner-border-sm me-2"></div> Loading messages...</div>';
+    }
+
+    const avatar = displayName && displayName.length > 0 ? displayName.charAt(0).toUpperCase() : "G";
+
+    if (layout) {
+      layout.classList.add("has-active-chat");
+      layout.classList.add("chat-open");
+    }
+
+    if (headerTitle) {
+      headerTitle.innerHTML = `
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn p-0 border-0 text-teal d-md-none me-2" id="backToChatListBtn" title="Back to chats" style="font-size: 1.25rem;">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          <div class="tl-avatar">${escapeHtml(avatar)}</div>
+          <div>
+            <h6 class="mb-0">${escapeHtml(displayName)}</h6>
+            <span class="tl-metadata text-teal"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> Active Guide Session</span>
+          </div>
+        </div>`;
+
+      headerTitle.querySelector("#backToChatListBtn")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (layout) {
+          layout.classList.remove("has-active-chat");
+          layout.classList.remove("chat-open");
+        }
+      });
+    }
 
     try {
-      const response =
-        await window.TL.Chats.messages(id);
+      await window.TL.ChatApi.markAsRead(activeChatId);
+      if (typeof window.TL.checkUnreadMessages === "function") {
+        window.TL.checkUnreadMessages();
+      }
+    } catch {}
 
-      state.messages = list(response);
+    await loadMessages(activeChatId);
+  }
 
-      renderMessages();
+  async function loadMessages(id) {
+    const thread = document.getElementById("chatMessagesThread") || document.getElementById("chat-messages");
+    if (!thread) return;
 
-      await window.TL.Chats
-        .markRead(id)
-        .catch(() => {});
-
-      await loadUnreadCount();
-
-    } catch (error) {
-      console.error(
-        "Failed to load messages:",
-        error
-      );
-
-      messagesEl.innerHTML = `
-        <div class="tl-chat-error">
-          ${escape(
-            error.message ||
-            "Failed to load messages."
-          )}
-        </div>
-      `;
+    try {
+      const res = await window.TL.ChatApi.getChatMessages(id);
+      // Guard against race conditions when user rapidly clicks through chats
+      if (String(activeChatId) !== String(id)) return;
+      const msgs = extractArray(res);
+      renderMessagesThread(msgs);
+    } catch (err) {
+      if (String(activeChatId) !== String(id)) return;
+      thread.innerHTML = '<div class="text-center py-4 text-danger">Failed to load message thread.</div>';
     }
   }
 
-  // ============================================================
-  // SEND MESSAGE
-  // ============================================================
+  function renderMessagesThread(msgs) {
+    const thread = document.getElementById("chatMessagesThread") || document.getElementById("chat-messages");
+    if (!thread) return;
 
-  async function sendMessage(event) {
-    event.preventDefault();
-
-    if (!state.activeChatId) {
+    if (!Array.isArray(msgs) || msgs.length === 0) {
+      thread.innerHTML = `
+        <div class="tl-chat-empty my-auto text-center">
+          <div class="tl-chat-empty-icon mb-2">💬</div>
+          <p class="tl-text-secondary">Start a conversation with your tour guide!</p>
+        </div>`;
       return;
     }
 
-    const input =
-      document.getElementById("chat-input");
+    const currentUser = getCurrentUser();
+    const currentUserId = String(currentUser.id || "");
+    const currentUserName = (currentUser.name || currentUser.full_name || "").toLowerCase();
+    const partnerId = String(activeChatId || "");
 
-    const button =
-      document.getElementById("chat-send-btn");
+    thread.innerHTML = msgs
+      .map((m) => {
+        const senderId = String(m.sender_id || m.sender?.id || m.from_id || "");
+        const receiverId = String(m.receiver_id || m.to_id || "");
 
-    if (!input || !button) {
-      return;
-    }
+        let isSent = false;
+        if (currentUserId && senderId === currentUserId) {
+          isSent = true;
+        } else if (partnerId && senderId === partnerId) {
+          isSent = false;
+        } else if (partnerId && receiverId === partnerId) {
+          isSent = true;
+        } else if (currentUserName && m.sender?.name && String(m.sender.name).toLowerCase() === currentUserName) {
+          isSent = true;
+        } else {
+          isSent = m.is_sender === true || m.sent_by_me === true;
+        }
 
-    const message = input.value.trim();
+        const bubbleCls = isSent ? "tl-message--sent" : "tl-message--received";
+        const timeStr = m.created_at
+          ? new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : "Just now";
 
-    if (!message) {
-      return;
-    }
+        // Read receipt evaluation
+        const isRead =
+          m.is_read === true ||
+          m.is_read === 1 ||
+          String(m.is_read) === "1" ||
+          String(m.is_read) === "true" ||
+          m.read === true ||
+          m.read === 1 ||
+          m.status === "read" ||
+          m.seen === true ||
+          Boolean(m.read_at);
 
-    button.disabled = true;
-    input.disabled = true;
+        const checkmarkCls = isRead ? "tl-checkmark--read" : "tl-checkmark--unread";
+        const checkmarkTitle = isRead ? "Read by guide" : "Delivered";
+
+        return `
+          <div class="tl-message-bubble ${bubbleCls}" id="msg-${m.id}">
+            <div>${escapeHtml(m.message || m.content)}</div>
+            <div class="tl-message__meta">
+              <span>${timeStr}</span>
+              ${isSent ? `<i class="bi bi-check2-all tl-checkmark ${checkmarkCls}" title="${checkmarkTitle}"></i>` : ""}
+              ${
+                isSent && m.id
+                  ? `<button type="button" class="btn btn-link p-0 text-danger ms-2 delete-msg-btn" data-id="${m.id}" title="Delete Message" style="font-size: 11px; text-decoration: none;">
+                      <i class="bi bi-trash"></i>
+                    </button>`
+                  : ""
+              }
+            </div>
+          </div>`;
+      })
+      .join("");
+
+    thread.scrollTop = thread.scrollHeight;
+
+    // Attach message deletion listeners
+    thread.querySelectorAll(".delete-msg-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const msgId = btn.dataset.id;
+        if (!confirm("Delete this message?")) return;
+
+        try {
+          await window.TL.ChatApi.deleteMessage(msgId);
+          showToast("Message deleted.", "info");
+          document.getElementById(`msg-${msgId}`)?.remove();
+        } catch (err) {
+          showToast("Failed to delete message: " + err.message, "error");
+        }
+      });
+    });
+  }
+
+  async function handleSendMessage(e) {
+    e.preventDefault();
+    const recipientId = activeChatId;
+    if (!recipientId) return;
+
+    const input = document.getElementById("chatInputText") || document.getElementById("chat-input");
+    const sendBtn = document.getElementById("chatSendBtn") || document.getElementById("chat-send-btn");
+    const text = input ? input.value.trim() : "";
+
+    if (!text) return;
+
+    input.value = "";
+    if (sendBtn) sendBtn.disabled = true;
 
     try {
-      const response =
-        await window.TL.Chats.sendMessage(
-          state.activeChatId,
-          message,
-          null
-        );
-
-      const sent = object(response);
-
-      const newMessage =
-        sent.data &&
-        !Array.isArray(sent.data)
-          ? sent.data
-          : sent;
-
-      if (newMessage && newMessage.id) {
-        state.messages.push(newMessage);
-      } else {
-        const refreshed =
-          await window.TL.Chats.messages(
-            state.activeChatId
-          );
-
-        state.messages = list(refreshed);
+      await window.TL.ChatApi.sendMessage(recipientId, text);
+      if (String(activeChatId) === String(recipientId)) {
+        await loadMessages(recipientId);
       }
-
-      input.value = "";
-      input.style.height = "auto";
-
-      renderMessages();
-
-      await loadChats(false);
-
-    } catch (error) {
-      console.error(
-        "Failed to send message:",
-        error
-      );
-
-      if (
-        window.TL &&
-        typeof window.TL.toast === "function"
-      ) {
-        window.TL.toast(
-          error.message ||
-          "Couldn't send message.",
-          "error"
-        );
-      } else {
-        alert(
-          error.message ||
-          "Couldn't send message."
-        );
-      }
-
+      await loadChatList();
+    } catch (err) {
+      showToast("Failed to send message: " + err.message, "error");
     } finally {
-      button.disabled = false;
-      input.disabled = false;
+      if (sendBtn) sendBtn.disabled = false;
       input.focus();
     }
   }
 
-  // ============================================================
-  // DELETE MESSAGE
-  // ============================================================
-
-  async function deleteMessage(id) {
-    if (!window.confirm("Delete this message?")) {
-      return;
-    }
-
+  async function pollUpdates() {
     try {
-      await window.TL.Chats.deleteMessage(id);
+      const res = await window.TL.ChatApi.getChats();
+      const updatedChats = extractArray(res);
+      if (updatedChats.length > 0) {
+        const currentUser = getCurrentUser();
+        const currentUserId = String(currentUser.id || "");
 
-      state.messages =
-        state.messages.filter(
-          (message) =>
-            Number(message.id) !== Number(id)
+        let totalUnread = 0;
+
+        await Promise.all(
+          updatedChats.map(async (c) => {
+            const partnerId = getPartnerUserId(c);
+            try {
+              const msgRes = await window.TL.ChatApi.getChatMessages(partnerId);
+              const msgs = extractArray(msgRes);
+              const unread = processConversationMessages(c, msgs, currentUserId, activeChatId);
+              totalUnread += unread;
+            } catch {
+              if (activeChatId && (String(partnerId) === String(activeChatId) || String(c.id) === String(activeChatId))) {
+                c.unread_count = 0;
+              }
+            }
+          })
         );
 
-      renderMessages();
-
-      if (
-        window.TL &&
-        typeof window.TL.toast === "function"
-      ) {
-        window.TL.toast(
-          "Message deleted",
-          "success"
-        );
+        chats = updatedChats;
+        renderChatSidebar();
+        updateTotalUnreadBadge(totalUnread);
       }
 
-    } catch (error) {
-      console.error(
-        "Failed to delete message:",
-        error
-      );
-
-      if (
-        window.TL &&
-        typeof window.TL.toast === "function"
-      ) {
-        window.TL.toast(
-          error.message ||
-          "Couldn't delete message.",
-          "error"
-        );
-      }
-    }
-  }
-
-  // ============================================================
-  // UNREAD COUNT
-  // ============================================================
-
-  async function loadUnreadCount() {
-    try {
-      const response =
-        await window.TL.Chats.unreadCount();
-
-      const data =
-        response &&
-        response.data &&
-        !Array.isArray(response.data)
-          ? response.data
-          : response;
-
-      const count = Number(
-        data &&
-        (
-          data.unread_count ??
-          data.count ??
-          0
-        )
-      );
-
-      const badge =
-        document.getElementById(
-          "chat-unread-count"
-        );
-
-      if (!badge) {
-        return;
-      }
-
-      badge.textContent = String(count);
-      badge.hidden = count <= 0;
-
-    } catch (error) {
-      console.warn(
-        "Failed to load unread count:",
-        error
-      );
-    }
-  }
-
-  // ============================================================
-  // LOAD CHATS
-  // ============================================================
-
-  async function loadChats(selectFirst = true) {
-    const listEl =
-      document.getElementById("chat-list");
-
-    if (!listEl) {
-      console.error(
-        "chat-list element was not found."
-      );
-      return;
-    }
-
-    listEl.innerHTML =
-      '<div class="tl-chat-loading">Loading conversations...</div>';
-
-    try {
-      const response =
-        await window.TL.Chats.all();
-
-      state.chats = list(response);
-
-// If there are no previous conversations,
-// open the default Tour Guide so the user can
-// start the first conversation.
- if (state.chats.length === 0) {
-            listEl.innerHTML = `
-                <div class="tl-chat-empty">
-                    No conversations yet.
-                </div>
-            `;
-            return;
+      if (activeChatId) {
+        const currentActiveId = activeChatId;
+        const msgRes = await window.TL.ChatApi.getChatMessages(currentActiveId);
+        if (String(activeChatId) === String(currentActiveId)) {
+          const msgs = extractArray(msgRes);
+          renderMessagesThread(msgs);
         }
-
-renderChatList();
-
-// if (
-//   selectFirst &&
-//   state.chats.length
-// ) {
-//   await openChat(state.chats[0].id);
-// }
-
-    } catch (error) {
-      console.error(
-        "Failed to load conversations:",
-        error
-      );
-
-      listEl.innerHTML = `
-        <div class="tl-chat-error">
-          ${escape(
-            error.message ||
-            "Failed to load conversations."
-          )}
-        </div>
-      `;
-    }
+      }
+    } catch {}
   }
 
-  // ============================================================
-  // INITIALIZE PAGE
-  // ============================================================
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    async function () {
-      const backBtn =
-       document.getElementById("chat-back-btn");
-
-     if (backBtn) {
-       backBtn.addEventListener("click", closeChat);
-     }
-      if (
-        !window.TL ||
-        !window.TL.Auth ||
-        !window.TL.Auth.guard()
-      ) {
-        return;
-      }
-
-      state.currentUserId =
-        getCurrentUserId();
-
-      const chatForm =
-        document.getElementById("chat-form");
-
-      if (chatForm) {
-        chatForm.addEventListener(
-          "submit",
-          sendMessage
-        );
-      }
-
-      const input =
-        document.getElementById("chat-input");
-
-      if (input) {
-        input.addEventListener(
-          "input",
-          function () {
-            input.style.height = "auto";
-
-            input.style.height =
-              Math.min(
-                input.scrollHeight,
-                130
-              ) + "px";
-          }
-        );
-      }
-
-      await loadUnreadCount();
-      await loadChats(false);
+  async function init() {
+    if (window.TL && window.TL.Auth && typeof window.TL.Auth.guard === "function") {
+      if (!window.TL.Auth.guard()) return;
     }
-  );
-  
+
+    await loadChatList();
+
+    const form = document.getElementById("chatSendForm") || document.getElementById("chat-form");
+    if (form) {
+      form.addEventListener("submit", handleSendMessage);
+    }
+
+    // Background polling for incoming messages every 10 seconds
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(pollUpdates, 10000);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
 })();

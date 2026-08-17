@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Availabilities — Tailora Tour Guide</title>
+
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Tailora Design System -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="availabilities" data-page-title="Availability Slots" data-breadcrumb="Tour Operations, Availabilities" data-requires-auth="true">
+
+<div class="tl-app">
+
+  <!-- SIDEBAR -->
+  <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="tl-main">
+
+    <!-- TOPBAR -->
+    <header class="tl-topbar" id="tlTopbar"></header>
+
+    <!-- MAIN CONTENT -->
+    <main class="tl-content">
+
+      <!-- Page Header -->
+      <div class="tl-page-header">
+        <div>
+          <div class="tl-eyebrow">
+            <span class="tl-badge tl-badge--purple"><i class="bi bi-clock-history"></i> Guide Calendar</span>
+          </div>
+          <h1 class="tl-page-title">
+            Manage Your <span class="tl-gradient-text">Availability Slots</span>
+          </h1>
+          <p class="tl-text-secondary">Configure available working days, time slots, and status.</p>
+        </div>
+        <div>
+          <button class="tl-btn tl-btn--primary" id="addAvailabilityBtn">
+            <i class="bi bi-plus-lg"></i> Add Availability Slot
+          </button>
+        </div>
+      </div>
+
+      <!-- AVAILABILITY CARDS LIST -->
+      <div class="row g-4" id="availabilitiesList">
+        <div class="col-12 text-center py-5 text-secondary">
+          <div class="spinner-border text-teal" role="status"></div>
+          <p class="mt-2">Loading availability slots...</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ADD / EDIT AVAILABILITY MODAL -->
+<div class="modal fade" id="availabilityModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content tl-modal-dialog">
+      <div class="modal-header tl-modal-header">
+        <h5 class="modal-title text-light fw-bold" id="availModalTitle"><i class="bi bi-clock me-2 text-teal"></i> Availability Slot</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form id="availForm">
+        <div class="modal-body tl-modal-body">
+          <input type="hidden" id="availIdInput">
+
+          <!-- Date Input (مطابق لعمود date في الداتابيز) -->
+          <div class="tl-field mb-3">
+            <label for="availDateInput">Date</label>
+            <input type="date" id="availDateInput" class="tl-input form-control text-light" required style="background-color: #1a1f37; border-color: rgba(255,255,255,0.1);">
+          </div>
+
+          <!-- Time Range -->
+<div class="row g-2 mb-3">
+  <div class="col-6">
+    <div class="tl-field">
+      <label for="availStartTimeInput">Start Time</label>
+      <input type="time" id="availStartTimeInput" class="tl-input form-control text-light" required style="background-color: #1a1f37; border-color: rgba(255,255,255,0.1);">
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="tl-field">
+      <label for="availEndTimeInput">End Time</label>
+      <input type="time" id="availEndTimeInput" class="tl-input form-control text-light" required style="background-color: #1a1f37; border-color: rgba(255,255,255,0.1);">
+    </div>
+  </div>
+</div>
+
+         
+
+        </div>
+        <div class="modal-footer tl-modal-footer">
+          <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="tl-btn tl-btn--primary" id="saveAvailBtn"><i class="bi bi-check-lg me-1"></i> Save Slot</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap 5 Bundle -->
+<script src="assets/js/bootstrap.bundle.min.js"></script> <!-- أو الـ CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<!-- API Core Scripts -->
+<script src="assets/js/config.js"></script>
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/tourguide.js"></script>
+
+<!-- App Shell & Page Controller -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/availabilities.js"></script>
+
+</body>
+</html>
