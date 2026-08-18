@@ -357,10 +357,23 @@
 .tl-sidebar__nav {
   flex: 1;
   overflow-y: auto;
-  padding: 18px 14px;
+  height: 44px;
 }
 
 .tl-nav-group {
+
+/* Theme-aware brand logo: prefer explicit light/dark images when available */
+.tl-brand-logo { display: inline-flex; align-items: center; }
+.tl-brand-logo img { display: block; height: 44px; width: auto; max-width: 100%; }
+.tl-logo-dark { display: none !important; }
+
+/* Light Mode */
+html[data-theme="light"] .tl-logo-light { display: block !important; }
+html[data-theme="light"] .tl-logo-dark { display: none !important; }
+
+/* Dark Mode */
+html:not([data-theme="light"]) .tl-logo-light { display: none !important; }
+html:not([data-theme="light"]) .tl-logo-dark { display: block !important; }
   margin-bottom: 22px;
 }
 

@@ -45,8 +45,10 @@
 <input id="trip_number_of_travelers" name="trip_number_of_travelers" type="number" class="tl-input" placeholder="" >
 <div class="tl-field-error" data-error-for="trip_number_of_travelers"></div>
 </div><div class="tl-field">
-<label for="trip_user_id">User ID</label>
-<input id="trip_user_id" name="trip_user_id" type="number" class="tl-input" placeholder="" >
+<label for="trip_user_id">User</label>
+<select id="trip_user_id" name="trip_user_id" class="tl-select">
+  <option value="">Select user</option>
+</select>
 <div class="tl-field-error" data-error-for="trip_user_id"></div>
 </div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Save changes</button></div></form></div></div></div>
 <div class="modal fade" id="tripDetailsModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Trip details</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><pre id="tripDetails" class="tl-code-block"></pre></div></div></div></div>

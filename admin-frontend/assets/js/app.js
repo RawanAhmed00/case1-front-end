@@ -14,6 +14,8 @@
   const THEME_KEY = "tailora_theme";
   const SIDEBAR_HIDDEN_KEY = "tailora_sidebar_hidden";
   const LOGO_PATH = "images/logo.png";
+  const LOGO_LIGHT = "images/logo-light.png"; // light-mode logo (if present)
+  const LOGO_DARK = "images/logo-dark.png"; // dark-mode logo (if present)
 
   const NAV_SECTIONS = [
     {
@@ -170,8 +172,11 @@
 
     return `
       <div class="tl-sidebar__brand">
-        <img src="${LOGO_PATH}" alt="Tailora">
-      
+        <span class="tl-brand-logo">
+          <img src="${LOGO_LIGHT}" alt="Tailora" class="tl-logo-light" onerror="this.onerror=null;this.src='${LOGO_PATH}'">
+          <img src="${LOGO_DARK}" alt="Tailora" class="tl-logo-dark" onerror="this.onerror=null;this.src='${LOGO_PATH}'">
+        </span>
+
         <button type="button" class="tl-sidebar-close" id="tlSidebarCloseBtn" aria-label="Close sidebar">
           <i class="bi bi-x-lg"></i>
         </button>

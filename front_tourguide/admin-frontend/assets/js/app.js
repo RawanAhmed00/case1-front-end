@@ -49,6 +49,8 @@
   ];
 
   const LOGO_PATH = "assets/images/logo.png";
+  const LOGO_LIGHT = "assets/images/logo-light.png";
+  const LOGO_DARK = "assets/images/logo-dark.png";
 
   /* -----------------------------------------------------------------------
      2. HELPERS
@@ -99,8 +101,10 @@
       </div>
       <div class="offcanvas-body d-flex flex-column p-0">
         <div class="tl-sidebar__brand">
-          <img src="${LOGO_PATH}" alt="Tailora">
-          <span class="tl-sidebar__wordmark tl-body">Tailora</span>
+          <span class="tl-brand-logo">
+            <img src="${LOGO_LIGHT}" alt="Tailora" class="tl-logo-light" onerror="this.onerror=null;this.src='${LOGO_PATH}'">
+            <img src="${LOGO_DARK}" alt="Tailora" class="tl-logo-dark" onerror="this.onerror=null;this.src='${LOGO_PATH}'">
+          </span>
         </div>
         <nav class="tl-sidebar__nav" aria-label="Primary">
           ${groups}

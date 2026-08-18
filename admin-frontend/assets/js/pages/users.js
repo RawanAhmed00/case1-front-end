@@ -55,9 +55,7 @@
                   <td>${P.badge(u.is_active !== undefined ? (u.is_active ? "Active" : "Inactive") : "Active")}</td>
                   <td>
                     <div class="tl-table-actions">
-                      <button class="tl-btn tl-btn--outline tl-btn--sm" data-user-view="${P.escape(u.id)}" title="View Details">
-                        <i class="bi bi-eye"></i>
-                      </button>
+                      
                       <button class="tl-btn tl-btn--outline tl-btn--sm" data-user-edit="${P.escape(u.id)}" title="Edit User">
                         <i class="bi bi-pencil"></i>
                       </button>
@@ -338,20 +336,7 @@
         return;
       }
 
-      // View Details
-      const viewBtn = e.target.closest("[data-user-view]");
-      if (viewBtn) {
-        const id = viewBtn.dataset.userView;
-        try {
-          const r = await TL.Users.getUser(id);
-          const d = P.data(r) || currentUsersList.find(x => String(x.id) === String(id));
-          document.getElementById("userDetails").textContent = JSON.stringify(d, null, 2);
-          P.modal("userDetailsModal")?.show();
-        } catch (err) {
-          TL.showToast(err.message, "error");
-        }
-        return;
-      }
+      
 
       // Edit
       const editBtn = e.target.closest("[data-user-edit]");

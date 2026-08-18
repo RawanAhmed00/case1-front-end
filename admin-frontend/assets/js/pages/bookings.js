@@ -91,23 +91,7 @@
       });
     }
 
-    const viewBtn = document.getElementById("bookingViewBtn");
-    if (viewBtn) {
-      viewBtn.addEventListener("click", async function () {
-        const input = getBookingIdInput();
-        const id = input ? input.value : "";
-        if (!id) return TL.showToast("Enter a booking ID.", "warning");
-
-        try {
-          const r = await TL.Bookings.getBooking(id);
-          const details = document.getElementById("bookingDetails");
-          if (details) details.textContent = JSON.stringify(P.data(r), null, 2);
-          P.modal("bookingViewModal")?.show();
-        } catch (e) {
-          TL.showToast(e.message, "error");
-        }
-      });
-    }
+    
 
     const updateBtn = document.getElementById("bookingUpdateBtn");
     if (updateBtn) {

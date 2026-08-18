@@ -7,6 +7,7 @@
 
     let currentPage = 1;
     const perPage = 20;
+    let currentTripsList = [];
 
     function renderTable(rows, meta) {
       if (!rows) {
@@ -59,9 +60,6 @@
                   <td>${P.escape(P.display(t.created_at))}</td>
                   <td>
                     <div class="tl-table-actions">
-                      <button class="tl-btn tl-btn--outline tl-btn--sm" data-trip-view="${P.escape(t.id)}" title="View Trip">
-                        <i class="bi bi-eye"></i>
-                      </button>
                       <button class="tl-btn tl-btn--outline tl-btn--sm" data-trip-edit="${P.escape(t.id)}" title="Edit Trip">
                         <i class="bi bi-pencil"></i>
                       </button>
@@ -137,6 +135,27 @@
           TL.Trips.getTripStatistics(),
         ]);
 
+        // Populate User dropdown for create/edit forms
+        (async function populateUsers() {
+          try {
+            const usersRes = await TL.Users.getUsers({ per_page: 1000 });
+            const users = P.list(usersRes) || P.data(usersRes) || [];
+            const userSelect = document.getElementById("trip_user_id");
+            if (userSelect) {
+              const opts = ["<option value=''>Select user</option>"];
+              users.forEach(u => {
+                const id = u && (u.id !== undefined ? String(u.id) : "");
+                const label = u && (u.name || u.email) ? `${P.escape(u.name || `User #${id}`)}${u.email ? ' — ' + P.escape(u.email) : ''}` : `User #${id}`;
+                opts.push(`<option value="${id}">${label}</option>`);
+              });
+              userSelect.innerHTML = opts.join("");
+            }
+          } catch (e) {
+            // silently ignore — dropdown will remain with placeholder
+            console.warn("Failed to load users for trip form:", e && e.message ? e.message : e);
+          }
+        })();
+
         // Process Stats
         if (statsRes.status === "fulfilled") {
           const d = P.data(statsRes.value) || {};
@@ -182,6 +201,9 @@
           if (metaEl) {
             metaEl.textContent = meta ? `Page ${meta.current_page || currentPage} of ${meta.last_page || 1}` : `Page ${currentPage}`;
           }
+
+          // Cache current list for reliable editing
+          currentTripsList = rows || [];
 
           renderTable(rows, meta);
         } else {
@@ -243,34 +265,19 @@
         return;
       }
 
-      // View
-      const viewBtn = e.target.closest("[data-trip-view]");
-      if (viewBtn) {
-        const id = viewBtn.dataset.tripView;
-        try {
-          const res = await TL.Trips.getTrips({ page: currentPage, per_page: perPage });
-          const rows = P.list(res) || [];
-          const trip = rows.find(x => String(x.id) === String(id));
-          document.getElementById("tripDetails").textContent = trip ? JSON.stringify(trip, null, 2) : "Trip data unavailable.";
-          P.modal("tripDetailsModal")?.show();
-        } catch (err) {
-          TL.showToast(err.message, "error");
-        }
-        return;
-      }
+      
 
       // Edit
       const editBtn = e.target.closest("[data-trip-edit]");
       if (editBtn) {
         const id = editBtn.dataset.tripEdit;
         try {
-          const res = await TL.Trips.getTrips({ page: currentPage, per_page: perPage });
-          const rows = P.list(res) || [];
-          const trip = rows.find(x => String(x.id) === String(id));
+          const trip = currentTripsList.find(x => String(x.id) === String(id));
           if (!trip) {
             TL.showToast("Trip details not found.", "warning");
             return;
           }
+
           document.getElementById("trip_id").value = trip.id;
           document.getElementById("trip_num_days").value = trip.num_days ?? "";
           document.getElementById("trip_travel_style").value = trip.travel_style ?? "";

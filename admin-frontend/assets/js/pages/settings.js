@@ -55,7 +55,21 @@ function files() {
     }
 
     return d;
-} function capture(r){const d=P.data(r);if(d&&d.id){setId(d.id);response.innerHTML=`<div class="tl-badge tl-badge--success mb-3">ID ${P.escape(d.id)} captured</div><pre class="tl-code-block">${P.escape(JSON.stringify(d,null,2))}</pre>`;}else{response.innerHTML=P.empty("No settings ID returned","The operation completed without a documented id in the response.","bi-gear");}sync();}
+} function capture(r){
+    const d = P.data(r);
+    if (d && d.id) {
+        setId(d.id);
+        // Only show the captured ID badge — do not render the full JSON response
+        response.innerHTML = `<div class="tl-badge tl-badge--success mb-3">ID ${P.escape(d.id)} captured</div>`;
+    } else {
+        response.innerHTML = P.empty(
+            "No settings ID returned",
+            "The operation completed without a documented id in the response.",
+            "bi-gear"
+        );
+    }
+    sync();
+}
  function preview(input,img){input.addEventListener("change",()=>{const f=input.files[0];if(!f){img.style.display="none";return;}const url=URL.createObjectURL(f);img.src=url;img.style.display="block";});}
  preview(form.logo,document.getElementById("logoPreview"));preview(form.homepage_banner,document.getElementById("bannerPreview"));
  const socialContainer = document.getElementById(

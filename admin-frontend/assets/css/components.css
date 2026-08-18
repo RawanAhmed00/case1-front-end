@@ -530,6 +530,19 @@
   flex-shrink: 0;
 }
 
+/* Theme-aware brand logo: prefer explicit light/dark images when available */
+.tl-brand-logo { display: inline-flex; align-items: center; }
+.tl-brand-logo img { display: block; height: 44px; width: auto; max-width: 100%; }
+.tl-logo-dark { display: none !important; }
+
+/* Light Mode */
+html[data-theme="light"] .tl-logo-light { display: block !important; }
+html[data-theme="light"] .tl-logo-dark { display: none !important; }
+
+/* Dark Mode */
+html:not([data-theme="light"]) .tl-logo-light { display: none !important; }
+html:not([data-theme="light"]) .tl-logo-dark { display: block !important; }
+
 [data-theme="light"] .tl-sidebar__brand img {
   /* Logo is white by default, invert it in light mode to make it dark */
   filter: brightness(0);
