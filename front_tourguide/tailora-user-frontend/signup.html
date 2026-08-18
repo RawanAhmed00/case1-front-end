@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Create Account — Tailora</title>
+
+<link rel="icon" href="assets/images/logo.png">
+
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main class="tl-auth-shell">
+
+  <div class="tl-hero-bg"></div>
+
+  <div class="tl-card tl-auth-card tl-reveal">
+
+    <!-- Brand -->
+    <a href="index.html" class="tl-brand">
+      <img src="assets/images/logo.png" alt="Tailora">
+      <span>Tailora</span>
+    </a>
+
+    <!-- Heading -->
+    <h1 class="tl-display">Start your journey</h1>
+
+    <p>
+      Create an account to build AI-tailored trips.
+    </p>
+
+    <!-- API / Validation Alert -->
+    <div
+      class="tl-auth-alert"
+      id="auth-alert"
+      role="alert"
+      aria-live="polite">
+    </div>
+
+    <!-- Signup Form -->
+    <form id="signup-form" novalidate>
+
+      <!-- Full Name -->
+      <div class="tl-field" id="field-name">
+        <label for="name">Full name</label>
+
+        <input
+          class="tl-input"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Jordan Lee"
+          required
+          autocomplete="name"
+        >
+
+        <div class="tl-field-error"></div>
+      </div>
+
+
+      <!-- Email -->
+      <div class="tl-field" id="field-email">
+        <label for="email">Email address</label>
+
+        <input
+          class="tl-input"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+        >
+
+        <div class="tl-field-error"></div>
+      </div>
+
+
+      <!-- Phone -->
+      <div class="tl-field" id="field-phone_num">
+        <label for="phone_num">Phone number</label>
+
+        <input
+          class="tl-input"
+          type="tel"
+          id="phone_num"
+          name="phone_num"
+          placeholder="+20 100 000 0000"
+          required
+          autocomplete="tel"
+        >
+
+        <div class="tl-field-error"></div>
+      </div>
+
+
+      <!-- Age + Gender -->
+      <div class="tl-auth-grid">
+
+        <!-- Age -->
+        <div class="tl-field" id="field-age">
+          <label for="age">Age</label>
+
+          <input
+            class="tl-input"
+            type="number"
+            id="age"
+            name="age"
+            placeholder="21"
+            min="1"
+            required
+            autocomplete="off"
+          >
+
+          <div class="tl-field-error"></div>
+        </div>
+
+
+        <!-- Gender -->
+        <div class="tl-field" id="field-gender">
+          <label for="gender">Gender</label>
+
+          <input
+            class="tl-input"
+            type="text"
+            id="gender"
+            name="gender"
+            placeholder="Female"
+            required
+            autocomplete="sex"
+          >
+
+          <div class="tl-field-error"></div>
+        </div>
+
+      </div>
+
+
+      <!-- Country of Birth -->
+     <div class="tl-field" id="field-dist_country">
+  <label for="dist_country">Country</label>
+
+  <input
+    class="tl-input"
+    type="text"
+    id="dist_country"
+    name="dist_country"
+    placeholder="Egypt"
+    required
+    autocomplete="country-name"
+  >
+
+  <div class="tl-field-error"></div>
+</div>
+
+
+      <!-- Password -->
+      <div class="tl-field" id="field-password">
+        <label for="password">Password</label>
+
+        <input
+          class="tl-input"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="At least 6 characters"
+          minlength="6"
+          required
+          autocomplete="new-password"
+        >
+
+        <div class="tl-field-error"></div>
+      </div>
+
+
+      <!-- Confirm Password -->
+      <div class="tl-field" id="field-password_confirmation">
+        <label for="password_confirmation">
+          Confirm password
+        </label>
+
+        <input
+          class="tl-input"
+          type="password"
+          id="password_confirmation"
+          name="password_confirmation"
+          placeholder="Repeat your password"
+          minlength="6"
+          required
+          autocomplete="new-password"
+        >
+
+        <div class="tl-field-error"></div>
+      </div>
+
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        class="tl-btn tl-btn--primary tl-btn--block tl-mt-8"
+        id="signup-submit">
+
+        Create Account
+
+      </button>
+
+    </form>
+
+
+    <!-- Sign In -->
+    <div class="tl-auth-switch">
+      Already have an account?
+      <a href="signin.html">Sign in</a>
+    </div>
+
+  </div>
+
+</main>
+
+
+<div id="tl-footer-mount"></div>
+
+
+<!-- Core -->
+<script src="assets/js/api/api.js"></script>
+
+<!-- Authentication -->
+<script src="assets/js/api/auth.js"></script>
+
+<!-- Shared App -->
+<script src="assets/js/app.js"></script>
+
+<!-- Auth Pages -->
+<script src="assets/js/pages/auth-pages.js"></script>
+
+</body>
+</html>

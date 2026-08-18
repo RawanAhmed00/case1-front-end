@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trips — Tailora Admin</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="trips" data-page-title="Trips" data-breadcrumb="Management,Trips" data-requires-auth="true">
+  <div class="tl-app">
+    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <div class="tl-main">
+      <header class="tl-topbar" id="tlTopbar"></header>
+      <main class="tl-content">
+        
+<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-map"></i> Trip Management</span></div><h1 class="tl-page-title">Trips</h1><p class="tl-text-secondary">Live trips and documented trip statistics.</p></div><button id="tripsRefresh" class="tl-btn tl-btn--outline"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
+<div class="tl-grid tl-grid--kpi"><div class="tl-card"><div class="tl-label">Total trips</div><div id="tripTotal" class="tl-stat-card__value">Loading…</div></div><div class="tl-card"><div class="tl-label">Created today</div><div id="tripToday" class="tl-stat-card__value">Loading…</div></div><div class="tl-card"><div class="tl-label">This month</div><div id="tripMonth" class="tl-stat-card__value">Loading…</div></div><div class="tl-card"><div class="tl-label">Pagination</div><div id="tripMeta" class="tl-stat-card__value" style="font-size:15px;">Loading…</div></div></div>
+<section class="tl-card tl-card--flush" style="margin-top:20px;"><div class="tl-card__head" style="padding:22px 22px 0;"><div><div class="tl-section-title">Trip directory</div><div class="tl-metadata">GET /admin/trips-admin</div></div></div><div id="tripsState"></div></section>
+<div class="modal fade" id="tripEditModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Edit trip</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><form id="tripEditForm"><div class="modal-body"><input type="hidden" id="trip_id"><div class="tl-field">
+<label for="trip_num_days">Number of days</label>
+<input id="trip_num_days" name="trip_num_days" type="number" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="trip_num_days"></div>
+</div><div class="tl-field">
+<label for="trip_travel_style">Travel style</label>
+<input id="trip_travel_style" name="trip_travel_style" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="trip_travel_style"></div>
+</div><div class="tl-field">
+<label for="trip_dis_country">Destination country</label>
+<input id="trip_dis_country" name="trip_dis_country" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="trip_dis_country"></div>
+</div><div class="tl-field">
+<label for="trip_budget">Budget</label>
+<input id="trip_budget" name="trip_budget" type="number" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="trip_budget"></div>
+</div><div class="tl-field"><label for="trip_interst">Interests</label><textarea id="trip_interst" name="trip_interst" class="tl-textarea" rows="4" placeholder=""></textarea><div class="tl-field-error" data-error-for="trip_interst"></div></div><div class="tl-field">
+<label for="trip_number_of_travelers">Travelers</label>
+<input id="trip_number_of_travelers" name="trip_number_of_travelers" type="number" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="trip_number_of_travelers"></div>
+</div><div class="tl-field">
+<label for="trip_user_id">User ID</label>
+<input id="trip_user_id" name="trip_user_id" type="number" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="trip_user_id"></div>
+</div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Save changes</button></div></form></div></div></div>
+<div class="modal fade" id="tripDetailsModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Trip details</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><pre id="tripDetails" class="tl-code-block"></pre></div></div></div></div>
+
+      </main>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/trips.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages/utils.js"></script>
+  <script src="assets/js/pages/trips.js"></script>
+</body>
+</html>

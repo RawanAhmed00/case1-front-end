@@ -146,6 +146,7 @@
 
     activeType: "all", // 'all' | 'attraction' | 'hotel' | 'restaurant'
     search: "",
+    currentVisibleCount: 100,
 
     // Routing
     start: null,
@@ -335,11 +336,8 @@
     if (res && res.last_page !== undefined) state.categories.attraction.lastPage = Number(res.last_page);
 
     const normalized = rawItems.map((item) => normalize(item, "attraction")).filter(Boolean);
-    const uniqueNormalized = (window.TL && window.TL.Util && typeof window.TL.Util.uniqueBy === "function")
-      ? window.TL.Util.uniqueBy(normalized, (item) => `${item.name}_${item.city}`)
-      : normalized;
-    state.pageCache.set(cacheKey, uniqueNormalized);
-    return uniqueNormalized;
+    state.pageCache.set(cacheKey, normalized);
+    return normalized;
   }
 
   async function fetchHotelsPage(pageNum) {
@@ -367,11 +365,8 @@
     }
 
     const normalized = rawItems.map((item) => normalize(item, "hotel")).filter(Boolean);
-    const uniqueNormalized = (window.TL && window.TL.Util && typeof window.TL.Util.uniqueBy === "function")
-      ? window.TL.Util.uniqueBy(normalized, (item) => `${item.name}_${item.city}`)
-      : normalized;
-    state.pageCache.set(cacheKey, uniqueNormalized);
-    return uniqueNormalized;
+    state.pageCache.set(cacheKey, normalized);
+    return normalized;
   }
 
   async function fetchRestaurantsPage(pageNum) {
@@ -399,11 +394,8 @@
     }
 
     const normalized = rawItems.map((item) => normalize(item, "restaurant")).filter(Boolean);
-    const uniqueNormalized = (window.TL && window.TL.Util && typeof window.TL.Util.uniqueBy === "function")
-      ? window.TL.Util.uniqueBy(normalized, (item) => `${item.name}_${item.city}_${item.lat}_${item.lng}`)
-      : normalized;
-    state.pageCache.set(cacheKey, uniqueNormalized);
-    return uniqueNormalized;
+    state.pageCache.set(cacheKey, normalized);
+    return normalized;
   }
 
   async function getRecordsForCategoryAndPage(type, pageNum) {
@@ -579,6 +571,7 @@
       }
     });
 
+    state.currentVisibleCount = visibleLocations.length;
     updatePaginationUI(visibleLocations.length);
 
     if (shouldFitBounds && visibleLocations.length > 0) {
@@ -603,11 +596,18 @@
     const nextIcon = document.getElementById("map-next-btn-icon");
 
     const catState = getActiveCategoryState();
-    const currentPage = catState.page;
+    const currentPage = catState.page || 1;
     const hasMore = currentPage < (catState.lastPage || 999);
 
+    if (visibleCount !== undefined && visibleCount !== null && visibleCount > 0) {
+      state.currentVisibleCount = visibleCount;
+    }
+    const count = (visibleCount !== undefined && visibleCount !== null && visibleCount > 0)
+      ? visibleCount
+      : (state.currentVisibleCount || PAGE_SIZE);
+
     const startRecord = (currentPage - 1) * PAGE_SIZE + 1;
-    const endRecord = startRecord + visibleCount - 1;
+    const endRecord = (currentPage - 1) * PAGE_SIZE + count;
 
     if (pageBadge) {
       pageBadge.textContent = `Page ${currentPage}`;
@@ -629,25 +629,26 @@
       }
     }
 
+    const total = catState.total || (catState.lastPage ? catState.lastPage * PAGE_SIZE : 1001);
+    const totalStr = ` of ${total.toLocaleString()}`;
+
     if (subText) {
-      const totalStr = catState.total ? ` of ${catState.total.toLocaleString()}` : "";
-      if (visibleCount > 0) {
-        subText.textContent = `Showing records ${startRecord}–${endRecord}${totalStr}`;
+      if (state.activeType === "all") {
+        subText.textContent = `Showing records ${startRecord.toLocaleString()}–${endRecord.toLocaleString()} (100 per category)`;
       } else {
-        subText.textContent = `No records on this page`;
+        subText.textContent = `Showing records ${startRecord.toLocaleString()}–${endRecord.toLocaleString()}${totalStr}`;
       }
     }
 
     if (countsEl) {
       if (state.activeType === "all") {
         countsEl.innerHTML = `
-          Page <strong>${currentPage}</strong> &bull; Showing <strong>${visibleCount}</strong> places (100 per category).
+          Page <strong>${currentPage}</strong> &bull; Showing <strong>${startRecord.toLocaleString()}–${endRecord.toLocaleString()}</strong> of each category.
         `;
       } else {
         const catName = labels[state.activeType] || state.activeType;
-        const totalStr = catState.total ? ` of ${catState.total.toLocaleString()}` : "";
         countsEl.innerHTML = `
-          Page <strong>${currentPage}</strong> &bull; Showing <strong>${visibleCount}${totalStr}</strong> ${catName.toLowerCase()}s.
+          Page <strong>${currentPage}</strong> &bull; Showing <strong>${startRecord.toLocaleString()}–${endRecord.toLocaleString()}${totalStr}</strong> ${catName.toLowerCase()}s.
         `;
       }
     }
@@ -683,7 +684,7 @@
     } finally {
       if (loadingEl) loadingEl.hidden = true;
       isPaginating = false;
-      updatePaginationUI(0);
+      updatePaginationUI();
     }
   }
 
@@ -694,7 +695,7 @@
 
     isPaginating = true;
     catState.page += 1;
-    updatePaginationUI(0);
+    updatePaginationUI();
     await loadCurrentPageData(false);
   }
 
@@ -705,7 +706,7 @@
 
     isPaginating = true;
     catState.page -= 1;
-    updatePaginationUI(0);
+    updatePaginationUI();
     await loadCurrentPageData(false);
   }
 

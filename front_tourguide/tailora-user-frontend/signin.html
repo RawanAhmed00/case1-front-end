@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main class="tl-auth-shell">
+  <div class="tl-hero-bg"></div>
+  <div class="tl-card tl-auth-card tl-reveal">
+    <a href="index.html" class="tl-brand"><img src="assets/images/logo.png" alt=""><span>Tailora</span></a>
+    <h1 class="tl-display">Welcome back</h1>
+    <p>Sign in to continue planning your next trip.</p>
+
+    <div class="tl-auth-alert" id="auth-alert" role="alert"></div>
+
+    <form id="signin-form" novalidate>
+      <div class="tl-field" id="field-email">
+        <label for="email">Email address</label>
+        <input class="tl-input" type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        <div class="tl-field-error"></div>
+      </div>
+      <div class="tl-field" id="field-password">
+        <label for="password">Password</label>
+        <input class="tl-input" type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        <div class="tl-field-error"></div>
+      </div>
+      <div class="tl-flex tl-justify-between tl-items-center tl-mt-8" style="margin-bottom:18px;">
+        <span></span>
+        <a href="forgot-password.html" style="font-size:13px;color:var(--tl-cyan);">Forgot password?</a>
+      </div>
+      <button type="submit" class="tl-btn tl-btn--primary tl-btn--block" id="signin-submit">Sign In</button>
+    </form>
+
+    <div class="tl-auth-switch">Don't have an account? <a href="signup.html">Create one</a></div>
+  </div>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/auth-pages.js"></script>
+</body>
+</html>

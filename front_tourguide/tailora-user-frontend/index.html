@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tailora — Your journey, tailored to your aura</title>
+<meta name="description" content="AI-crafted trips that match your preferences, budget, and travel style.">
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <!-- ============================= HERO ============================= -->
+  <section class="tl-hero">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <div class="tl-hero-grid">
+        <div>
+          <span class="tl-eyebrow">AI-Powered Travel Planning</span>
+          <h1 class="tl-hero-title tl-display" style="margin-top:18px;">
+            Your journey,<br><em class="tl-gradient-text">tailored to your aura.</em>
+          </h1>
+          <p class="tl-hero-sub">AI-crafted trips that match your preferences, budget, and travel style — from the first idea to the final itinerary.</p>
+
+          <div class="tl-trust-row">
+            <div class="tl-avatar-stack">
+              <span>JM</span><span>AK</span><span>SR</span><span>+</span>
+            </div>
+            <div class="tl-trust-text"><strong>Trusted by travelers</strong> planning smarter trips with Tailora</div>
+          </div>
+
+          <!-- Search / planning card -->
+          <div class="tl-search-card">
+            <div class="tl-search-title">Where do you want to go?</div>
+            <form id="hero-search-form">
+              <div class="tl-search-grid">
+                <div class="tl-search-field">
+                  <label for="hero-destination">Destination</label>
+                  <input class="tl-input" id="hero-destination" type="text" placeholder="Search a country or city" autocomplete="off">
+                  <div class="tl-search-suggest" id="hero-suggest"></div>
+                </div>
+                <div class="tl-search-field">
+                  <label for="hero-when">When</label>
+                  <input class="tl-input" id="hero-when" type="month">
+                </div>
+                <div class="tl-search-field">
+                  <label for="hero-travelers">Travelers</label>
+                  <select class="tl-select" id="hero-travelers">
+                    <option>1 Traveler</option>
+                    <option>2 Travelers</option>
+                    <option>3 Travelers</option>
+                    <option>4+ Travelers</option>
+                  </select>
+                </div>
+                <button type="submit" class="tl-btn tl-btn--primary" style="height:100%;">Plan My Trip</button>
+              </div>
+            </form>
+            <div class="tl-chip-row tl-mt-16">
+              <button type="button" class="tl-pill" data-style="Adventure">🧗 Adventure</button>
+              <button type="button" class="tl-pill" data-style="Relaxation">🌴 Relaxation</button>
+              <button type="button" class="tl-pill" data-style="Culture">🏛️ Culture</button>
+              <button type="button" class="tl-pill" data-style="Food">🍜 Food</button>
+              <button type="button" class="tl-pill" data-style="Luxury">✨ Luxury</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI itinerary showcase -->
+        <div class="tl-showcase tl-reveal">
+          <div class="tl-showcase-label">
+            <span class="tl-badge">✦ AI Itinerary Preview</span>
+            <span class="tl-showcase-day">Day 2 · Kyoto</span>
+          </div>
+          <div class="tl-showcase-item">
+            <div class="tl-showcase-node"><div class="tl-showcase-dot"></div></div>
+            <div class="tl-showcase-time">08:00</div>
+            <div class="tl-showcase-text"><strong>Fushimi Inari Shrine</strong><span>Sunrise walk through the torii gates</span></div>
+          </div>
+          <div class="tl-showcase-item">
+            <div class="tl-showcase-node"><div class="tl-showcase-dot"></div></div>
+            <div class="tl-showcase-time">12:30</div>
+            <div class="tl-showcase-text"><strong>Local izakaya lunch</strong><span>AI-matched to your food preferences</span></div>
+          </div>
+          <div class="tl-showcase-item">
+            <div class="tl-showcase-node"><div class="tl-showcase-dot"></div></div>
+            <div class="tl-showcase-time">16:00</div>
+            <div class="tl-showcase-text"><strong>Arashiyama Bamboo Grove</strong><span>Golden-hour photography stop</span></div>
+          </div>
+          <div class="tl-showcase-note">This is a preview of what Tailora's AI planner builds — sign in and start a plan to generate your own, real itinerary.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= AURA ============================= -->
+  <section class="tl-section tl-reveal" id="aura">
+    <div class="tl-container">
+      <div class="tl-section-head">
+        <div>
+          <span class="tl-eyebrow">Travel Personality</span>
+          <h2 class="tl-display tl-mt-8">Build Your Aura</h2>
+          <p>Every traveler has a rhythm. Tell us yours and let the planner shape trips around it.</p>
+        </div>
+      </div>
+      <div class="tl-aura-grid">
+        <div class="tl-aura-card">
+          <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=500&q=70" alt="Mountain trail" loading="lazy">
+          <div class="tl-aura-body"><div class="tl-aura-icon">🧭</div><h3>The Explorer</h3><p>Off-grid trails and unmapped corners</p></div>
+        </div>
+        <div class="tl-aura-card">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=70" alt="Quiet beach" loading="lazy">
+          <div class="tl-aura-body"><div class="tl-aura-icon">🌊</div><h3>The Escapist</h3><p>Slow mornings, quiet coastlines</p></div>
+        </div>
+        <div class="tl-aura-card">
+          <img src="https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?auto=format&fit=crop&w=500&q=70" alt="Temple architecture" loading="lazy">
+          <div class="tl-aura-body"><div class="tl-aura-icon">🏛️</div><h3>The Culture Seeker</h3><p>Museums, temples, living history</p></div>
+        </div>
+        <div class="tl-aura-card">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=500&q=70" alt="Street food market" loading="lazy">
+          <div class="tl-aura-body"><div class="tl-aura-icon">🍜</div><h3>The Foodie</h3><p>Markets, tasting menus, night stalls</p></div>
+        </div>
+        <div class="tl-aura-card">
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=500&q=70" alt="City skyline at night" loading="lazy">
+          <div class="tl-aura-body"><div class="tl-aura-icon">✨</div><h3>The Luxury Nomad</h3><p>Suites, skylines, effortless travel</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= TRENDING DESTINATIONS ======================= -->
+  <section class="tl-section tl-section--tight tl-reveal">
+    <div class="tl-container">
+      <div class="tl-section-head">
+        <div>
+          <span class="tl-eyebrow">Trending Now</span>
+          <h2 class="tl-display tl-mt-8">Where travelers are heading</h2>
+        </div>
+        <a href="destinations.html" class="tl-btn tl-btn--outline tl-btn--sm">View all destinations</a>
+      </div>
+      <div class="tl-scroll-row" id="trending-row">
+        <!-- populated by home.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= WHY TAILORA ============================= -->
+  <section class="tl-section tl-reveal">
+    <div class="tl-container">
+      <div class="tl-section-head">
+        <div>
+          <span class="tl-eyebrow">Why Tailora</span>
+          <h2 class="tl-display tl-mt-8">Not another booking form</h2>
+        </div>
+      </div>
+      <div class="tl-feature-grid">
+        <div class="tl-card tl-feature-card">
+          <div class="tl-feature-icon">✦</div>
+          <h3>AI-Powered Plans</h3>
+          <p>Describe your trip in your own words and let the assistant draft real, bookable itineraries.</p>
+        </div>
+        <div class="tl-card tl-feature-card">
+          <div class="tl-feature-icon">🌤️</div>
+          <h3>Real-Time Travel Data</h3>
+          <p>Live weather for your trip dates, current flight options, and up-to-date destination details.</p>
+        </div>
+        <div class="tl-card tl-feature-card">
+          <div class="tl-feature-icon">🗓️</div>
+          <h3>Custom Itineraries</h3>
+          <p>Day-by-day plans built around your cities, attractions, and pace — not a generic template.</p>
+        </div>
+        <div class="tl-card tl-feature-card">
+          <div class="tl-feature-icon">🧳</div>
+          <h3>All in One Place</h3>
+          <p>Flights, hotels, restaurants, favorites, and bookings — tracked together in your dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= ABOUT ============================= -->
+  <section class="tl-section tl-reveal" id="about">
+    <div class="tl-container tl-text-center" style="max-width:720px;">
+      <span class="tl-eyebrow" style="justify-content:center;">About Tailora</span>
+      <h2 class="tl-display tl-mt-8" style="font-size:clamp(24px,3vw,32px);">Travel planning that starts with you, not a destination list</h2>
+      <p class="tl-text-secondary tl-mt-16">Tailora pairs an AI travel assistant with real destination, hotel, restaurant, and flight data — so the plan it builds is one you can actually book, day by day, city by city.</p>
+    </div>
+  </section>
+
+  <!-- ============================= CTA ============================= -->
+  <section class="tl-section tl-reveal">
+    <div class="tl-container">
+      <div class="tl-cta-band">
+        <h2 class="tl-display">Not just a trip.<br>It's your story.</h2>
+        <p>Start a conversation with your AI planner and get a real itinerary in minutes.</p>
+        <a href="plan-trip.html" class="tl-btn tl-btn--primary">Start Your Journey</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/catalog.js"></script>
+<script src="assets/js/api/attractions.js"></script>
+<script src="assets/js/api/hotels.js"></script>
+<script src="assets/js/api/trips.js"></script>
+<script src="assets/js/api/ai.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/api/profile.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/home.js"></script>
+</body>
+</html>

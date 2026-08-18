@@ -1,0 +1,1302 @@
+/* ==========================================================================
+   TAILORA ADMIN — components.css
+   Reusable UI components built on top of the design tokens in style.css.
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   1. GLASS CARD
+   ------------------------------------------------------------------------- */
+.tl-card {
+  position: relative;
+  background: var(--tl-card);
+  border: 1px solid var(--tl-border);
+  border-radius: var(--tl-radius-lg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--tl-shadow-sm);
+  padding: 22px;
+  transition: border-color var(--tl-duration-base) var(--tl-ease),
+              background var(--tl-duration-base) var(--tl-ease),
+              transform var(--tl-duration-base) var(--tl-ease);
+}
+
+.tl-card--hover:hover {
+  border-color: var(--tl-border-strong);
+  background: var(--tl-card-hover);
+  transform: translateY(-2px);
+}
+
+.tl-card--flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.tl-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Subtle top glow accent for featured cards */
+.tl-card--accent {
+  overflow: hidden;
+}
+.tl-card--accent::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--tl-gradient-spectrum);
+  opacity: 0.7;
+}
+
+/* -------------------------------------------------------------------------
+   2. BUTTONS
+   ------------------------------------------------------------------------- */
+.tl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--tl-font);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: var(--tl-radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--tl-duration-fast) var(--tl-ease),
+              box-shadow var(--tl-duration-fast) var(--tl-ease),
+              opacity var(--tl-duration-fast) var(--tl-ease),
+              background var(--tl-duration-fast) var(--tl-ease),
+              border-color var(--tl-duration-fast) var(--tl-ease);
+}
+
+.tl-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.tl-btn:disabled,
+.tl-btn.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.tl-btn--primary {
+  background: var(--tl-gradient-aura);
+  color: #06231D;
+  box-shadow: var(--tl-shadow-glow-teal);
+}
+.tl-btn--primary:hover {
+  box-shadow: 0 0 0 1px rgba(32, 227, 194, 0.4), 0 10px 28px rgba(32, 227, 194, 0.22);
+  transform: translateY(-1px);
+}
+
+.tl-btn--violet {
+  background: var(--tl-gradient-violet);
+  color: #0B132B;
+  box-shadow: var(--tl-shadow-glow-purple);
+}
+.tl-btn--violet:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px rgba(138, 92, 246, 0.4), 0 10px 28px rgba(138, 92, 246, 0.22);
+}
+
+.tl-btn--outline {
+  background: transparent;
+  border-color: var(--tl-border-strong);
+  color: var(--tl-text-primary);
+}
+.tl-btn--outline:hover {
+  border-color: var(--tl-teal);
+  color: var(--tl-teal);
+  background: rgba(32, 227, 194, 0.06);
+}
+
+.tl-btn--ghost {
+  background: transparent;
+  color: var(--tl-text-secondary);
+}
+.tl-btn--ghost:hover {
+  background: rgba(248, 250, 252, 0.06);
+  color: var(--tl-text-primary);
+}
+
+.tl-btn--danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #FCA5A5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.tl-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.tl-btn--sm {
+  padding: 7px 12px;
+  font-size: 13px;
+}
+
+.tl-btn--icon {
+  padding: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+.tl-btn--block {
+  width: 100%;
+}
+
+/* -------------------------------------------------------------------------
+   3. BADGES
+   ------------------------------------------------------------------------- */
+.tl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--tl-radius-pill);
+  border: 1px solid transparent;
+  line-height: 1.6;
+}
+
+.tl-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.tl-badge--success { background: rgba(34, 197, 94, 0.12); color: var(--tl-success); border-color: rgba(34, 197, 94, 0.25); }
+.tl-badge--warning { background: rgba(245, 158, 11, 0.12); color: var(--tl-warning); border-color: rgba(245, 158, 11, 0.25); }
+.tl-badge--danger  { background: rgba(239, 68, 68, 0.12); color: var(--tl-danger); border-color: rgba(239, 68, 68, 0.25); }
+.tl-badge--info    { background: rgba(77, 163, 255, 0.12); color: var(--tl-info); border-color: rgba(77, 163, 255, 0.25); }
+.tl-badge--neutral { background: rgba(248, 250, 252, 0.06); color: var(--tl-text-secondary); border-color: var(--tl-border); }
+
+/* -------------------------------------------------------------------------
+   4. FORM CONTROLS
+   ------------------------------------------------------------------------- */
+.tl-field {
+  margin-bottom: 18px;
+}
+
+.tl-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tl-text-secondary);
+  margin-bottom: 8px;
+}
+
+.tl-input,
+.tl-select,
+.tl-textarea {
+  width: 100%;
+  font-family: var(--tl-font);
+  font-size: 14px;
+  color: var(--tl-text-primary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--tl-border-strong);
+  border-radius: var(--tl-radius-sm);
+  padding: 11px 14px;
+  transition: border-color var(--tl-duration-fast) var(--tl-ease),
+              box-shadow var(--tl-duration-fast) var(--tl-ease),
+              background var(--tl-duration-fast) var(--tl-ease);
+}
+
+.tl-textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.tl-input::placeholder,
+.tl-textarea::placeholder {
+  color: var(--tl-text-muted);
+}
+
+.tl-input:focus,
+.tl-select:focus,
+.tl-textarea:focus {
+  outline: none;
+  border-color: var(--tl-teal);
+  background: rgba(32, 227, 194, 0.04);
+  box-shadow: 0 0 0 3px rgba(32, 227, 194, 0.12);
+}
+
+.tl-input.is-invalid,
+.tl-select.is-invalid,
+.tl-textarea.is-invalid {
+  border-color: var(--tl-danger);
+}
+
+.tl-field-error {
+  display: none;
+  font-size: 12px;
+  color: var(--tl-danger);
+  margin-top: 6px;
+}
+
+.tl-field-error.is-visible {
+  display: block;
+}
+
+.tl-field-hint {
+  font-size: 12px;
+  color: var(--tl-text-muted);
+  margin-top: 6px;
+}
+
+.tl-input-group {
+  position: relative;
+}
+
+.tl-input-group .tl-input {
+  padding-left: 42px;
+}
+
+.tl-input-group .tl-input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tl-text-muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Select arrow (native select, styled) */
+.tl-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23F8FAFC' stroke-opacity='0.5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* Checkbox / switch */
+.tl-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+.tl-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.tl-switch__track {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--tl-radius-pill);
+  transition: background var(--tl-duration-fast) var(--tl-ease);
+}
+.tl-switch__track::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  top: 3px;
+  background: var(--tl-text-primary);
+  border-radius: 50%;
+  transition: transform var(--tl-duration-fast) var(--tl-ease);
+}
+.tl-switch input:checked + .tl-switch__track {
+  background: var(--tl-gradient-aura);
+}
+.tl-switch input:checked + .tl-switch__track::before {
+  transform: translateX(18px);
+}
+
+/* -------------------------------------------------------------------------
+   5. SIDEBAR
+   ------------------------------------------------------------------------- */
+.tl-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--tl-sidebar-width);
+  background: var(--tl-bg-secondary);
+  border-right: 1px solid var(--tl-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 1040;
+  transition: width var(--tl-duration-base) var(--tl-ease);
+}
+
+.tl-app.is-collapsed .tl-sidebar {
+  width: var(--tl-sidebar-collapsed);
+}
+
+.tl-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 20px;
+  border-bottom: 1px solid var(--tl-border);
+  min-height: var(--tl-topbar-height);
+}
+
+.tl-sidebar__brand img {
+  height: 28px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.tl-sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 14px;
+}
+
+.tl-nav-group {
+  margin-bottom: 22px;
+}
+
+.tl-nav-group__label {
+  padding: 0 12px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tl-text-muted);
+}
+
+.tl-app.is-collapsed .tl-nav-group__label,
+.tl-app.is-collapsed .tl-nav-link__label,
+.tl-app.is-collapsed .tl-sidebar__wordmark {
+  display: none;
+}
+
+.tl-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 12px;
+  border-radius: var(--tl-radius-sm);
+  color: var(--tl-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  transition: background var(--tl-duration-fast) var(--tl-ease),
+              color var(--tl-duration-fast) var(--tl-ease);
+}
+
+.tl-nav-link i {
+  font-size: 17px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.tl-nav-link:hover {
+  background: rgba(248, 250, 252, 0.05);
+  color: var(--tl-text-primary);
+}
+
+.tl-nav-link.is-active {
+  color: var(--tl-text-primary);
+  background: linear-gradient(90deg, rgba(32, 227, 194, 0.14), rgba(138, 92, 246, 0.08));
+}
+
+.tl-nav-link.is-active::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: var(--tl-radius-pill);
+  background: var(--tl-gradient-aura);
+}
+
+.tl-sidebar__footer {
+  padding: 16px;
+  border-top: 1px solid var(--tl-border);
+}
+
+.tl-admin-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--tl-radius-sm);
+}
+
+.tl-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--tl-gradient-violet);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.tl-admin-card__meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.tl-admin-card__meta .name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tl-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tl-admin-card__meta .role {
+  font-size: 12px;
+  color: var(--tl-text-muted);
+}
+
+.tl-logout-btn {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* -------------------------------------------------------------------------
+   6. TOPBAR
+   ------------------------------------------------------------------------- */
+.tl-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  height: var(--tl-topbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 28px;
+  background: rgba(11, 19, 43, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--tl-border);
+}
+
+.tl-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.tl-sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--tl-radius-sm);
+  border: 1px solid var(--tl-border-strong);
+  background: transparent;
+  color: var(--tl-text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--tl-duration-fast) var(--tl-ease);
+}
+.tl-sidebar-toggle:hover {
+  background: rgba(248, 250, 252, 0.06);
+}
+
+.tl-breadcrumb {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tl-breadcrumb__trail {
+  font-size: 12px;
+  color: var(--tl-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tl-breadcrumb__title {
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tl-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.tl-icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--tl-radius-sm);
+  border: 1px solid var(--tl-border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--tl-text-primary);
+  cursor: pointer;
+  font-size: 17px;
+  transition: border-color var(--tl-duration-fast) var(--tl-ease),
+              background var(--tl-duration-fast) var(--tl-ease);
+}
+.tl-icon-btn:hover {
+  border-color: var(--tl-border-strong);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tl-icon-btn__dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tl-teal);
+  border: 2px solid var(--tl-bg-primary);
+  display: none;
+}
+.tl-icon-btn__dot.is-visible {
+  display: block;
+}
+
+.tl-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 6px 6px;
+  border-radius: var(--tl-radius-pill);
+  border: 1px solid var(--tl-border);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+}
+.tl-profile-trigger:hover {
+  border-color: var(--tl-border-strong);
+}
+.tl-profile-trigger .tl-avatar {
+  width: 30px;
+  height: 30px;
+  font-size: 12px;
+}
+.tl-profile-trigger i {
+  color: var(--tl-text-muted);
+  font-size: 14px;
+}
+
+/* -------------------------------------------------------------------------
+   7. MODAL FOUNDATION (wraps Bootstrap modal visuals)
+   ------------------------------------------------------------------------- */
+.modal-content.tl-modal {
+  background: #101832;
+  border: 1px solid var(--tl-border-strong);
+  border-radius: var(--tl-radius-lg);
+  box-shadow: var(--tl-shadow-md);
+}
+
+.tl-modal .modal-header {
+  border-bottom: 1px solid var(--tl-border);
+  padding: 20px 24px;
+}
+
+.tl-modal .modal-title {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.tl-modal .modal-body {
+  padding: 22px 24px;
+}
+
+.tl-modal .modal-footer {
+  border-top: 1px solid var(--tl-border);
+  padding: 16px 24px;
+}
+
+.tl-modal .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.8);
+  opacity: 0.6;
+}
+.tl-modal .btn-close:hover {
+  opacity: 1;
+}
+
+/* -------------------------------------------------------------------------
+   8. TABLE FOUNDATION
+   ------------------------------------------------------------------------- */
+.tl-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--tl-radius-lg);
+  border: 1px solid var(--tl-border);
+}
+
+.tl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  min-width: 640px;
+}
+
+.tl-table thead th {
+  text-align: left;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tl-text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--tl-border);
+  white-space: nowrap;
+}
+
+.tl-table tbody td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--tl-border);
+  color: var(--tl-text-primary);
+  vertical-align: middle;
+}
+
+.tl-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tl-table tbody tr {
+  transition: background var(--tl-duration-fast) var(--tl-ease);
+}
+
+.tl-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tl-table-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* -------------------------------------------------------------------------
+   9. PAGINATION FOUNDATION
+   ------------------------------------------------------------------------- */
+.tl-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 18px;
+}
+
+.tl-pagination__pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tl-page-btn {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: var(--tl-radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--tl-text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--tl-duration-fast) var(--tl-ease), color var(--tl-duration-fast) var(--tl-ease);
+}
+.tl-page-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--tl-text-primary);
+}
+.tl-page-btn.is-active {
+  background: var(--tl-gradient-aura);
+  color: #06231D;
+}
+.tl-page-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* -------------------------------------------------------------------------
+   10. EMPTY STATE
+   ------------------------------------------------------------------------- */
+.tl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 56px 24px;
+  color: var(--tl-text-secondary);
+}
+
+.tl-empty__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--tl-border);
+  font-size: 22px;
+  color: var(--tl-text-muted);
+  margin-bottom: 16px;
+}
+
+.tl-empty__title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--tl-text-primary);
+  margin-bottom: 4px;
+}
+
+.tl-empty__desc {
+  font-size: 13px;
+  color: var(--tl-text-muted);
+  max-width: 320px;
+}
+
+/* -------------------------------------------------------------------------
+   11. LOADING OVERLAY
+   ------------------------------------------------------------------------- */
+.tl-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 19, 43, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.tl-loading-overlay.is-visible {
+  display: flex;
+}
+
+.tl-spinner {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.tl-spinner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(248, 250, 252, 0.1);
+  border-top-color: var(--tl-teal);
+  border-right-color: var(--tl-purple);
+  animation: tl-spin 0.8s linear infinite;
+}
+
+@keyframes tl-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Inline loader (for cards/tables while fetching) */
+.tl-inline-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+.tl-inline-loader .tl-spinner {
+  width: 30px;
+  height: 30px;
+}
+
+/* -------------------------------------------------------------------------
+   12. TOAST FOUNDATION
+   ------------------------------------------------------------------------- */
+.tl-toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(360px, calc(100vw - 40px));
+}
+
+.toast.tl-toast {
+  background: #101832;
+  border: 1px solid var(--tl-border-strong);
+  border-radius: var(--tl-radius-md);
+  box-shadow: var(--tl-shadow-md);
+  overflow: hidden;
+}
+
+.tl-toast .toast-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: var(--tl-text-primary);
+}
+
+.tl-toast__icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.tl-toast--success .tl-toast__icon { background: rgba(34, 197, 94, 0.15); color: var(--tl-success); }
+.tl-toast--error .tl-toast__icon   { background: rgba(239, 68, 68, 0.15); color: var(--tl-danger); }
+.tl-toast--warning .tl-toast__icon { background: rgba(245, 158, 11, 0.15); color: var(--tl-warning); }
+.tl-toast--info .tl-toast__icon    { background: rgba(77, 163, 255, 0.15); color: var(--tl-info); }
+
+.tl-toast--success { border-left: 3px solid var(--tl-success); }
+.tl-toast--error   { border-left: 3px solid var(--tl-danger); }
+.tl-toast--warning  { border-left: 3px solid var(--tl-warning); }
+.tl-toast--info     { border-left: 3px solid var(--tl-info); }
+
+.tl-toast .btn-close {
+  filter: invert(1) grayscale(1) brightness(1.8);
+  opacity: 0.5;
+  margin-top: 2px;
+}
+
+/* -------------------------------------------------------------------------
+   13. KPI / STAT CARD (used by dashboard, defined here as a shared shape)
+   ------------------------------------------------------------------------- */
+.tl-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tl-stat-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.tl-stat-card__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--tl-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.tl-stat-card__value {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.tl-stat-card__label {
+  font-size: 13px;
+  color: var(--tl-text-secondary);
+}
+
+/* -------------------------------------------------------------------------
+   14. LOGIN CARD (index.html shell — no auth logic in Step 1)
+   ------------------------------------------------------------------------- */
+.tl-auth-screen {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 1;
+}
+
+.tl-auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px 36px;
+}
+
+.tl-auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.tl-auth-brand img {
+  height: 40px;
+  margin-bottom: 18px;
+}
+
+.tl-auth-brand h1 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.tl-auth-brand p {
+  font-size: 13.5px;
+  color: var(--tl-text-secondary);
+  max-width: 280px;
+}
+
+.tl-auth-footnote {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12.5px;
+  color: var(--tl-text-muted);
+}
+
+.tl-auth-wrap {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 420px;
+}
+
+.tl-auth-options {
+  margin-bottom: 22px;
+}
+
+.tl-checkbox-label {
+  align-items: center;
+  font-size: 13px;
+  color: var(--tl-text-secondary);
+  cursor: pointer;
+}
+
+.tl-checkbox-label input[type="checkbox"] {
+  accent-color: var(--tl-teal);
+}
+
+.tl-link-accent {
+  color: var(--tl-teal);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------------------
+   15. SIDEBAR / TOPBAR text fragments (rendered by app.js)
+   ------------------------------------------------------------------------- */
+.tl-sidebar__wordmark {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tl-breadcrumb__chevron {
+  font-size: 9px;
+}
+
+.tl-sidebar-toggle .bi-list {
+  font-size: 19px;
+}
+
+.tl-profile-name {
+  font-weight: 600;
+}
+
+/* Dropdown menu skin (profile menu in the topbar) */
+.tl-dropdown-menu {
+  background: #101832;
+  border: 1px solid var(--tl-border-strong);
+}
+
+.tl-dropdown-menu .dropdown-divider {
+  border-color: var(--tl-border);
+}
+
+/* -------------------------------------------------------------------------
+   16. STEP 1 VERIFICATION SHELL
+   Temporary dashboard content used only to confirm the shell renders
+   correctly. Everything is scoped under .tl-step1-preview so the whole
+   block can be deleted in one pass once the real Dashboard (Step 4)
+   replaces it — nothing in this block is meant to be reused.
+   ------------------------------------------------------------------------- */
+.tl-step1-preview {
+  margin-top: 20px;
+}
+
+.tl-step1-preview__hero {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.tl-step1-preview__hero .tl-empty__icon {
+  margin: 0 auto 18px;
+  width: 64px;
+  height: 64px;
+  font-size: 26px;
+}
+
+.tl-step1-preview__hero .tl-section-title {
+  margin-bottom: 8px;
+}
+
+.tl-step1-preview__hero p {
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.tl-step1-preview__status-icon--ok {
+  color: var(--tl-success);
+}
+
+.tl-step1-preview__status-icon--pending {
+  color: var(--tl-warning);
+}
+
+.tl-step1-preview__card-title {
+  margin-bottom: 4px;
+}
+
+.tl-step1-preview__actions {
+  flex-wrap: wrap;
+}
+/* =========================================================
+   SIDEBAR / BOOTSTRAP OFFCANVAS FIX
+   ========================================================= */
+
+.tl-sidebar {
+    z-index: 1045 !important;
+}
+
+.offcanvas-backdrop {
+    z-index: 1040 !important;
+}
+
+.tl-main {
+    position: relative;
+    z-index: 1;
+}
+/* =========================================================
+   HOTEL LIST TABLE
+   ========================================================= */
+
+#hotelList {
+    color: #ffffff;
+}
+
+#hotelList .tl-card__head {
+    color: #ffffff;
+}
+
+#hotelList .tl-section-title {
+    color: #ffffff;
+}
+
+#hotelList .tl-text-secondary {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+#hotelList .tl-metadata {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+
+/* Table */
+
+#hotelList .tl-table {
+    width: 100%;
+    margin-bottom: 0;
+    color: #ffffff !important;
+    --bs-table-color: #ffffff;
+    --bs-table-bg: transparent;
+    --bs-table-border-color: rgba(255, 255, 255, 0.12);
+}
+
+#hotelList .tl-table thead th {
+    color: rgba(255, 255, 255, 0.75) !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+#hotelList .tl-table tbody td {
+    color: #ffffff !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#hotelList .tl-table tbody tr {
+    background: transparent !important;
+}
+
+#hotelList .tl-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+
+/* ID */
+
+#hotelList .tl-table tbody td:first-child {
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+
+/* Hotel name */
+
+#hotelList .tl-table tbody td:nth-child(2) {
+    font-weight: 600;
+    color: #ffffff !important;
+}
+
+
+/* Buttons */
+
+#hotelList .hotel-edit-btn,
+#hotelList .hotel-delete-btn {
+    min-width: 44px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Keep actions visible */
+
+#hotelList .tl-table td:last-child {
+    white-space: nowrap;
+}
+
+
+/* Responsive */
+
+#hotelList .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+
+/* Empty / loading states */
+
+#hotelList .tl-empty {
+    color: #ffffff;
+}
+
+#hotelList .tl-empty .tl-section-title {
+    color: #ffffff !important;
+}
+
+#hotelList .tl-empty .tl-text-secondary {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+/* ============================================================
+   RESTAURANT LIST
+   ============================================================ */
+
+#restaurantList {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#restaurantList .table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#restaurantList .tl-table {
+  width: 100%;
+  min-width: 1000px;
+  margin-bottom: 0;
+}
+
+#restaurantList .tl-table th,
+#restaurantList .tl-table td {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+#restaurantList .tl-table td:nth-child(2) {
+  white-space: normal;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+#restaurantList .tl-table td:last-child {
+  width: 130px;
+}
+
+#restaurantList .tl-flex {
+  justify-content: flex-start;
+}
+/* ============================================================
+   DATABASE LIST TABLES — DARK THEME FIX
+   Override Bootstrap table background
+   ============================================================ */
+
+#hotelList .tl-table,
+#restaurantList .tl-table {
+  --bs-table-bg: transparent !important;
+  --bs-table-color: inherit !important;
+  --bs-table-border-color: rgba(255, 255, 255, 0.12) !important;
+  --bs-table-striped-bg: transparent !important;
+  --bs-table-striped-color: inherit !important;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04) !important;
+  --bs-table-hover-color: inherit !important;
+
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+#hotelList .tl-table > :not(caption) > * > *,
+#restaurantList .tl-table > :not(caption) > * > * {
+  background-color: transparent !important;
+  color: inherit !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+#hotelList .tl-table thead th,
+#restaurantList .tl-table thead th {
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+#hotelList .tl-table tbody td,
+#restaurantList .tl-table tbody td {
+  background-color: transparent !important;
+  color: #ffffff !important;
+}
+
+#hotelList .tl-table tbody tr:hover td,
+#restaurantList .tl-table tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}

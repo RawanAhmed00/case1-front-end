@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users — Tailora Admin</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body data-page="users" data-page-title="Users" data-breadcrumb="Management,Users" data-requires-auth="true">
+  <div class="tl-app">
+    <aside class="tl-sidebar offcanvas offcanvas-start offcanvas-lg" tabindex="-1" id="tlSidebar" aria-labelledby="tlSidebarLabel"></aside>
+    <div class="tl-main">
+      <header class="tl-topbar" id="tlTopbar"></header>
+      <main class="tl-content">
+        
+<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-people"></i> User Management</span></div><h1 class="tl-page-title">Users</h1><p class="tl-text-secondary">Manage users using the documented Admin API. Undocumented response fields are never assumed.</p></div><button class="tl-btn tl-btn--primary" data-bs-toggle="modal" data-bs-target="#userCreateModal"><i class="bi bi-person-plus"></i> Add user</button></div>
+<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div><div class="tl-section-title">User directory</div><div class="tl-metadata">GET /admin/users — documented response is a string.</div></div><button id="usersRefresh" class="tl-btn tl-btn--outline tl-btn--sm"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div><div id="usersState"></div></section>
+<div class="modal fade" id="userCreateModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Create user</h5><button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><form id="userCreateForm"><div class="modal-body"><div class="row">
+<div class="col-md-6"><div class="tl-field">
+<label for="create_name">Name</label>
+<input id="create_name" name="create_name" type="text" class="tl-input" placeholder="Full name" required >
+<div class="tl-field-error" data-error-for="create_name"></div>
+</div><div class="tl-field">
+<label for="create_email">Email</label>
+<input id="create_email" name="create_email" type="email" class="tl-input" placeholder="name@example.com" required >
+<div class="tl-field-error" data-error-for="create_email"></div>
+</div><div class="tl-field">
+<label for="create_password">Password</label>
+<input id="create_password" name="create_password" type="password" class="tl-input" placeholder="Password" required >
+<div class="tl-field-error" data-error-for="create_password"></div>
+</div></div>
+<div class="col-md-6"><div class="tl-field">
+<label for="create_age">Age</label>
+<input id="create_age" name="create_age" type="number" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="create_age"></div>
+</div><div class="tl-field">
+<label for="create_dist_country">Destination country</label>
+<input id="create_dist_country" name="create_dist_country" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="create_dist_country"></div>
+</div><div class="tl-field">
+<label for="create_gender">Gender</label>
+<input id="create_gender" name="create_gender" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="create_gender"></div>
+</div><div class="tl-field">
+<label for="create_role">Role</label>
+<input id="create_role" name="create_role" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="create_role"></div>
+</div><div class="tl-field">
+<label for="create_phone_num">Phone</label>
+<input id="create_phone_num" name="create_phone_num" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="create_phone_num"></div>
+</div></div></div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Create user</button></div></form></div></div></div>
+<div class="modal fade" id="userEditModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Edit user</h5><button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><form id="userEditForm"><input type="hidden" name="id" id="edit_user_id"><div class="modal-body"><div class="row"><div class="col-md-6"><div class="tl-field">
+<label for="edit_name">Name</label>
+<input id="edit_name" name="edit_name" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_name"></div>
+</div><div class="tl-field">
+<label for="edit_email">Email</label>
+<input id="edit_email" name="edit_email" type="email" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_email"></div>
+</div><div class="tl-field">
+<label for="edit_password">Password</label>
+<input id="edit_password" name="edit_password" type="password" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_password"></div>
+</div></div><div class="col-md-6"><div class="tl-field">
+<label for="edit_age">Age</label>
+<input id="edit_age" name="edit_age" type="number" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_age"></div>
+</div><div class="tl-field">
+<label for="edit_dist_country">Destination country</label>
+<input id="edit_dist_country" name="edit_dist_country" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_dist_country"></div>
+</div><div class="tl-field">
+<label for="edit_gender">Gender</label>
+<input id="edit_gender" name="edit_gender" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_gender"></div>
+</div><div class="tl-field">
+<label for="edit_role">Role</label>
+<input id="edit_role" name="edit_role" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_role"></div>
+</div><div class="tl-field">
+<label for="edit_phone_num">Phone</label>
+<input id="edit_phone_num" name="edit_phone_num" type="text" class="tl-input" placeholder="" >
+<div class="tl-field-error" data-error-for="edit_phone_num"></div>
+</div></div></div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Save changes</button></div></form></div></div></div>
+<div class="modal fade" id="userStatusModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Change user status</h5><button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><form id="userStatusForm"><div class="modal-body"><input type="hidden" id="status_user_id"><p class="tl-text-secondary">The API documents this PATCH endpoint but does not document its request body. Enter the backend-defined JSON payload exactly as required.</p><textarea id="status_payload" class="tl-textarea" rows="6" placeholder='{ "status": "..." }'></textarea><div class="tl-field-hint">No field name or enum is invented by this UI.</div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Send status request</button></div></form></div></div></div>
+
+      </main>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api/api.js"></script>
+  <script src="assets/js/api/auth.js"></script>
+  <script src="assets/js/api/users.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages/utils.js"></script>
+  <script src="assets/js/pages/users.js"></script>
+
+<div class="modal fade" id="userDetailsModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">User details</h5><button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"><pre id="userDetails" class="tl-code-block"></pre></div></div></div></div>
+</body>
+</html>

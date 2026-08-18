@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Favorites — Tailora</title>
+<link rel="icon" href="assets/images/logo.png">
+<link rel="stylesheet" href="assets/css/tailora.css">
+<link rel="stylesheet" href="assets/css/nav.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+<div id="tl-nav-mount"></div>
+
+<main>
+  <section class="tl-hero" style="padding-bottom:20px;">
+    <div class="tl-hero-bg"></div>
+    <div class="tl-container">
+      <span class="tl-eyebrow">Saved</span>
+      <h1 class="tl-display tl-mt-8" style="font-size:clamp(30px,4.5vw,48px);max-width:640px;">Your favorites</h1>
+      <p class="tl-hero-sub">Destinations, hotels, restaurants, and experiences you've saved along the way.</p>
+    </div>
+  </section>
+
+  <section class="tl-section tl-section--tight">
+    <div class="tl-container">
+
+      <div id="fav-signed-out" class="tl-card tl-state tl-hidden">
+        <div class="tl-state-icon">🔒</div>
+        <h3>Sign in to see your favorites</h3>
+        <p>Save destinations, hotels, restaurants, and experiences to find them here later.</p>
+        <a href="signin.html?next=favorites.html" class="tl-btn tl-btn--primary">Sign In</a>
+      </div>
+
+      <div class="tl-chip-row tl-mt-16" id="fav-type-filter" style="margin-bottom:24px;">
+        <button type="button" class="tl-pill is-active" data-type="">All</button>
+      </div>
+
+      <div class="tl-grid" id="favorites-grid"></div>
+    </div>
+  </section>
+</main>
+
+<div id="tl-footer-mount"></div>
+
+<script src="assets/js/api/api.js"></script>
+<script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/favorites.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages/favorites.js"></script>
+</body>
+</html>
