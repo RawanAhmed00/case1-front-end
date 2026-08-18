@@ -94,7 +94,26 @@
 
   function isAuthPage() {
     const path = window.location.pathname.toLowerCase();
-    return path.endsWith("/index.html") || path.endsWith("/") || path.includes("index.html");
+    return (
+      path.endsWith("/index.html") ||
+      path.endsWith("/forgot-password.html") ||
+      path.endsWith("/reset-password.html") ||
+      path.endsWith("/") ||
+      path.includes("index.html") ||
+      path.includes("forgot-password.html") ||
+      path.includes("reset-password.html")
+    );
+  }
+
+  async function forgotPassword(email) {
+    if (!email) throw new Error("Email address is required.");
+    return await window.TL.Api.post("/auth/forget-password", { email });
+  }
+
+  async function resetPassword({ token, email, password, password_confirmation }) {
+    if (!token || !email || !password) throw new Error("Token, email, and new password are required.");
+    const path = `/auth/reset-password/${encodeURIComponent(token)}/${encodeURIComponent(email)}`;
+    return await window.TL.Api.post(path, { password, password_confirmation });
   }
 
   function guard() {
@@ -113,6 +132,8 @@
   window.TL.Auth = {
     login,
     logout,
+    forgotPassword,
+    resetPassword,
     getToken,
     setToken,
     clearToken,

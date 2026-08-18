@@ -46,19 +46,19 @@
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Signing in...';
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Logging in...';
       }
 
       try {
         await window.TL.Auth.login({ email, password });
-        if (window.TL.showToast) window.TL.showToast("Signed in successfully!", "success");
+        if (window.TL.showToast) window.TL.showToast("Logged in successfully!", "success");
         setTimeout(() => {
           window.location.replace("dashboard.html");
         }, 500);
       } catch (err) {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Sign In to Command Center';
+          submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Login';
         }
 
         if (err instanceof window.TL.Api.ApiValidationError) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In — Tailora Tour Guide</title>
+  <title>Login — Tailora Tour Guide</title>
 
   <link rel="icon" type="image/png" href="assets/images/logo.png">
 
@@ -32,7 +32,7 @@
         <img src="assets/images/logo.png" alt="Tailora" class="mx-auto mb-3" style="width: 54px; height: 54px; object-fit: contain;">
         <span class="tl-badge tl-badge--info mb-2"><i class="bi bi-compass"></i> Tour Guide Portal</span>
         <h2 class="tl-page-title mt-2 mb-1">Welcome Back</h2>
-        <p class="tl-text-secondary small mb-0">Sign in to your Tailora Tour Guide Command Center</p>
+        <p class="tl-text-secondary small mb-0">Login to your Tailora Tour Guide Portal</p>
       </div>
 
       <!-- Sign In Form -->
@@ -49,7 +49,10 @@
 
         <!-- Password Field -->
         <div class="tl-field">
-          <label for="tlPassword">Password</label>
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label for="tlPassword" class="mb-0">Password</label>
+            <a href="forgot-password.html" class="tl-metadata text-teal text-decoration-none small fw-semibold">Forgot Password?</a>
+          </div>
           <div class="tl-input-group">
             <i class="bi bi-lock tl-input-icon"></i>
             <input type="password" id="tlPassword" class="tl-input" placeholder="••••••••" required autocomplete="current-password">
@@ -59,7 +62,7 @@
 
         <!-- Submit Button -->
         <button type="submit" class="tl-btn tl-btn--primary tl-btn--block py-3 mt-3 fs-6" id="tlLoginSubmitBtn">
-          <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Command Center
+          <i class="bi bi-box-arrow-in-right me-1"></i> Login
         </button>
       </form>
 
