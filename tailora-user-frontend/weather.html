@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/responsive.css">
 <style>
-  .tl-weather-form-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; }
+  .tl-weather-form-row { display: grid; grid-template-columns: 1fr 180px auto; gap: 12px; align-items: end; }
   .tl-city-field { position: relative; }
   .tl-weather-card { padding: 34px; text-align: center; background: var(--tl-gradient-radial); }
   .tl-weather-temp { font-family: var(--tl-font-display); font-size: 56px; margin: 10px 0; }
@@ -53,7 +53,12 @@
             <div class="tl-field tl-city-field" style="margin-bottom:0;">
               <label for="weather-city-input">City</label>
               <input class="tl-input" type="text" id="weather-city-input" placeholder="Search a city..." autocomplete="off">
+              <input type="hidden" id="weather-city-id" value="">
               <div class="tl-search-suggest" id="weather-city-suggest"></div>
+            </div>
+            <div class="tl-field" style="margin-bottom:0;">
+              <label for="weather-date-input">Forecast Date</label>
+              <input class="tl-input" type="date" id="weather-date-input">
             </div>
             <button type="button" class="tl-btn tl-btn--primary" id="weather-fetch-btn">Get Weather</button>
           </div>
