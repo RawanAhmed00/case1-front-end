@@ -1,6 +1,6 @@
 /**
  * TAILORA USER — CITY WEATHER PAGE
- * GET  /cities                   (city autocomplete — reused, not hardcoded)
+ * GET  /cities                   (city autocomplete search)
  * GET  /weather?city={city}      (fetch city weather directly)
  */
 (function () {
@@ -17,9 +17,10 @@
 
   async function loadCities() {
     try {
-      const response = await window.TL.Cities.all();
-      const rawCities = window.TL.Util.list(response);
-      allCities = window.TL.Util.uniqueBy(rawCities, (c) => `${window.TL.Util.name(c)}_${window.TL.Util.country(c)}`);
+      const response = typeof window.TL.Cities.allFull === "function"
+        ? await window.TL.Cities.allFull()
+        : await window.TL.Cities.all();
+      allCities = window.TL.Util.list(response);
     } catch (err) {
       allCities = [];
     }
@@ -37,8 +38,13 @@
         return;
       }
       const matches = allCities
-        .filter((c) => window.TL.Util.name(c, "").toLowerCase().includes(q))
-        .slice(0, 8);
+        .filter((c) => {
+          const cName = window.TL.Util.name(c, "").toLowerCase();
+          const cCountry = window.TL.Util.country(c, "").toLowerCase();
+          return cName.includes(q) || cCountry.includes(q);
+        })
+        .slice(0, 10);
+
       if (!matches.length) {
         suggestBox.classList.remove("is-open");
         return;
@@ -47,6 +53,7 @@
         .map((c, i) => `<button type="button" data-idx="${i}">${window.TL.Util.escape(window.TL.Util.name(c))}${window.TL.Util.country(c) ? ` — ${window.TL.Util.escape(window.TL.Util.country(c))}` : ""}</button>`)
         .join("");
       suggestBox.classList.add("is-open");
+
       suggestBox.querySelectorAll("button[data-idx]").forEach((btn) => {
         btn.addEventListener("click", () => {
           const city = matches[Number(btn.dataset.idx)];
@@ -55,6 +62,19 @@
           suggestBox.classList.remove("is-open");
         });
       });
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        suggestBox.classList.remove("is-open");
+        const city = selectedCityName || input.value.trim();
+        if (!city) {
+          window.TL.toast("Enter or select a city.", "error");
+          return;
+        }
+        fetchCityWeather(city);
+      }
     });
 
     document.addEventListener("click", (e) => {
