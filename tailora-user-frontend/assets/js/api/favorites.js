@@ -62,7 +62,8 @@
     }
   };
 
-  async function fetchDirectCityWeather(city) {
+  async function fetchDirectCityWeather(city, dateStr) {
+    const targetDate = dateStr || new Date().toISOString().split("T")[0];
     const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
     const geoRes = await fetch(geoUrl);
     if (!geoRes.ok) throw new Error("Could not find location data for that city.");
@@ -71,11 +72,35 @@
       throw new Error(`No weather data found for "${city}".`);
     }
     const loc = geoData.results[0];
-    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto`;
-    const weatherRes = await fetch(weatherUrl);
-    if (!weatherRes.ok) throw new Error("Could not fetch weather forecast.");
-    const weatherData = await weatherRes.json();
-    const current = weatherData.current || {};
+
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&start_date=${targetDate}&end_date=${targetDate}&daily=temperature_2m_max,relative_humidity_2m_mean,wind_speed_10m_max,weather_code&timezone=auto`;
+    let temp = null, humidity = null, wind = null, code = null;
+
+    try {
+      const weatherRes = await fetch(weatherUrl);
+      if (weatherRes.ok) {
+        const weatherData = await weatherRes.json();
+        if (weatherData.daily && weatherData.daily.time && weatherData.daily.time.length > 0) {
+          const d = weatherData.daily;
+          temp = d.temperature_2m_max && d.temperature_2m_max[0] !== undefined ? d.temperature_2m_max[0] : null;
+          humidity = d.relative_humidity_2m_mean && d.relative_humidity_2m_mean[0] !== undefined ? d.relative_humidity_2m_mean[0] : null;
+          wind = d.wind_speed_10m_max && d.wind_speed_10m_max[0] !== undefined ? d.wind_speed_10m_max[0] : null;
+          code = d.weather_code && d.weather_code[0] !== undefined ? d.weather_code[0] : null;
+        }
+      }
+    } catch (e) {}
+
+    if (temp === null) {
+      const currentUrl = `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto`;
+      const currentRes = await fetch(currentUrl);
+      if (!currentRes.ok) throw new Error("Could not fetch weather forecast.");
+      const currentData = await currentRes.json();
+      const current = currentData.current || {};
+      temp = current.temperature_2m !== undefined ? current.temperature_2m : null;
+      humidity = current.relative_humidity_2m !== undefined ? current.relative_humidity_2m : null;
+      wind = current.wind_speed_10m !== undefined ? current.wind_speed_10m : null;
+      code = current.weather_code !== undefined ? current.weather_code : null;
+    }
 
     const WMO_CODES = {
       0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
@@ -90,30 +115,54 @@
     return {
       city: loc.name,
       country: loc.country || "",
-      temperature: current.temperature_2m !== undefined ? current.temperature_2m : null,
-      humidity: current.relative_humidity_2m !== undefined ? current.relative_humidity_2m : null,
-      wind_speed: current.wind_speed_10m !== undefined ? current.wind_speed_10m : null,
-      condition: WMO_CODES[current.weather_code] || "Clear",
-      forecast_date: new Date().toISOString().split("T")[0]
+      temperature: temp,
+      humidity: humidity,
+      wind_speed: wind,
+      condition: WMO_CODES[code] || "Clear sky",
+      forecast_date: targetDate
     };
   }
 
   // Weather API: city-based and trip-based
   const Weather = {
-    async getByCity(city) {
-      if (window.TL && window.TL.Trips && typeof window.TL.Trips.all === "function") {
-        try {
+    async getByCity(cityOrParams, date) {
+      let city = "";
+      let cityId = null;
+      let targetDate = date;
+
+      if (typeof cityOrParams === "object" && cityOrParams !== null) {
+        city = cityOrParams.city || "";
+        cityId = cityOrParams.cityId || cityOrParams.city_id || null;
+        targetDate = cityOrParams.date || date;
+      } else {
+        city = String(cityOrParams || "");
+      }
+
+      try {
+        const directData = await fetchDirectCityWeather(city, targetDate);
+        if (cityId) directData.city_id = cityId;
+
+        if (window.TL && window.TL.Trips && typeof window.TL.Trips.all === "function") {
+          window.TL.Trips.all().then((tripsRes) => {
+            const trips = window.TL.Util.list(tripsRes);
+            if (trips.length > 0) {
+              const tripId = window.TL.Util.id(trips[0]);
+              window.TL.Api.post(`/weather/trips/${tripId}`, { city, city_id: cityId, date: targetDate }).catch(() => {});
+            }
+          }).catch(() => {});
+        }
+        return directData;
+      } catch (e) {
+        if (window.TL && window.TL.Trips && typeof window.TL.Trips.all === "function") {
           const tripsRes = await window.TL.Trips.all();
           const trips = window.TL.Util.list(tripsRes);
           if (trips.length > 0) {
             const tripId = window.TL.Util.id(trips[0]);
-            return await window.TL.Api.post(`/weather/trips/${tripId}`, { city });
+            return await window.TL.Api.post(`/weather/trips/${tripId}`, { city, city_id: cityId, date: targetDate });
           }
-        } catch (e) {
-          // Fallback to direct fetch
         }
+        throw e;
       }
-      return await fetchDirectCityWeather(city);
     },
     get(tripId) {
       return window.TL.Api.get(`/weather/trips/${tripId}`);

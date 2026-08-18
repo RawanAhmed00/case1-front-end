@@ -97,6 +97,10 @@
 
     get: function (id) {
       return window.TL.Api.get("/cities/" + id);
+    },
+
+    search: function (q) {
+      return window.TL.Api.get("/cities", { search: q });
     }
   };
 
