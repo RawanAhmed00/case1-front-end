@@ -9,11 +9,12 @@
 
   const API_CONFIG = {
     get baseUrl() {
-      return (window.ENV && window.ENV.API_URL) ? window.ENV.API_URL : "reliable-laughter-production-a837.up.railway.app/api";
+      return (window.ENV && window.ENV.API_URL) ? window.ENV.API_URL : "https://reliable-laughter-production-a837.up.railway.app/api";
     },
     tokenKey: "tailora_guide_token",
     userKey: "tailora_guide_user"
   };
+
 
   class ApiError extends Error {
     constructor(message, status = 0, body = null) {
