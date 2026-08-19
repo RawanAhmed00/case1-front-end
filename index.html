@@ -1,8 +1,9 @@
-Listed directory C:\xampp\htdocs\case1-front-end
+Created C:\xampp\htdocs\case1-front-end\index.html
 
-Here is the complete, redesigned HTML code for your portal landing page styled to match the **Tailora Design System** (dark glassmorphism, glowing aura accents, Bootstrap 5 & Bootstrap Icons, and hover cards) while preserving the exact 3 portal links:
+The issue in your screenshot occurred because the conversational text (`Listed directory...`) and markdown code blocks (` ```html `) were included at the top of your `index.html` file. When text appears above `<!DOCTYPE html>`, browsers render it as plain text next to the page.
 
-```html
+Copy the pure HTML code below into your `index.html` file:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -263,7 +264,7 @@ Here is the complete, redesigned HTML code for your portal landing page styled t
             Manage trips, system users, booking requests, and platform configuration.
           </p>
           <div class="tl-card-action" style="color: #A78BFA;">
-            Go to Admin Interface<i class="bi bi-arrow-right"></i>
+            Go to Admin Frontend <i class="bi bi-arrow-right"></i>
           </div>
         </a>
       </div>
@@ -282,7 +283,7 @@ Here is the complete, redesigned HTML code for your portal landing page styled t
             Plan AI itineraries, explore destinations, manage favorites, and chat with AI.
           </p>
           <div class="tl-card-action" style="color: var(--tl-teal);">
-            Go to User Interface <i class="bi bi-arrow-right"></i>
+            Go to User Frontend <i class="bi bi-arrow-right"></i>
           </div>
         </a>
       </div>
@@ -301,7 +302,7 @@ Here is the complete, redesigned HTML code for your portal landing page styled t
             Set availabilities, manage tour schedules, accept booking requests, and message travelers.
           </p>
           <div class="tl-card-action" style="color: var(--tl-blue);">
-            Go to Tour Guide Interface <i class="bi bi-arrow-right"></i>
+            Go to Tour Guide Frontend <i class="bi bi-arrow-right"></i>
           </div>
         </a>
       </div>
@@ -319,4 +320,3 @@ Here is the complete, redesigned HTML code for your portal landing page styled t
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-```
