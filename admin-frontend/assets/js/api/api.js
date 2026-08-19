@@ -23,10 +23,9 @@
      * =================================================================== */
 
     const API_CONFIG = {
-        baseUrl: "http://127.0.0.1:8000/api",
-        tokenKey: "tailora_token"
-    };
-
+    baseUrl: "https://reliable-laughter-production-a837.up.railway.app/api",
+    tokenKey: "tailora_token"
+};
 
     /* =====================================================================
      * 2. ERROR CLASSES
