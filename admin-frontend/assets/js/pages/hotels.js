@@ -4,6 +4,9 @@
   document.addEventListener("DOMContentLoaded", function () {
     const P = TL.Pages;
 
+    const perPage = 10;
+    let currentPage = 1;
+
     function values(form, prefix) {
       const data = {};
       form.querySelectorAll("[name]").forEach(function (el) {
@@ -14,13 +17,6 @@
         }
       });
       return data;
-    }
-
-    function getHotelsFromResponse(response) {
-      if (response && Array.isArray(response.data)) return response.data;
-      if (response && response.data && Array.isArray(response.data.data)) return response.data.data;
-      if (Array.isArray(response)) return response;
-      return [];
     }
 
     function getHotelFromResponse(response) {
@@ -41,7 +37,7 @@
           const modalEl = document.getElementById(closeModalId);
           if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
         }
-        await loadHotels();
+        await loadHotels(currentPage);
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
           P.showValidation(form, e.errors);
@@ -53,9 +49,10 @@
     }
 
     // LOAD HOTELS
-    async function loadHotels() {
+    async function loadHotels(page = 1) {
       const list = document.getElementById("hotelList");
       if (!list) return;
+      currentPage = page;
 
       list.innerHTML = `
         <div class="tl-inline-loader">
@@ -64,8 +61,8 @@
       `;
 
       try {
-        const response = await TL.Hotels.getHotels();
-        const hotels = getHotelsFromResponse(response);
+        const response = await TL.Hotels.getHotels({ page: currentPage, per_page: perPage });
+        const { rows: hotels, meta } = P.extractPagination(response, currentPage, perPage);
 
         if (!hotels.length) {
           list.innerHTML = `
@@ -76,13 +73,16 @@
           return;
         }
 
+        const totalHotels = meta ? meta.total : hotels.length;
+        const paginationHtml = P.buildPagination(meta, "data-hotel-page", "hotels", currentPage);
+
         list.innerHTML = `
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Hotel Directory</h2>
               <span class="tl-metadata">All active accommodations and partner hotels</span>
             </div>
-            <span class="tl-badge tl-badge--info">${hotels.length} hotels</span>
+            <span class="tl-badge tl-badge--info">${totalHotels} hotels</span>
           </div>
 
           <div style="padding: 0 24px 24px;">
@@ -138,6 +138,7 @@
               </table>
             </div>
           </div>
+          ${paginationHtml}
         `;
 
         // Edit button listener
@@ -159,9 +160,19 @@
             try {
               await TL.Hotels.deleteHotel(id);
               TL.showToast("Hotel deleted successfully.", "success");
-              await loadHotels();
+              await loadHotels(currentPage);
             } catch (e) {
               TL.showToast(e.message || "Failed to delete hotel.", "error");
+            }
+          });
+        });
+
+        // Pagination buttons listener
+        list.querySelectorAll("[data-hotel-page]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            const target = parseInt(this.dataset.hotelPage, 10);
+            if (!isNaN(target) && target >= 1 && target !== currentPage) {
+              loadHotels(target);
             }
           });
         });
@@ -180,84 +191,80 @@
       try {
         const response = await TL.Hotels.getHotel(id);
         const hotel = getHotelFromResponse(response);
-        const form = document.getElementById("hotelManageForm");
-        if (!form) return;
 
-        if (form.hotel_id) form.hotel_id.value = hotel.id ?? "";
-        if (form.hotel_u_name) form.hotel_u_name.value = hotel.name ?? "";
-        if (form.hotel_u_city) form.hotel_u_city.value = hotel.city ?? "";
-        if (form.hotel_u_neighborhood) form.hotel_u_neighborhood.value = hotel.neighborhood ?? "";
-        if (form.hotel_u_distance_km) form.hotel_u_distance_km.value = hotel.distance_km ?? "";
-        if (form.hotel_u_price_per_night) form.hotel_u_price_per_night.value = hotel.price_per_night ?? "";
-        if (form.hotel_u_rating) form.hotel_u_rating.value = hotel.rating ?? "";
-        if (form.hotel_u_review_count) form.hotel_u_review_count.value = hotel.review_count ?? "";
-        if (form.hotel_u_amenities) form.hotel_u_amenities.value = hotel.amenities ?? "";
-        if (form.hotel_u_available_rooms) form.hotel_u_available_rooms.value = hotel.available_rooms ?? "";
+        if (!hotel || !hotel.id) {
+          return TL.showToast("Failed to fetch hotel details.", "error");
+        }
 
-        P.clearErrors(form);
+        const idField = document.getElementById("edit_hotel_id");
+        const nameField = document.getElementById("edit_name");
+        const cityField = document.getElementById("edit_city");
+        const addressField = document.getElementById("edit_address");
+        const priceField = document.getElementById("edit_price_per_night");
+        const roomsField = document.getElementById("edit_available_rooms");
+        const ratingField = document.getElementById("edit_rating");
+        const descriptionField = document.getElementById("edit_description");
+
+        if (idField) idField.value = hotel.id;
+        if (nameField) nameField.value = hotel.name || "";
+        if (cityField) cityField.value = hotel.city || "";
+        if (addressField) addressField.value = hotel.address || "";
+        if (priceField) priceField.value = hotel.price_per_night != null ? hotel.price_per_night : "";
+        if (roomsField) roomsField.value = hotel.available_rooms != null ? hotel.available_rooms : "";
+        if (ratingField) ratingField.value = hotel.rating != null ? hotel.rating : "";
+        if (descriptionField) descriptionField.value = hotel.description || "";
+
         const modalEl = document.getElementById("hotelEditModal");
         if (modalEl) {
-          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-          modal.show();
+          bootstrap.Modal.getOrCreateInstance(modalEl).show();
         }
       } catch (e) {
-        TL.showToast(e.message || "Failed to load hotel.", "error");
+        TL.showToast(e.message || "Could not load hotel.", "error");
       }
     }
 
-    // Create Form
+    // FORM: Create Hotel
     const createForm = document.getElementById("hotelCreateForm");
     if (createForm) {
       createForm.addEventListener("submit", function (e) {
         e.preventDefault();
+        const data = values(createForm, "create_");
         submit(
-          e.currentTarget,
-          () => TL.Hotels.createHotel(values(e.currentTarget, "hotel_")),
-          "Hotel created successfully.",
+          createForm,
+          function () {
+            return TL.Hotels.createHotel(data);
+          },
+          "Hotel added successfully.",
           "hotelCreateModal"
         );
       });
     }
 
-    // Update Form
-    const manageForm = document.getElementById("hotelManageForm");
-    if (manageForm) {
-      manageForm.addEventListener("submit", function (e) {
+    // FORM: Edit Hotel
+    const editForm = document.getElementById("hotelEditForm");
+    if (editForm) {
+      editForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const form = e.currentTarget;
-        const id = form.hotel_id.value;
-        if (!id) return TL.showToast("Enter a hotel ID.", "warning");
+        const idField = document.getElementById("edit_hotel_id");
+        const id = idField ? idField.value : null;
+        if (!id) return TL.showToast("Missing hotel ID.", "error");
 
+        const data = values(editForm, "edit_");
         submit(
-          form,
-          () => TL.Hotels.updateHotel(id, values(form, "hotel_u_")),
+          editForm,
+          function () {
+            return TL.Hotels.updateHotel(id, data);
+          },
           "Hotel updated successfully.",
           "hotelEditModal"
         );
       });
     }
 
-    // Delete Button from Manage Form (inside modal)
-    const deleteButton = document.getElementById("hotelDeleteBtn");
-    if (deleteButton) {
-      deleteButton.addEventListener("click", async function () {
-        const id = document.getElementById("hotel_id")?.value;
-        if (!id) return TL.showToast("Enter a hotel ID.", "warning");
-        if (!P.confirm("Delete this hotel? This cannot be undone.")) return;
+    const refreshBtn = document.getElementById("hotelsRefresh");
+    if (refreshBtn) refreshBtn.addEventListener("click", () => loadHotels(currentPage));
 
-        try {
-          await TL.Hotels.deleteHotel(id);
-          TL.showToast("Hotel deleted successfully.", "success");
-          const modalEl = document.getElementById("hotelEditModal");
-          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
-          if (manageForm) manageForm.reset();
-          await loadHotels();
-        } catch (e) {
-          TL.showToast(e.message || "Failed to delete hotel.", "error");
-        }
-      });
-    }
-
-    loadHotels();
+    // Initial load
+    loadHotels(1);
   });
 })();

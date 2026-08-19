@@ -4,6 +4,9 @@
   document.addEventListener("DOMContentLoaded", function () {
     const P = TL.Pages;
 
+    const perPage = 10;
+    let currentPage = 1;
+
     function vals(form, prefix) {
       const data = {};
       form.querySelectorAll("[name]").forEach(function (el) {
@@ -15,13 +18,6 @@
         }
       });
       return data;
-    }
-
-    function getRestaurantsFromResponse(response) {
-      if (response && Array.isArray(response.data)) return response.data;
-      if (response && response.data && Array.isArray(response.data.data)) return response.data.data;
-      if (Array.isArray(response)) return response;
-      return [];
     }
 
     function getRestaurantFromResponse(response) {
@@ -42,7 +38,7 @@
           const modalEl = document.getElementById(closeModalId);
           if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
         }
-        await loadRestaurants();
+        await loadRestaurants(currentPage);
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
           P.showValidation(form, e.errors);
@@ -54,9 +50,10 @@
     }
 
     // LOAD RESTAURANTS
-    async function loadRestaurants() {
+    async function loadRestaurants(page = 1) {
       const list = document.getElementById("restaurantList");
       if (!list) return;
+      currentPage = page;
 
       list.innerHTML = `
         <div class="tl-inline-loader">
@@ -65,8 +62,8 @@
       `;
 
       try {
-        const response = await TL.Restaurants.getRestaurants();
-        const restaurants = getRestaurantsFromResponse(response);
+        const response = await TL.Restaurants.getRestaurants({ page: currentPage, per_page: perPage });
+        const { rows: restaurants, meta } = P.extractPagination(response, currentPage, perPage);
 
         if (!restaurants.length) {
           list.innerHTML = `
@@ -77,13 +74,16 @@
           return;
         }
 
+        const totalRestaurants = meta ? meta.total : restaurants.length;
+        const paginationHtml = P.buildPagination(meta, "data-restaurant-page", "restaurants", currentPage);
+
         list.innerHTML = `
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Restaurant Directory</h2>
               <span class="tl-metadata">All registered restaurants and dining spots</span>
             </div>
-            <span class="tl-badge tl-badge--info">${restaurants.length} restaurants</span>
+            <span class="tl-badge tl-badge--info">${totalRestaurants} restaurants</span>
           </div>
 
           <div style="padding: 0 24px 24px;">
@@ -141,6 +141,7 @@
               </table>
             </div>
           </div>
+          ${paginationHtml}
         `;
 
         // Edit button listener
@@ -162,9 +163,19 @@
             try {
               await TL.Restaurants.deleteRestaurant(id);
               TL.showToast("Restaurant deleted successfully.", "success");
-              await loadRestaurants();
+              await loadRestaurants(currentPage);
             } catch (e) {
               TL.showToast(e.message || "Failed to delete restaurant.", "error");
+            }
+          });
+        });
+
+        // Pagination buttons listener
+        list.querySelectorAll("[data-restaurant-page]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            const target = parseInt(this.dataset.restaurantPage, 10);
+            if (!isNaN(target) && target >= 1 && target !== currentPage) {
+              loadRestaurants(target);
             }
           });
         });
@@ -183,90 +194,82 @@
       try {
         const response = await TL.Restaurants.getRestaurant(id);
         const restaurant = getRestaurantFromResponse(response);
-        const form = document.getElementById("restaurantManageForm");
-        if (!form) return;
 
-        if (form.restaurant_id) form.restaurant_id.value = restaurant.id ?? "";
-        if (form.restaurant_u_name) form.restaurant_u_name.value = restaurant.name ?? "";
-        if (form.restaurant_u_city) form.restaurant_u_city.value = restaurant.city ?? "";
-        if (form.restaurant_u_address) form.restaurant_u_address.value = restaurant.address ?? "";
-        if (form.restaurant_u_locality) form.restaurant_u_locality.value = restaurant.locality ?? "";
-        if (form.restaurant_u_latitude) form.restaurant_u_latitude.value = restaurant.latitude ?? "";
-        if (form.restaurant_u_longitude) form.restaurant_u_longitude.value = restaurant.longitude ?? "";
-        if (form.restaurant_u_cuisines) form.restaurant_u_cuisines.value = restaurant.cuisines ?? "";
-        if (form.restaurant_u_currency) form.restaurant_u_currency.value = restaurant.currency ?? "";
-        if (form.restaurant_u_average_cost_for_two) form.restaurant_u_average_cost_for_two.value = restaurant.average_cost_for_two ?? "";
-        if (form.restaurant_u_price_range) form.restaurant_u_price_range.value = restaurant.price_range ?? "";
-        if (form.restaurant_u_has_table_booking) form.restaurant_u_has_table_booking.value = String(restaurant.has_table_booking ?? "");
-        if (form.restaurant_u_has_online_delivery) form.restaurant_u_has_online_delivery.value = String(restaurant.has_online_delivery ?? "");
-        if (form.restaurant_u_is_delivering_now) form.restaurant_u_is_delivering_now.value = String(restaurant.is_delivering_now ?? "");
-        if (form.restaurant_u_rating) form.restaurant_u_rating.value = restaurant.rating ?? "";
-        if (form.restaurant_u_votes) form.restaurant_u_votes.value = restaurant.votes ?? "";
+        if (!restaurant || !restaurant.id) {
+          return TL.showToast("Failed to fetch restaurant details.", "error");
+        }
 
-        P.clearErrors(form);
+        const idField = document.getElementById("edit_restaurant_id");
+        const nameField = document.getElementById("edit_name");
+        const cityField = document.getElementById("edit_city");
+        const addressField = document.getElementById("edit_address");
+        const costField = document.getElementById("edit_average_cost_for_two");
+        const ratingField = document.getElementById("edit_rating");
+        const votesField = document.getElementById("edit_votes");
+        const hasTableField = document.getElementById("edit_has_table_booking");
+        const isDeliveringField = document.getElementById("edit_is_delivering_now");
+
+        if (idField) idField.value = restaurant.id;
+        if (nameField) nameField.value = restaurant.name || "";
+        if (cityField) cityField.value = restaurant.city || "";
+        if (addressField) addressField.value = restaurant.address || "";
+        if (costField) costField.value = restaurant.average_cost_for_two != null ? restaurant.average_cost_for_two : "";
+        if (ratingField) ratingField.value = restaurant.rating != null ? restaurant.rating : "";
+        if (votesField) votesField.value = restaurant.votes != null ? restaurant.votes : "";
+        if (hasTableField) hasTableField.value = restaurant.has_table_booking ? "true" : "false";
+        if (isDeliveringField) isDeliveringField.value = restaurant.is_delivering_now ? "true" : "false";
+
         const modalEl = document.getElementById("restaurantEditModal");
         if (modalEl) {
-          const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-          modal.show();
+          bootstrap.Modal.getOrCreateInstance(modalEl).show();
         }
       } catch (e) {
-        TL.showToast(e.message || "Failed to load restaurant.", "error");
+        TL.showToast(e.message || "Could not load restaurant.", "error");
       }
     }
 
-    // Create Form
+    // FORM: Create Restaurant
     const createForm = document.getElementById("restaurantCreateForm");
     if (createForm) {
       createForm.addEventListener("submit", function (e) {
         e.preventDefault();
+        const data = vals(createForm, "create_");
         submit(
-          e.currentTarget,
-          () => TL.Restaurants.createRestaurant(vals(e.currentTarget, "restaurant_")),
-          "Restaurant created successfully.",
+          createForm,
+          function () {
+            return TL.Restaurants.createRestaurant(data);
+          },
+          "Restaurant added successfully.",
           "restaurantCreateModal"
         );
       });
     }
 
-    // Update Form
-    const manageForm = document.getElementById("restaurantManageForm");
-    if (manageForm) {
-      manageForm.addEventListener("submit", function (e) {
+    // FORM: Edit Restaurant
+    const editForm = document.getElementById("restaurantEditForm");
+    if (editForm) {
+      editForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const form = e.currentTarget;
-        const id = form.restaurant_id.value;
-        if (!id) return TL.showToast("Enter a restaurant ID.", "warning");
+        const idField = document.getElementById("edit_restaurant_id");
+        const id = idField ? idField.value : null;
+        if (!id) return TL.showToast("Missing restaurant ID.", "error");
 
+        const data = vals(editForm, "edit_");
         submit(
-          form,
-          () => TL.Restaurants.updateRestaurant(id, vals(form, "restaurant_u_")),
+          editForm,
+          function () {
+            return TL.Restaurants.updateRestaurant(id, data);
+          },
           "Restaurant updated successfully.",
           "restaurantEditModal"
         );
       });
     }
 
-    // Delete Button from Manage Form (inside modal)
-    const deleteButton = document.getElementById("restaurantDeleteBtn");
-    if (deleteButton) {
-      deleteButton.addEventListener("click", async function () {
-        const id = document.getElementById("restaurant_id")?.value;
-        if (!id) return TL.showToast("Enter a restaurant ID.", "warning");
-        if (!P.confirm("Delete this restaurant? This cannot be undone.")) return;
+    const refreshBtn = document.getElementById("restaurantsRefresh");
+    if (refreshBtn) refreshBtn.addEventListener("click", () => loadRestaurants(currentPage));
 
-        try {
-          await TL.Restaurants.deleteRestaurant(id);
-          TL.showToast("Restaurant deleted successfully.", "success");
-          const modalEl = document.getElementById("restaurantEditModal");
-          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
-          if (manageForm) manageForm.reset();
-          await loadRestaurants();
-        } catch (e) {
-          TL.showToast(e.message || "Failed to delete restaurant.", "error");
-        }
-      });
-    }
-
-    loadRestaurants();
+    // Initial load
+    loadRestaurants(1);
   });
 })();

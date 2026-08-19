@@ -5,9 +5,12 @@
     const P = TL.Pages;
 
     const list = document.getElementById("categoriesList");
+    const perPage = 10;
+    let currentPage = 1;
 
-    async function loadCategories() {
+    async function loadCategories(page = 1) {
       if (!list) return;
+      currentPage = page;
 
       list.innerHTML = `
         <div class="tl-inline-loader">
@@ -16,21 +19,10 @@
       `;
 
       try {
-        const response = await TL.Categories.getCategories();
-        const data = P.data(response);
+        const response = await TL.Categories.getCategories({ page: currentPage, per_page: perPage });
+        const { rows: allCategories, meta } = P.extractPagination(response, currentPage, perPage);
 
-        let categories = [];
-        if (Array.isArray(data)) {
-          categories = data;
-        } else if (Array.isArray(data?.data)) {
-          categories = data.data;
-        } else if (Array.isArray(response?.data)) {
-          categories = response.data;
-        } else if (Array.isArray(response)) {
-          categories = response;
-        }
-
-        if (!categories.length) {
+        if (!allCategories.length) {
           list.innerHTML = `
             <div style="padding: 24px;">
               ${P.empty("No categories found", "No categories have been created yet.", "bi-tags")}
@@ -39,13 +31,16 @@
           return;
         }
 
+        const totalCategories = meta ? meta.total : allCategories.length;
+        const paginationHtml = P.buildPagination(meta, "data-category-page", "categories", currentPage);
+
         list.innerHTML = `
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Category Directory</h2>
               <span class="tl-metadata">All active attraction and activity categories</span>
             </div>
-            <span class="tl-badge tl-badge--info">${categories.length} categories</span>
+            <span class="tl-badge tl-badge--info">${totalCategories} categories</span>
           </div>
 
           <div style="padding: 0 24px 24px;">
@@ -59,7 +54,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  ${categories.map(function (category) {
+                  ${allCategories.map(function (category) {
                     return `
                       <tr>
                         <td><strong>#${P.escape(P.display(category.id))}</strong></td>
@@ -92,6 +87,7 @@
               </table>
             </div>
           </div>
+          ${paginationHtml}
         `;
 
         bindCategoryActions();
@@ -138,9 +134,18 @@
           try {
             await TL.Categories.deleteCategory(id);
             TL.showToast("Category deleted.", "success");
-            await loadCategories();
+            await loadCategories(currentPage);
           } catch (e) {
             TL.showToast(e?.message || "Failed to delete category.", "error");
+          }
+        });
+      });
+
+      list.querySelectorAll("[data-category-page]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          const target = parseInt(this.dataset.categoryPage, 10);
+          if (!isNaN(target) && target >= 1 && target !== currentPage) {
+            loadCategories(target);
           }
         });
       });
@@ -159,90 +164,70 @@
           const modalEl = document.getElementById(closeModalId);
           if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
         }
-        await loadCategories();
+        await loadCategories(currentPage);
       } catch (e) {
         if (e instanceof TL.Api.ApiValidationError) {
           P.showValidation(form, e.errors);
         }
-        TL.showToast(e?.message || "Request failed.", "error");
+        TL.showToast(e?.message || "Something went wrong.", "error");
       } finally {
         P.setBusy(button, false);
       }
     }
 
-    // CREATE
     const createForm = document.getElementById("categoryCreateForm");
     if (createForm) {
       createForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const form = e.currentTarget;
-        const nameVal = form.querySelector("#category_name")?.value || form.name?.value;
-        const fileInput = form.querySelector("#category_image");
+        const name = (document.getElementById("create_category_name")?.value || "").trim();
+        const image = document.getElementById("create_category_image")?.files[0];
 
-        const data = { name: nameVal };
-        if (fileInput && fileInput.files[0]) {
-          data.image = fileInput.files[0];
-        }
+        const data = {};
+        if (name) data.name = name;
+        if (image) data.image = image;
 
         submit(
-          form,
-          () => TL.Categories.createCategory(data),
+          createForm,
+          function () {
+            return TL.Categories.createCategory(data);
+          },
           "Category created successfully.",
           "categoryCreateModal"
         );
       });
     }
 
-    // UPDATE
     const manageForm = document.getElementById("categoryManageForm");
     if (manageForm) {
       manageForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const form = e.currentTarget;
-        const id = form.querySelector("#category_id")?.value;
-        if (!id) return TL.showToast("Enter a category ID.", "warning");
+        const id = document.getElementById("category_id")?.value;
+        const name = (document.getElementById("category_update_name")?.value || "").trim();
+        const image = document.getElementById("category_update_image")?.files[0];
 
-        const nameVal = form.querySelector("#category_update_name")?.value;
-        const fileInput = form.querySelector("#category_update_image");
+        if (!id) {
+          TL.showToast("Category ID is required.", "error");
+          return;
+        }
 
         const data = {};
-        if (nameVal) data.name = nameVal;
-        if (fileInput && fileInput.files[0]) data.image = fileInput.files[0];
+        if (name) data.name = name;
+        if (image) data.image = image;
 
         submit(
-          form,
-          () => TL.Categories.updateCategory(id, data),
+          manageForm,
+          function () {
+            return TL.Categories.updateCategory(id, data);
+          },
           "Category updated successfully.",
           "categoryEditModal"
         );
       });
     }
 
-    // DELETE from modal
-    const deleteButton = document.getElementById("categoryDeleteBtn");
-    if (deleteButton) {
-      deleteButton.addEventListener("click", async function () {
-        const id = document.getElementById("category_id")?.value;
-        if (!id) {
-          TL.showToast("Enter a category ID.", "warning");
-          return;
-        }
+    const refreshBtn = document.getElementById("categoriesRefresh");
+    if (refreshBtn) refreshBtn.addEventListener("click", () => loadCategories(currentPage));
 
-        if (!P.confirm("Delete this category? This cannot be undone.")) return;
-
-        try {
-          await TL.Categories.deleteCategory(id);
-          TL.showToast("Category deleted.", "success");
-          const modalEl = document.getElementById("categoryEditModal");
-          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
-          manageForm?.reset();
-          await loadCategories();
-        } catch (e) {
-          TL.showToast(e?.message || "Failed to delete category.", "error");
-        }
-      });
-    }
-
-    await loadCategories();
+    loadCategories(1);
   });
 })();

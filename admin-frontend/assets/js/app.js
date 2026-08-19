@@ -33,7 +33,6 @@
         { id: "hotels", label: "Hotels", href: "hotels.html", icon: "bi-building" },
         { id: "restaurants", label: "Restaurants", href: "restaurants.html", icon: "bi-cup-hot" },
         { id: "categories", label: "Categories", href: "categories.html", icon: "bi-grid" },
-        { id: "reviews", label: "Reviews", href: "reviews.html", icon: "bi-star" },
         { id: "bookings", label: "Bookings", href: "bookings.html", icon: "bi-calendar-check" },
         { id: "messages", label: "Contact Messages", href: "messages.html", icon: "bi-envelope" },
       ],

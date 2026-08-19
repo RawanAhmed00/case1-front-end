@@ -46,7 +46,7 @@
             </div>
             <h1 class="tl-page-title">Contact Messages</h1>
             <p class="tl-text-secondary">
-              View and manage messages from website visitors.
+              View inquiries and messages sent by users and website visitors.
             </p>
           </div>
 
@@ -59,45 +59,60 @@
         <section class="tl-card tl-card--flush">
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
-              <h2 class="tl-section-title">Inbox</h2>
-              <span class="tl-metadata">Recent customer inquiries and contact forms</span>
+              <h2 class="tl-section-title">Inbox Messages</h2>
+              <span class="tl-metadata">Recent user inquiries</span>
             </div>
           </div>
 
           <div id="messagesState" style="padding: 0 24px 24px;"></div>
         </section>
+      </main>
+    </div>
+  </div>
 
-        <!-- Message Details / Status Modal -->
-        <div class="modal fade" id="messageViewModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content tl-modal">
-              <div class="modal-header">
-                <h5 class="modal-title">Contact Message</h5>
-                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <!-- =========================================================================
+       MODALS (Placed directly at root body level)
+       ========================================================================= -->
+
+  <!-- View Message Content Modal -->
+  <div class="modal fade" id="messageViewModal" tabindex="-1" aria-labelledby="messageViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-2">
+            <span class="tl-badge tl-badge--info"><i class="bi bi-envelope-open"></i> Message</span>
+            <h5 class="modal-title mb-0" id="messageViewModalLabel">Contact Message Details</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3 p-3 rounded" style="background: var(--tl-bg-elevated); border: 1px solid var(--tl-border);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-2">
+              <div>
+                <span class="tl-label mb-1 d-block text-muted" style="font-size: 11px;">SENDER</span>
+                <h5 id="modalSenderName" class="fw-bold mb-0 text-primary" style="font-size: 16px;"></h5>
               </div>
-
-              <div class="modal-body">
-                <pre id="messageDetails" class="tl-code-block mb-4"></pre>
-
-                <hr class="tl-divider">
-
-                <form id="messageStatusForm" novalidate>
-                  <input type="hidden" id="msg_id">
-                  <div class="tl-field">
-                    <label for="msg_status">Update Status</label>
-                    <input id="msg_status" type="text" class="tl-input" placeholder="e.g. read, resolved, pending"
-                      required>
-                  </div>
-                  <div class="tl-flex tl-gap-sm">
-                    <button class="tl-btn tl-btn--primary" type="submit">Update Status</button>
-                    <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Close</button>
-                  </div>
-                </form>
+              <div class="text-end">
+                <span class="tl-label mb-1 d-block text-muted" style="font-size: 11px;">DATE RECEIVED</span>
+                <div id="modalMessageDate" class="tl-metadata" style="font-size: 12.5px;"></div>
               </div>
             </div>
+            <div id="modalSenderEmail" class="tl-text-secondary" style="font-size: 13px;"></div>
+          </div>
+
+          <div class="p-4 rounded" style="background: var(--tl-bg-primary); border: 1px solid var(--tl-border-strong); min-height: 140px;">
+            <span class="tl-label d-block mb-2 text-info" style="font-size: 11.5px; letter-spacing: 0.05em;">
+              <i class="bi bi-chat-left-text me-1"></i> MESSAGE CONTENT
+            </span>
+            <div id="modalMessageBody" style="white-space: pre-wrap; line-height: 1.65; font-size: 14px; color: var(--tl-text-primary);"></div>
           </div>
         </div>
-      </main>
+
+        <div class="modal-footer">
+          <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 

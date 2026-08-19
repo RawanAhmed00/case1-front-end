@@ -16,11 +16,14 @@
     const attractionManageForm = document.getElementById("attractionManageForm");
     const attractionDeleteBtn = document.getElementById("attractionDeleteBtn");
 
+    const perPage = 10;
+    let cityCurrentPage = 1;
+    let attractionCurrentPage = 1;
+
     // Extract Form Fields Helper
-    function extractFormFields(form, prefix) {
+    function extractFormFields(form) {
       const data = {};
       form.querySelectorAll("[name]").forEach(el => {
-        // Handle names that don't have a prefix (we removed prefixes in html for standard names)
         const key = el.name;
         if (!key || key === "id") return; // exclude ID from payload
         if (el.type === "file") {
@@ -68,18 +71,21 @@
     // CITIES
     // =========================================================================
 
-    async function loadCities() {
+    async function loadCities(page = 1) {
       if (!citiesListEl) return;
+      cityCurrentPage = page;
+      citiesListEl.innerHTML = '<div class="tl-inline-loader"><div class="tl-spinner"></div></div>';
+
       try {
-        const response = await TL.Cities.getCities();
-        const cities = response.data || response;
-        renderCities(cities);
+        const response = await TL.Cities.getCities({ page: cityCurrentPage, per_page: perPage });
+        const { rows, meta } = P.extractPagination(response, cityCurrentPage, perPage);
+        renderCities(rows, meta);
       } catch (err) {
         citiesListEl.innerHTML = P.empty("Failed to load cities", err.message, "bi-exclamation-triangle text-danger");
       }
     }
 
-    function renderCities(cities) {
+    function renderCities(cities, meta) {
       if (!Array.isArray(cities) || cities.length === 0) {
         citiesListEl.innerHTML = P.empty("No cities found", "Add a city using the form below.");
         return;
@@ -115,6 +121,8 @@
       });
 
       html += `</tbody></table></div>`;
+      html += P.buildPagination(meta, "data-city-page", "cities", cityCurrentPage);
+
       citiesListEl.innerHTML = html;
       bindCityActions();
     }
@@ -140,6 +148,15 @@
           if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
         });
       });
+
+      citiesListEl.querySelectorAll("[data-city-page]").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const target = parseInt(this.dataset.cityPage, 10);
+          if (!isNaN(target) && target >= 1 && target !== cityCurrentPage) {
+            loadCities(target);
+          }
+        });
+      });
     }
 
     // Create City
@@ -152,7 +169,7 @@
           () => TL.Cities.createCity(payload),
           "City created successfully.",
           "cityCreateModal",
-          loadCities
+          () => loadCities(1)
         );
       });
     }
@@ -168,7 +185,7 @@
           () => TL.Cities.updateCity(id, payload),
           "City updated successfully.",
           "cityEditModal",
-          loadCities
+          () => loadCities(cityCurrentPage)
         );
       });
     }
@@ -185,7 +202,7 @@
           TL.showToast("City deleted successfully.", "success");
           const modalEl = document.getElementById("cityEditModal");
           if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
-          loadCities();
+          loadCities(cityCurrentPage);
         } catch (err) {
           TL.showToast(err.message || "Failed to delete city.", "error");
         } finally {
@@ -198,18 +215,21 @@
     // ATTRACTIONS
     // =========================================================================
 
-    async function loadAttractions() {
+    async function loadAttractions(page = 1) {
       if (!attractionsListEl) return;
+      attractionCurrentPage = page;
+      attractionsListEl.innerHTML = '<div class="tl-inline-loader"><div class="tl-spinner"></div></div>';
+
       try {
-        const response = await TL.Attractions.getAttractions();
-        const attractions = response.data || response;
-        renderAttractions(attractions);
+        const response = await TL.Attractions.getAttractions({ page: attractionCurrentPage, per_page: perPage });
+        const { rows, meta } = P.extractPagination(response, attractionCurrentPage, perPage);
+        renderAttractions(rows, meta);
       } catch (err) {
         attractionsListEl.innerHTML = P.empty("Failed to load attractions", err.message, "bi-exclamation-triangle text-danger");
       }
     }
 
-    function renderAttractions(attractions) {
+    function renderAttractions(attractions, meta) {
       if (!Array.isArray(attractions) || attractions.length === 0) {
         attractionsListEl.innerHTML = P.empty("No attractions found", "Add an attraction using the form below.");
         return;
@@ -251,6 +271,8 @@
       });
 
       html += `</tbody></table></div>`;
+      html += P.buildPagination(meta, "data-att-page", "attractions", attractionCurrentPage);
+
       attractionsListEl.innerHTML = html;
       bindAttractionActions();
     }
@@ -277,6 +299,15 @@
           if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
         });
       });
+
+      attractionsListEl.querySelectorAll("[data-att-page]").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const target = parseInt(this.dataset.attPage, 10);
+          if (!isNaN(target) && target >= 1 && target !== attractionCurrentPage) {
+            loadAttractions(target);
+          }
+        });
+      });
     }
 
     // Create Attraction
@@ -289,7 +320,7 @@
           () => TL.Attractions.createAttraction(payload),
           "Attraction created successfully.",
           "attractionCreateModal",
-          loadAttractions
+          () => loadAttractions(1)
         );
       });
     }
@@ -305,7 +336,7 @@
           () => TL.Attractions.updateAttraction(id, payload),
           "Attraction updated successfully.",
           "attractionEditModal",
-          loadAttractions
+          () => loadAttractions(attractionCurrentPage)
         );
       });
     }
@@ -322,7 +353,7 @@
           TL.showToast("Attraction deleted successfully.", "success");
           const modalEl = document.getElementById("attractionEditModal");
           if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
-          loadAttractions();
+          loadAttractions(attractionCurrentPage);
         } catch (err) {
           TL.showToast(err.message || "Failed to delete attraction.", "error");
         } finally {
@@ -332,7 +363,7 @@
     }
 
     // INIT
-    loadCities();
-    loadAttractions();
+    loadCities(1);
+    loadAttractions(1);
   });
 })();

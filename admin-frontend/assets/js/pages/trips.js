@@ -6,7 +6,7 @@
     const state = document.getElementById("tripsState");
 
     let currentPage = 1;
-    const perPage = 20;
+    const perPage = 10;
     let currentTripsList = [];
 
     function renderTable(rows, meta) {
@@ -75,53 +75,7 @@
         </div>
       `;
 
-      let paginationHtml = "";
-      if (meta && meta.last_page > 1) {
-        const cur = meta.current_page || currentPage;
-        const last = meta.last_page || 1;
-        const total = meta.total || rows.length;
-
-        let pageButtons = "";
-        const maxPagesToShow = 5;
-        let startPage = Math.max(1, cur - 2);
-        let endPage = Math.min(last, startPage + maxPagesToShow - 1);
-        if (endPage - startPage < maxPagesToShow - 1) {
-          startPage = Math.max(1, endPage - maxPagesToShow + 1);
-        }
-
-        for (let p = startPage; p <= endPage; p++) {
-          pageButtons += `
-            <button type="button" class="tl-page-btn ${p === cur ? 'is-active' : ''}" data-page-target="${p}">
-              ${p}
-            </button>
-          `;
-        }
-
-        paginationHtml = `
-          <div class="tl-pagination">
-            <span class="tl-metadata">
-              Showing page <strong>${cur}</strong> of <strong>${last}</strong> (${total} total trips, 20 per page)
-            </span>
-            <div class="d-flex align-items-center gap-1">
-              <button type="button" class="tl-page-btn" data-page-target="${cur - 1}" ${cur <= 1 ? 'disabled' : ''}>
-                <i class="bi bi-chevron-left"></i> Prev
-              </button>
-              ${pageButtons}
-              <button type="button" class="tl-page-btn" data-page-target="${cur + 1}" ${cur >= last ? 'disabled' : ''}>
-                Next <i class="bi bi-chevron-right"></i>
-              </button>
-            </div>
-          </div>
-        `;
-      } else {
-        const total = meta ? meta.total || rows.length : rows.length;
-        paginationHtml = `
-          <div class="tl-pagination">
-            <span class="tl-metadata">Showing ${rows.length} of ${total} total trips</span>
-          </div>
-        `;
-      }
-
+      const paginationHtml = P.buildPagination(meta, "data-page-target", "trips", currentPage);
       state.innerHTML = tableHtml + paginationHtml;
     }
 
@@ -169,33 +123,7 @@
 
         // Process Trips List
         if (listRes.status === "fulfilled") {
-          let rows = [];
-          let meta = null;
-
-          const raw = P.parse(listRes.value);
-          if (raw && typeof raw === "object") {
-            if (Array.isArray(raw)) {
-              rows = raw;
-            } else if (Array.isArray(raw.data)) {
-              rows = raw.data;
-              meta = raw.meta || {
-                current_page: raw.current_page || currentPage,
-                last_page: raw.last_page || 1,
-                per_page: raw.per_page || perPage,
-                total: raw.total || rows.length,
-              };
-            } else if (raw.data && typeof raw.data === "object" && Array.isArray(raw.data.data)) {
-              rows = raw.data.data;
-              meta = {
-                current_page: raw.data.current_page || currentPage,
-                last_page: raw.data.last_page || 1,
-                per_page: raw.data.per_page || perPage,
-                total: raw.data.total || rows.length,
-              };
-            } else {
-              rows = P.list(raw) || [];
-            }
-          }
+          const { rows, meta } = P.extractPagination(listRes.value, currentPage, perPage);
 
           const metaEl = document.getElementById("tripMeta");
           if (metaEl) {

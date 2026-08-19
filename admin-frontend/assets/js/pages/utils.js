@@ -25,6 +25,120 @@
     return parsed;
   };
 
+  P.extractPagination = function (response, currentPageNum = 1, perPageNum = 10) {
+    let raw = P.parse(response);
+    if (typeof raw === "string") {
+      try { raw = JSON.parse(raw); } catch (_) {}
+    }
+    
+    let rows = [];
+    let meta = {
+      current_page: currentPageNum,
+      last_page: 1,
+      per_page: perPageNum,
+      total: 0
+    };
+
+    if (!raw || typeof raw !== "object") {
+      return { rows: [], meta };
+    }
+
+    if (Array.isArray(raw)) {
+      const total = raw.length;
+      const last_page = Math.max(1, Math.ceil(total / perPageNum));
+      const start = (currentPageNum - 1) * perPageNum;
+      rows = raw.slice(start, start + perPageNum);
+      meta = {
+        current_page: currentPageNum,
+        last_page: last_page,
+        per_page: perPageNum,
+        total: total
+      };
+      return { rows, meta };
+    }
+
+    if (Array.isArray(raw.data)) {
+      rows = raw.data;
+      if (raw.meta && typeof raw.meta === "object") {
+        meta = {
+          current_page: Number(raw.meta.current_page) || currentPageNum,
+          last_page: Number(raw.meta.last_page) || 1,
+          per_page: Number(raw.meta.per_page) || perPageNum,
+          total: Number(raw.meta.total) != null ? Number(raw.meta.total) : rows.length
+        };
+      } else if (raw.current_page !== undefined || raw.last_page !== undefined || raw.total !== undefined) {
+        meta = {
+          current_page: Number(raw.current_page) || currentPageNum,
+          last_page: Number(raw.last_page) || 1,
+          per_page: Number(raw.per_page) || perPageNum,
+          total: Number(raw.total) != null ? Number(raw.total) : rows.length
+        };
+      } else {
+        meta = {
+          current_page: currentPageNum,
+          last_page: 1,
+          per_page: perPageNum,
+          total: rows.length
+        };
+      }
+      return { rows, meta };
+    }
+
+    if (raw.data && typeof raw.data === "object" && Array.isArray(raw.data.data)) {
+      rows = raw.data.data;
+      const pSource = raw.data.meta || raw.data;
+      meta = {
+        current_page: Number(pSource.current_page) || currentPageNum,
+        last_page: Number(pSource.last_page) || 1,
+        per_page: Number(pSource.per_page) || perPageNum,
+        total: Number(pSource.total) != null ? Number(pSource.total) : rows.length
+      };
+      return { rows, meta };
+    }
+
+    return { rows, meta };
+  };
+
+  P.buildPagination = function (meta, pageAttr, itemLabel = "items", currentPageNum = 1) {
+    const cur = meta ? (meta.current_page || currentPageNum) : currentPageNum;
+    const last = meta ? Math.max(1, meta.last_page || 1) : 1;
+    const total = meta ? (meta.total != null ? meta.total : 0) : 0;
+    const perPage = meta ? (meta.per_page || 10) : 10;
+
+    let pageButtons = "";
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, cur - 2);
+    let endPage = Math.min(last, startPage + maxPagesToShow - 1);
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let p = startPage; p <= endPage; p++) {
+      pageButtons += `
+        <button type="button" class="tl-page-btn ${p === cur ? 'is-active' : ''}" ${pageAttr}="${p}">
+          ${p}
+        </button>
+      `;
+    }
+
+    return `
+      <div class="tl-pagination" style="padding: 14px 24px;">
+        <span class="tl-metadata">
+          Showing page <strong>${cur}</strong> of <strong>${last}</strong> (${total} total ${itemLabel}, ${perPage} per page)
+        </span>
+        <div class="d-flex align-items-center gap-1">
+          <button type="button" class="tl-page-btn" ${cur <= 1 ? 'disabled' : ''} ${cur > 1 ? `${pageAttr}="${cur - 1}"` : ''}>
+            <i class="bi bi-chevron-left"></i> Prev
+          </button>
+          ${pageButtons}
+          <button type="button" class="tl-page-btn" ${cur >= last ? 'disabled' : ''} ${cur < last ? `${pageAttr}="${cur + 1}"` : ''}>
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  };
+
   P.list = function (response) {
     const value = P.data(response);
     if (Array.isArray(value)) return value;

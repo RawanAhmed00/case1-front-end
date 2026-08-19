@@ -2,8 +2,8 @@
   "use strict";
 
   // GET /hotels
-  function getHotels() {
-    return window.TL.Api.get("/hotels");
+  function getHotels(query) {
+    return window.TL.Api.get("/hotels", query);
   }
 
   // GET /hotels/{id}

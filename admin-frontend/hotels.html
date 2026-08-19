@@ -51,9 +51,14 @@
               Manage hotel listings, room availability, and night rates.
             </p>
           </div>
-          <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#hotelCreateModal">
-            <i class="bi bi-plus-lg"></i> Add Hotel
-          </button>
+          <div class="d-flex align-items-center gap-2">
+            <button id="hotelsRefresh" class="tl-btn tl-btn--outline" type="button">
+              <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+            <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#hotelCreateModal">
+              <i class="bi bi-plus-lg"></i> Add Hotel
+            </button>
+          </div>
         </div>
 
         <!-- Hotel List Card -->

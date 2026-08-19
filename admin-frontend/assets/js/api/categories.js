@@ -7,8 +7,8 @@
   "use strict";
 
   // GET /categories
-  function getCategories() {
-    return window.TL.Api.get("/categories");
+  function getCategories(query) {
+    return window.TL.Api.get("/categories", query);
   }
 
   // GET /categories/{id}
