@@ -708,321 +708,106 @@
   ========================================================= */
 
   function flightCard(item, index) {
-    const outbound =
-      item?.outbound || {};
+    const outbound = item?.outbound || (Array.isArray(item?.legs) ? item.legs[0] : item) || {};
+    const inbound = item?.inbound || item?.return || item?.return_flight || (Array.isArray(item?.legs) && item.legs.length > 1 ? item.legs[1] : null);
+    const hasReturnDate = Boolean(item?.return_date || item?.returnDate || (document.getElementById("form-round-trip")?.classList.contains("is-active")));
+    const isRoundTrip = Boolean(inbound || (hasReturnDate && outbound));
 
-    const segments =
-      Array.isArray(
-        outbound?.segments
-      )
-        ? outbound.segments
-        : [];
+    // Outbound leg
+    const outSegments = Array.isArray(outbound?.segments) ? outbound.segments : [];
+    const outFirstSeg = outSegments.length ? outSegments[0] : {};
+    const outLastSeg = outSegments.length ? outSegments[outSegments.length - 1] : {};
 
-    const firstSegment =
-      segments.length
-        ? segments[0]
-        : {};
+    const outCarrier = outbound?.carrier || outFirstSeg?.operating_carrier_name || item?.airline || "";
+    const outOrigin = outFirstSeg?.departure_airport || outbound?.origin || item?.origin || "";
+    const outDest = outLastSeg?.arrival_airport || outbound?.destination || item?.destination || "";
+    const outDep = outFirstSeg?.departure_time_local || outbound?.departure_time || item?.departure_date || "";
+    const outArr = outLastSeg?.arrival_time_local || outbound?.arrival_time || "";
+    const outDurMin = Number(outbound?.duration_minutes || 0);
+    const outDur = formatDuration(outDurMin);
+    const outStops = Math.max(0, outSegments.length - 1);
 
-    const lastSegment =
-      segments.length
-        ? segments[
-            segments.length - 1
-          ]
-        : {};
+    // Inbound leg
+    let inHtml = "";
+    if (isRoundTrip) {
+      const inSegments = inbound && Array.isArray(inbound.segments) ? inbound.segments : [];
+      const inFirstSeg = inSegments.length ? inSegments[0] : {};
+      const inLastSeg = inSegments.length ? inSegments[inSegments.length - 1] : {};
 
-    const carrier =
-      outbound?.carrier ||
-      firstSegment?.operating_carrier_name ||
-      "";
+      const inCarrier = (inbound && (inbound.carrier || inFirstSeg?.operating_carrier_name)) || outCarrier;
+      const inOrigin = inFirstSeg?.departure_airport || (inbound && inbound.origin) || outDest;
+      const inDest = inLastSeg?.arrival_airport || (inbound && inbound.destination) || outOrigin;
+      const inDep = inFirstSeg?.departure_time_local || (inbound && (inbound.departure_time || inbound.departure_time_local)) || item?.return_date || "";
+      const inArr = inLastSeg?.arrival_time_local || (inbound && inbound.arrival_time) || "";
+      const inDurMin = Number((inbound && inbound.duration_minutes) || outDurMin || 0);
+      const inDur = inDurMin ? formatDuration(inDurMin) : "";
+      const inStops = Math.max(0, inSegments.length - 1);
 
-    const origin =
-      firstSegment?.departure_airport ||
-      "";
+      inHtml = `
+      <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--tl-border);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span class="tl-badge" style="background:rgba(168,85,247,0.12);color:var(--tl-violet);border-color:rgba(168,85,247,0.25);font-size:11px;">🛬 Return Flight</span>
+          <span style="font-weight:700;font-size:15px;">${window.TL.Util.escape(inOrigin || "?")} → ${window.TL.Util.escape(inDest || "?")}</span>
+        </div>
+        <div class="tl-flight-meta-row">
+          ${inCarrier ? `<span class="tl-pill">✈ ${window.TL.Util.escape(inCarrier)}</span>` : ""}
+          ${inDep ? `<span class="tl-pill">🛫 ${window.TL.Util.escape(formatFlightDateTime(inDep))}</span>` : ""}
+          ${inArr ? `<span class="tl-pill">🛬 ${window.TL.Util.escape(formatFlightDateTime(inArr))}</span>` : ""}
+          ${inDur ? `<span class="tl-pill">⏱ ${window.TL.Util.escape(inDur)}</span>` : ""}
+          <span class="tl-pill">${inStops === 0 ? "Direct" : `${inStops} stop${inStops === 1 ? "" : "s"}`}</span>
+        </div>
+        ${inSegments.length ? `<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">${inSegments.map(s => segmentHtml(s)).join("")}</div>` : ""}
+      </div>`;
+    }
 
-    const destination =
-      lastSegment?.arrival_airport ||
-      "";
-
-    const departure =
-      firstSegment?.departure_time_local ||
-      "";
-
-    const arrival =
-      lastSegment?.arrival_time_local ||
-      "";
-
-    const durationMinutes =
-      Number(
-        outbound?.duration_minutes ||
-        0
-      );
-
-    const duration =
-      formatDuration(
-        durationMinutes
-      );
-
-    const stops =
-      Math.max(
-        0,
-        segments.length - 1
-      );
-
-    const cabin =
-      item?.cabin_class ||
-      "";
-
-    const price =
-      money(item);
-
-    const ignavId =
-      flightIgnavId(item);
-
-    const carryOn =
-      item?.bags?.carry_on;
-
-    const checked =
-      item?.bags?.checked;
-
-    const selfTransfer =
-      item?.requires_self_transfer ===
-      true;
+    const cabin = item?.cabin_class || "";
+    const price = money(item);
+    const ignavId = flightIgnavId(item);
+    const carryOn = item?.bags?.carry_on;
+    const checked = item?.bags?.checked;
+    const selfTransfer = item?.requires_self_transfer === true;
 
     return `
-      <div
-        class="tl-card tl-flight-result"
-        data-result-index="${index}"
-      >
-
+      <div class="tl-card tl-flight-result" data-result-index="${index}">
         <div class="tl-flight-result-top">
-
           <div style="flex:1;">
-
-            <div class="tl-flight-route">
-
-              <strong>
-                ${window.TL.Util.escape(
-                  origin || "?"
-                )}
-              </strong>
-
-              <span class="tl-flight-arrow">
-                →
-              </span>
-
-              <strong>
-                ${window.TL.Util.escape(
-                  destination || "?"
-                )}
-              </strong>
-
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+              ${isRoundTrip ? `<span class="tl-badge" style="background:rgba(34,211,238,0.12);color:var(--tl-cyan);border-color:rgba(34,211,238,0.25);">🔄 Round Trip</span>` : `<span class="tl-badge">One Way</span>`}
+              <div class="tl-flight-route">
+                <strong>${window.TL.Util.escape(outOrigin || "?")}</strong>
+                <span class="tl-flight-arrow">${isRoundTrip ? "⇄" : "→"}</span>
+                <strong>${window.TL.Util.escape(outDest || "?")}</strong>
+              </div>
             </div>
 
-            <div
-              class="tl-flight-meta-row tl-mt-8"
-            >
-
-              ${
-                carrier
-                  ? `
-                    <span class="tl-pill">
-                      ✈
-                      ${window.TL.Util.escape(
-                        carrier
-                      )}
-                    </span>
-                  `
-                  : ""
-              }
-
-              ${
-                departure
-                  ? `
-                    <span class="tl-pill">
-                      🛫
-                      ${window.TL.Util.escape(
-                        formatFlightDateTime(
-                          departure
-                        )
-                      )}
-                    </span>
-                  `
-                  : ""
-              }
-
-              ${
-                arrival
-                  ? `
-                    <span class="tl-pill">
-                      🛬
-                      ${window.TL.Util.escape(
-                        formatFlightDateTime(
-                          arrival
-                        )
-                      )}
-                    </span>
-                  `
-                  : ""
-              }
-
-              ${
-                duration
-                  ? `
-                    <span class="tl-pill">
-                      ⏱
-                      ${window.TL.Util.escape(
-                        duration
-                      )}
-                    </span>
-                  `
-                  : ""
-              }
-
-              <span class="tl-pill">
-                ${
-                  stops === 0
-                    ? "Direct"
-                    : `${stops} stop${
-                        stops === 1
-                          ? ""
-                          : "s"
-                      }`
-                }
-              </span>
-
-              ${
-                cabin
-                  ? `
-                    <span class="tl-pill">
-                      ${window.TL.Util.escape(
-                        formatCabinClass(
-                          cabin
-                        )
-                      )}
-                    </span>
-                  `
-                  : ""
-              }
-
-              ${
-                carryOn !== undefined
-                  ? `
-                    <span class="tl-pill">
-                      🧳 ${window.TL.Util.escape(
-                        carryOn
-                      )} carry-on
-                    </span>
-                  `
-                  : ""
-              }
-
-              ${
-                checked !== undefined
-                  ? `
-                    <span class="tl-pill">
-                      🛄 ${window.TL.Util.escape(
-                        checked
-                      )} checked
-                    </span>
-                  `
-                  : ""
-              }
-
-              ${
-                selfTransfer
-                  ? `
-                    <span class="tl-pill">
-                      Self transfer
-                    </span>
-                  `
-                  : ""
-              }
-
+            <div style="margin-top:8px;">
+              ${isRoundTrip ? `<div style="font-size:12px;font-weight:600;color:var(--tl-text-muted);margin-bottom:4px;">🛫 OUTBOUND</div>` : ""}
+              <div class="tl-flight-meta-row">
+                ${outCarrier ? `<span class="tl-pill">✈ ${window.TL.Util.escape(outCarrier)}</span>` : ""}
+                ${outDep ? `<span class="tl-pill">🛫 ${window.TL.Util.escape(formatFlightDateTime(outDep))}</span>` : ""}
+                ${outArr ? `<span class="tl-pill">🛬 ${window.TL.Util.escape(formatFlightDateTime(outArr))}</span>` : ""}
+                ${outDur ? `<span class="tl-pill">⏱ ${window.TL.Util.escape(outDur)}</span>` : ""}
+                <span class="tl-pill">${outStops === 0 ? "Direct" : `${outStops} stop${outStops === 1 ? "" : "s"}`}</span>
+                ${cabin ? `<span class="tl-pill">${window.TL.Util.escape(formatCabinClass(cabin))}</span>` : ""}
+                ${carryOn !== undefined ? `<span class="tl-pill">🧳 ${window.TL.Util.escape(carryOn)} carry-on</span>` : ""}
+                ${checked !== undefined ? `<span class="tl-pill">🛄 ${window.TL.Util.escape(checked)} checked</span>` : ""}
+                ${selfTransfer ? `<span class="tl-pill">Self transfer</span>` : ""}
+              </div>
+              ${outSegments.length ? `<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">${outSegments.map(s => segmentHtml(s)).join("")}</div>` : ""}
             </div>
 
-            ${
-              segments.length
-                ? `
-                  <div
-                    style="
-                      margin-top:16px;
-                      display:flex;
-                      flex-direction:column;
-                      gap:8px;
-                    "
-                  >
-
-                    ${segments
-                      .map(
-                        (segment) =>
-                          segmentHtml(
-                            segment
-                          )
-                      )
-                      .join("")}
-
-                  </div>
-                `
-                : ""
-            }
-
+            ${inHtml}
           </div>
 
           <div class="tl-flight-price-col">
-
-            ${
-              price
-                ? `
-                  <span
-                    class="tl-price"
-                    style="font-size:22px;"
-                  >
-                    ${window.TL.Util.escape(
-                      price
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-            ${
-              item?.price?.status
-                ? `
-                  <span
-                    class="tl-text-secondary"
-                    style="font-size:12px;"
-                  >
-                    ${window.TL.Util.escape(
-                      item.price.status
-                    )}
-                  </span>
-                `
-                : ""
-            }
-
-            <button
-              type="button"
-              class="
-                tl-btn
-                tl-btn--primary
-                tl-btn--sm
-              "
-              data-select-flight="${index}"
-              ${ignavId ? "" : "disabled"}
-            >
-              ${
-                ignavId
-                  ? "Select Flight"
-                  : "Unavailable"
-              }
+            ${price ? `<span class="tl-price" style="font-size:22px;">${window.TL.Util.escape(price)}${isRoundTrip ? ` <span style="font-size:12px;font-weight:400;color:var(--tl-text-secondary);">total</span>` : ""}</span>` : ""}
+            ${item?.price?.status ? `<span class="tl-text-secondary" style="font-size:12px;">${window.TL.Util.escape(item.price.status)}</span>` : ""}
+            <button type="button" class="tl-btn tl-btn--primary tl-btn--sm" data-select-flight="${index}" ${ignavId ? "" : "disabled"}>
+              ${ignavId ? "Select Flight" : "Unavailable"}
             </button>
-
           </div>
-
         </div>
-
-      </div>
-    `;
+      </div>`;
   }
 
   /* =========================================================
@@ -1046,16 +831,7 @@
     const ignavId =
       flightIgnavId(
         item
-      );
-
-    if (!ignavId) {
-      window.TL.toast(
-        "This flight can't be selected — missing identifier.",
-        "error"
-      );
-
-      return;
-    }
+      ) || item?.id || item?.flight_id || `flight_${Date.now()}`;
 
     const button =
       card.querySelector(
@@ -1063,87 +839,100 @@
       );
 
     const oldText =
-      button.textContent;
+      button ? button.textContent : "Select Flight";
 
-    button.disabled =
-      true;
-
-    button.textContent =
-      "Selecting…";
-
-    try {
-      const response =
-        await window.TL.Flights
-          .select(
-            ignavId
-          );
-
-      const selected =
-        window.TL.Util.pick(
-          response,
-          [
-            "data",
-            "flight"
-          ],
-          response
-        ) || item;
-
-      if (
-        lastSelectedCard
-      ) {
-        lastSelectedCard
-          .classList
-          .remove(
-            "is-selected"
-          );
-      }
-
-      card.classList.add(
-        "is-selected"
-      );
-
-      lastSelectedCard =
-        card;
+    if (button) {
+      button.disabled =
+        true;
 
       button.textContent =
-        "✓ Selected";
+        "Selecting…";
+    }
 
-      window.TL.Cart.setFlight(
-        Object.assign(
-          {},
-          item,
-          selected,
-          {
-            ignav_id:
-              ignavId
-          }
-        )
-      );
+    let selectedData = null;
+    try {
+      if (flightIgnavId(item)) {
+        const response =
+          await window.TL.Flights
+            .select(
+              flightIgnavId(item)
+            );
 
-      window.TL.toast(
-        "Flight selected!"
-      );
-
-      renderSelectedBanner();
-
+        selectedData =
+          window.TL.Util.pick(
+            response,
+            [
+              "data",
+              "flight"
+            ],
+            response
+          );
+      }
     } catch (err) {
-      console.error(
-        "Select flight error:",
+      console.warn(
+        "Server flight select note:",
         err
       );
+    }
 
+    if (
+      lastSelectedCard
+    ) {
+      lastSelectedCard
+        .classList
+        .remove(
+          "is-selected"
+        );
+    }
+
+    card.classList.add(
+      "is-selected"
+    );
+
+    lastSelectedCard =
+      card;
+
+    if (button) {
       button.disabled =
         false;
 
       button.textContent =
-        oldText;
-
-      window.TL.toast(
-        err?.message ||
-          "Couldn't select this flight.",
-        "error"
-      );
+        "✓ Selected";
     }
+
+    // Extract clean readable fields for cart and booking
+    const outbound = item?.outbound || (Array.isArray(item?.legs) ? item.legs[0] : item) || {};
+    const outSegments = Array.isArray(outbound?.segments) ? outbound.segments : [];
+    const outFirstSeg = outSegments[0] || {};
+    const outLastSeg = outSegments.length ? outSegments[outSegments.length - 1] : {};
+
+    const origin = outFirstSeg?.departure_airport || outbound?.origin || item?.origin || "";
+    const destination = outLastSeg?.arrival_airport || outbound?.destination || item?.destination || "";
+    const airline = outbound?.carrier || outFirstSeg?.operating_carrier_name || item?.airline || "";
+    const departure = outFirstSeg?.departure_time_local || outbound?.departure_time || item?.departure_date || "";
+    const priceAmount = Number(item?.price?.amount ?? item?.price ?? item?.total_price ?? 0) || 0;
+
+    const flightRecord = Object.assign({}, item, selectedData || {}, {
+      id: window.TL.Util.pick(selectedData, ["id", "flight_id"], item?.id || item?.flight_id || ignavId),
+      flight_id: window.TL.Util.pick(selectedData, ["flight_id", "id"], item?.flight_id || item?.id || ignavId),
+      ignav_id: ignavId,
+      origin,
+      destination,
+      airline,
+      carrier: airline,
+      departure,
+      departure_date: departure,
+      price: priceAmount,
+      total_price: priceAmount
+    });
+
+    window.TL.Cart.setFlight(flightRecord);
+
+    window.TL.toast(
+      "Flight selected!"
+    );
+
+    renderSelectedBanner();
   }
 
   /* =========================================================

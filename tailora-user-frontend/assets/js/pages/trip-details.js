@@ -22,17 +22,46 @@
   }
 
   function renderHeader(trip) {
-    const title = window.TL.Util.pick(
+    let countryName = window.TL.Util.pick(
       trip,
-      ["title", "name"],
-      "Your Trip"
-    );
-
-    const destination = window.TL.Util.pick(
-      trip,
-      ["destination", "city.name", "city_name"],
+      ["country.name", "country_name", "countryName"],
       ""
     );
+    if (typeof countryName === "object" && countryName !== null) {
+      countryName = countryName.name || countryName.country_name || "";
+    }
+    if (!countryName && typeof trip.country === "string") {
+      countryName = trip.country;
+    }
+    if (!countryName && Array.isArray(trip?.days)) {
+      for (const day of trip.days) {
+        const c = window.TL.Util.pick(day, ["country.name", "country_name", "country", "city.country.name", "city.country_name"], "");
+        const cName = typeof c === "object" && c !== null ? (c.name || c.country_name) : c;
+        if (cName && String(cName).trim() && String(cName).toLowerCase() !== "destination" && String(cName).toLowerCase() !== "custom trip") {
+          countryName = String(cName).trim();
+          break;
+        }
+      }
+    }
+
+    if (!countryName) {
+      const destField = window.TL.Util.pick(trip, ["destination", "city"], "");
+      if (typeof destField === "object" && destField !== null) {
+        const dName = destField.country || destField.country_name || destField.name || "";
+        if (dName && dName.toLowerCase() !== "destination") countryName = String(dName).trim();
+      } else if (typeof destField === "string" && destField.trim() && destField.toLowerCase() !== "destination" && destField.toLowerCase() !== "custom trip") {
+        countryName = destField.trim();
+      }
+    }
+
+    const rawTitle = String(window.TL.Util.pick(trip, ["title", "name"], "")).trim();
+    let title = countryName;
+    if (!title && rawTitle && !rawTitle.toLowerCase().startsWith("untitled") && !rawTitle.toLowerCase().startsWith("trip #") && !rawTitle.toLowerCase().startsWith("custom trip") && rawTitle.toLowerCase() !== "your trip" && rawTitle.toLowerCase() !== "destination") {
+      title = rawTitle.replace(/^trip to\s+/i, "").replace(/\s+trip$/i, "").trim();
+    }
+    if (!title) {
+      title = "Trip";
+    }
 
     const start = window.TL.Util.pick(
       trip,
@@ -85,9 +114,9 @@
       <div class="tl-chip-row tl-mt-16">
 
         ${
-          destination
+          countryName
             ? `<span class="tl-badge">
-                📍 ${window.TL.Util.escape(destination)}
+                📍 ${window.TL.Util.escape(countryName)}
               </span>`
             : ""
         }

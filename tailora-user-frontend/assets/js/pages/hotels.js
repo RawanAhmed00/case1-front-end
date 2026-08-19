@@ -24,7 +24,10 @@
     sort: "",
     page: 1,
     lastPage: 1,
-    total: 0
+    total: 0,
+    perPage: 10,
+    allHotels: null,
+    userFavoriteKeys: new Set()
   };
 
   function getHotelImage(item) {
@@ -43,13 +46,14 @@
     const price = window.TL.Util.money(window.TL.Util.price(item));
     const amenities = window.TL.Util.pick(item, ["amenities"], []);
     const id = window.TL.Util.id(item);
+    const isFav = state.userFavoriteKeys.has(`hotel_${id}`);
 
     return `
     <div class="tl-card tl-place-card">
       <div class="tl-place-media">
         <img src="${img}" alt="${window.TL.Util.escape(name)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
         ${rating ? `<span class="tl-badge">★ ${window.TL.Util.escape(rating)}</span>` : ""}
-        <button class="tl-fav-btn" data-fav-id="${id}" data-fav-type="hotel" aria-label="Save to favorites">♡</button>
+        <button class="tl-fav-btn ${isFav ? "is-active" : ""}" data-fav-id="${id}" data-fav-type="hotel" aria-label="Save to favorites">${isFav ? "♥" : "♡"}</button>
       </div>
       <div class="tl-place-body">
         <div class="tl-place-title"><h3>${window.TL.Util.escape(name)}</h3></div>
@@ -106,23 +110,73 @@
     </div>`;
   }
 
-  function render() {
+  async function getAllHotels() {
+    if (state.allHotels && state.allHotels.length > 0) return state.allHotels;
+    try {
+      const mapRes = await window.TL.Api.get("/hotels/map");
+      const list = window.TL.Util.list(mapRes);
+      if (list && list.length > 0) {
+        state.allHotels = window.TL.Util.uniqueBy(list, (h) => `${window.TL.Util.name(h)}_${window.TL.Util.city(h)}`);
+        return state.allHotels;
+      }
+    } catch (e) {}
+
+    try {
+      const promises = [];
+      for (let p = 1; p <= 15; p++) {
+        promises.push(window.TL.Api.get("/hotels", { page: p }).catch(() => ({ data: [] })));
+      }
+      const responses = await Promise.all(promises);
+      const combined = [];
+      for (const r of responses) {
+        combined.push(...window.TL.Util.list(r));
+      }
+      state.allHotels = window.TL.Util.uniqueBy(combined, (h) => `${window.TL.Util.name(h)}_${window.TL.Util.city(h)}`);
+      return state.allHotels;
+    } catch (e) {
+      return state.items;
+    }
+  }
+
+  async function render() {
     const grid = document.getElementById("hotels-grid");
     const pagerTop = document.getElementById("hotels-pagination-top");
     const pagerBottom = document.getElementById("hotels-pagination-bottom");
 
-    // Search/sort apply only within the currently loaded page,
-    // since search isn't wired to the backend yet.
-    let items = state.items.filter((h) => {
-      const hay = `${window.TL.Util.name(h)} ${window.TL.Util.city(h)} ${window.TL.Util.country(h)}`.toLowerCase();
-      return !state.query || hay.includes(state.query.toLowerCase());
-    });
+    const q = state.query.trim().toLowerCase();
+    const isGlobal = Boolean(q || state.sort);
 
-    if (state.sort === "price-asc") items = [...items].sort((a, b) => (window.TL.Util.price(a) || 0) - (window.TL.Util.price(b) || 0));
-    if (state.sort === "price-desc") items = [...items].sort((a, b) => (window.TL.Util.price(b) || 0) - (window.TL.Util.price(a) || 0));
-    if (state.sort === "rating-desc") items = [...items].sort((a, b) => (window.TL.Util.rating(b) || 0) - (window.TL.Util.rating(a) || 0));
+    let displayItems = [];
 
-    grid.innerHTML = items.length ? items.map(card).join("") : window.TL.Util.emptyState("No hotels found", "Try a different search term.");
+    if (isGlobal) {
+      const allHotels = await getAllHotels();
+      let filtered = [...allHotels];
+
+      if (q) {
+        filtered = filtered.filter((h) => {
+          const hay = `${window.TL.Util.name(h)} ${window.TL.Util.city(h)} ${window.TL.Util.country(h)} ${window.TL.Util.pick(h, ["neighborhood", "address"], "")}`.toLowerCase();
+          return hay.includes(q);
+        });
+      }
+
+      if (state.sort === "price-asc") {
+        filtered.sort((a, b) => (Number(window.TL.Util.price(a)) || 0) - (Number(window.TL.Util.price(b)) || 0));
+      } else if (state.sort === "price-desc") {
+        filtered.sort((a, b) => (Number(window.TL.Util.price(b)) || 0) - (Number(window.TL.Util.price(a)) || 0));
+      } else if (state.sort === "rating-desc") {
+        filtered.sort((a, b) => (Number(window.TL.Util.rating(b)) || 0) - (Number(window.TL.Util.rating(a)) || 0));
+      }
+
+      state.total = filtered.length;
+      state.lastPage = Math.max(1, Math.ceil(state.total / state.perPage));
+      if (state.page > state.lastPage) state.page = 1;
+      const start = (state.page - 1) * state.perPage;
+      displayItems = filtered.slice(start, start + state.perPage);
+    } else {
+      displayItems = [...state.items];
+    }
+
+    grid.innerHTML = displayItems.length ? displayItems.map(card).join("") : window.TL.Util.emptyState("No hotels found", "Try a different search term or city.");
 
     const pagerHtml = paginationControls();
     if (pagerTop) pagerTop.innerHTML = pagerHtml;
@@ -137,7 +191,13 @@
       btn.addEventListener("click", () => {
         const target = Number(btn.dataset.page);
         if (!target || target < 1 || target > state.lastPage || target === state.page) return;
-        load(target);
+        if (state.query.trim() || state.sort) {
+          state.page = target;
+          render();
+        } else {
+          load(target);
+        }
+        window.scrollTo({ top: document.getElementById("hotels-grid").offsetTop - 80, behavior: "smooth" });
       });
     });
 
@@ -149,7 +209,13 @@
           window.TL.toast(`Enter a page between 1 and ${state.lastPage}`, "error");
           return;
         }
-        load(target);
+        if (state.query.trim() || state.sort) {
+          state.page = target;
+          render();
+        } else {
+          load(target);
+        }
+        window.scrollTo({ top: document.getElementById("hotels-grid").offsetTop - 80, behavior: "smooth" });
       });
     });
 
@@ -162,23 +228,29 @@
 
   function wireFav() {
     document.querySelectorAll(".tl-fav-btn").forEach((btn) => {
-      btn.addEventListener("click", async () => {
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         if (!window.TL.Auth.isAuthenticated()) {
           window.location.href = "signin.html?next=hotels.html";
           return;
         }
         const id = btn.dataset.favId;
-        const type = btn.dataset.favType;
+        const type = btn.dataset.favType || "hotel";
         const active = btn.classList.contains("is-active");
         try {
           if (active) {
             await window.TL.Favorites.remove(type, id);
             btn.classList.remove("is-active");
             btn.textContent = "♡";
+            state.userFavoriteKeys.delete(`hotel_${id}`);
+            window.TL.toast("Removed from favorites");
           } else {
             await window.TL.Favorites.add(type, id);
             btn.classList.add("is-active");
             btn.textContent = "♥";
+            state.userFavoriteKeys.add(`hotel_${id}`);
+            window.TL.toast("Saved to favorites");
           }
         } catch (err) {
           window.TL.toast(err.message || "Couldn't update favorites", "error");
@@ -187,10 +259,27 @@
     });
   }
 
+  async function syncUserFavorites() {
+    if (!window.TL.Auth.isAuthenticated()) return;
+    try {
+      const response = await window.TL.Favorites.all();
+      const rawFavs = window.TL.Util.list(response);
+      rawFavs.forEach((f) => {
+        const item = window.TL.Util.pick(f, ["favoritable", "item"], f);
+        const favId = window.TL.Util.pick(f, ["favoritable_id"], window.TL.Util.id(item));
+        const type = String(window.TL.Util.pick(f, ["favoritable_type", "type"], "")).toLowerCase();
+        if (favId && type === "hotel") {
+          state.userFavoriteKeys.add(`hotel_${favId}`);
+        }
+      });
+    } catch (e) {}
+  }
+
   async function load(page = 1) {
     const grid = document.getElementById("hotels-grid");
     grid.innerHTML = window.TL.Util.skeletonCards(9);
     try {
+      await syncUserFavorites();
       const response = await window.TL.Hotels.all({ page });
       const rawHotels = window.TL.Util.list(response);
       state.items = window.TL.Util.uniqueBy(rawHotels, (h) => `${window.TL.Util.name(h)}_${window.TL.Util.city(h)}`);
@@ -198,7 +287,6 @@
       state.lastPage = response.meta?.last_page || 1;
       state.total = response.meta?.total || state.items.length;
       render();
-      window.scrollTo({ top: document.getElementById("hotels-grid").offsetTop - 80, behavior: "smooth" });
     } catch (err) {
       grid.innerHTML = window.TL.Util.errorState(err.message);
     }
@@ -206,12 +294,18 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     load(1);
+    let searchDebounce;
     document.getElementById("hotel-search").addEventListener("input", (e) => {
+      clearTimeout(searchDebounce);
       state.query = e.target.value;
-      render();
+      state.page = 1;
+      searchDebounce = setTimeout(() => {
+        render();
+      }, 250);
     });
     document.getElementById("hotel-sort").addEventListener("change", (e) => {
       state.sort = e.target.value;
+      state.page = 1;
       render();
     });
   });

@@ -135,13 +135,20 @@
 }
 
 .tl-btn--primary {
-  background: var(--tl-gradient-aura);
-  color: #06231D;
+  background: var(--tl-gradient-aura) !important;
+  color: #06231D !important;
   box-shadow: var(--tl-shadow-glow-teal);
 }
 .tl-btn--primary:hover {
   box-shadow: 0 0 0 1px rgba(32, 227, 194, 0.4), 0 10px 28px rgba(32, 227, 194, 0.22);
   transform: translateY(-1px);
+}
+.tl-btn--primary i,
+.tl-btn--primary .bi,
+.tl-btn--primary svg {
+  color: #06231D !important;
+  font-weight: 700 !important;
+  display: inline-block;
 }
 
 .tl-btn--violet {

@@ -38,12 +38,14 @@
     if (availabilities.length === 0) {
       container.innerHTML = `
         <div class="col-12">
-          <div class="tl-card tl-empty-state">
-            <i class="bi bi-clock-history fs-1 text-teal"></i>
-            <h5>No Availability Slots Defined</h5>
-            <p class="tl-text-secondary">Set up your availability slots so travelers can book your tours.</p>
-            <button class="tl-btn tl-btn--primary mt-3" id="emptyAddBtn">
-              <i class="bi bi-plus-lg me-1"></i> Add Your First Availability Slot
+          <div class="tl-card text-center p-4 p-md-5 border border-2 border-dashed border-teal border-opacity-50 rounded-4 shadow-sm">
+            <div class="mb-3 mx-auto d-inline-flex align-items-center justify-content-center rounded-circle bg-teal bg-opacity-10 text-teal" style="width: 72px; height: 72px;">
+              <i class="bi bi-calendar-plus fs-1"></i>
+            </div>
+            <h4 class="fw-bold mb-2">No Availability Slots Defined</h4>
+            <p class="tl-text-secondary max-w-md mx-auto mb-4" style="max-width: 480px;">Configure your working days and time slots so travelers can discover and book your tours.</p>
+            <button class="tl-btn tl-btn--primary px-4 py-3 fs-6 fw-semibold shadow-md" id="emptyAddBtn">
+              <i class="bi bi-plus-lg me-2 fw-bold fs-5"></i> Add Your First Availability Slot
             </button>
           </div>
         </div>`;

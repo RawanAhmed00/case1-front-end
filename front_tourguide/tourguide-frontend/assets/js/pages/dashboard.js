@@ -81,6 +81,7 @@
     if (!obj) return "Traveler";
     if (typeof obj === "string") return obj;
     const name = obj.username || obj.user_name || obj.name ||
+      (obj.trip && (obj.trip.user_name || (obj.trip.user && (obj.trip.user.username || obj.trip.user.user_name || obj.trip.user.name)))) ||
       (obj.user && (obj.user.username || obj.user.user_name || obj.user.name)) ||
       (obj.traveler && (obj.traveler.username || obj.traveler.user_name || obj.traveler.name || (obj.traveler.user && (obj.traveler.user.username || obj.traveler.user.name)))) ||
       (obj.booking && (obj.booking.username || obj.booking.user_name || (obj.booking.user && (obj.booking.user.username || obj.booking.user.name)))) ||
@@ -99,10 +100,12 @@
       return null;
     };
 
-    return parse(obj.country) ||
-      parse(obj.trip && obj.trip.country) ||
-      parse(obj.trip && obj.trip.destination) ||
-      parse(obj.booking && obj.booking.trip && obj.booking.trip.country) ||
+    return parse(obj.dis_country) ||
+      parse(obj.country) ||
+      parse(obj.country_name) ||
+      parse(obj.destination) ||
+      parse(obj.trip && (obj.trip.dis_country || obj.trip.country || obj.trip.country_name || obj.trip.destination)) ||
+      parse(obj.booking && obj.booking.trip && (obj.booking.trip.dis_country || obj.booking.trip.country || obj.booking.trip.country_name || obj.booking.trip.destination)) ||
       parse(obj.booking && obj.booking.hotel && obj.booking.hotel.country) ||
       parse(obj.user && obj.user.country) ||
       parse(obj.traveler && obj.traveler.country) ||
@@ -143,7 +146,7 @@
 
     tbody.innerHTML = pending.map(req => {
       const username = extractUsername(req);
-      const country = extractCountry(req) || "Egypt";
+      const country = extractCountry(req.trip) || extractCountry(req.booking?.trip) || extractCountry(req) || "Trip Destination";
       const avatarInitial = username.charAt(0).toUpperCase();
 
       const travelerUserId = req.user_id || req.traveler_id || (req.user && req.user.id) || (req.traveler && req.traveler.id) || (req.partner && req.partner.id);

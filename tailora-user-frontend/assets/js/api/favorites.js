@@ -14,17 +14,18 @@
   // relying on it.
   const Favorites = {
     all() {
-      return window.TL.Api.get("favorites/favorites");
+      return window.TL.Api.get("/favorites");
     },
     add(type, id) {
       return window.TL.Api.post("/favorites", {
-        type: type,
-        id: id
+        type: String(type).toLowerCase(),
+        id: Number(id)
       });
     },
     remove(type, id) {
-      return window.TL.Api.delete("/favorites", {
-        body: { type: type, id: id }
+      return window.TL.Api.delete(`/favorites?type=${encodeURIComponent(String(type).toLowerCase())}&id=${encodeURIComponent(Number(id))}`, {
+        type: String(type).toLowerCase(),
+        id: Number(id)
       });
     }
   };

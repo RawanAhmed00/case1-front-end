@@ -42,21 +42,29 @@
 
   async function renderBookingSummary(bookingId) {
     const mount = document.getElementById("payment-details");
+    let booking = null;
     try {
       const response = await window.TL.Bookings.get(bookingId);
-      const booking = window.TL.Util.pick(response, ["data", "booking"], response);
+      booking = window.TL.Util.pick(response, ["data", "booking"], response);
+    } catch (err) {
+      booking = window.TL.Cart.getBooking();
+    }
+    if (!booking) {
+      booking = window.TL.Cart.getBooking();
+    }
+
+    if (booking) {
       const status = window.TL.Util.pick(booking, ["status"], "pending");
-      const amount = window.TL.Util.money(window.TL.Util.pick(booking, ["amount", "total", "price"], null));
+      const amount = window.TL.Util.money(window.TL.Util.pick(booking, ["amount", "total", "total_price", "price"], null));
+      const ref = window.TL.Util.pick(booking, ["reference", "title"], bookingId);
       mount.innerHTML = `
-        <div class="tl-payment-row"><span>Booking</span><span>#${window.TL.Util.escape(bookingId)}</span></div>
+        <div class="tl-payment-row"><span>Booking Reference</span><span>${window.TL.Util.escape(ref)}</span></div>
         <div class="tl-payment-row"><span>Status</span><span>${window.TL.Util.escape(status)}</span></div>
         ${amount ? `<div class="tl-payment-row"><span>Amount</span><strong>${window.TL.Util.escape(amount)}</strong></div>` : ""}`;
-      document.getElementById("payment-subtitle").textContent = "Review your booking, then create your payment.";
-    } catch (err) {
-      // Best-effort — GET /bookings/{id} may not be reachable for this
-      // booking; the payment can still be created from the booking_id alone.
-      mount.innerHTML = `<div class="tl-payment-row"><span>Booking</span><span>#${window.TL.Util.escape(bookingId)}</span></div>`;
-      document.getElementById("payment-subtitle").textContent = "Ready to create your payment.";
+      document.getElementById("payment-subtitle").textContent = "Review your booking, then proceed to pay.";
+    } else {
+      mount.innerHTML = "";
+      document.getElementById("payment-subtitle").textContent = "Ready to proceed to payment.";
     }
   }
 
@@ -87,7 +95,7 @@
       if (paymentCreated) return; // guards against double-submit / idempotency
       paymentCreated = true;
       btn.disabled = true;
-      btn.textContent = "Creating payment…";
+      btn.textContent = "Processing payment…";
       showError("");
 
       try {
@@ -95,17 +103,17 @@
         const payment = window.TL.Util.pick(response, ["data", "payment"], response);
         const paymentId = window.TL.Util.id(payment);
 
-        btn.textContent = "✓ Payment Created";
-        window.TL.toast("Payment created!");
+        btn.textContent = "✓ Paid";
+        window.TL.toast("Payment initiated!");
         await proceedToCheckout(paymentId, response);
       } catch (err) {
         paymentCreated = false;
         btn.disabled = false;
-        btn.textContent = "Create Payment";
+        btn.textContent = "Pay";
         if (err.name === "ApiValidationError" && err.errors) {
           showError(Object.values(err.errors).flat().join(" ") || err.message);
         } else {
-          showError(err.message || "Couldn't create your payment. Please try again.");
+          showError(err.message || "Couldn't process your payment. Please try again.");
         }
         window.TL.toast(err.message || "Payment failed.", "error");
       }

@@ -266,22 +266,46 @@ p { margin: 0; }
   background: rgba(34, 211, 238, 0.12); color: var(--tl-cyan);
   border: 1px solid rgba(34, 211, 238, 0.25);
 }
-/* Dark-mode fix: native <select> dropdowns don't inherit page theme automatically */
-select.tl-input {
+/* Select & Dropdown Styling for Dark and Light Modes */
+select.tl-select,
+select.tl-input,
+select {
+  background-color: var(--tl-surface-solid);
+  color: var(--tl-text);
+  border: 1px solid var(--tl-border);
   color-scheme: dark;
-  background-color: #0b0f24;
-  color: #f2f2f2;
-  border: 1px solid #3a3d46;
+  border-radius: var(--tl-radius-sm);
+  padding: 12px 14px;
+  font-size: 14.5px;
+  width: 100%;
+  cursor: pointer;
 }
 
-select.tl-input option {
-  background-color: #0b0f24;
-  color: #f2f2f2;
+select option {
+  background-color: #0d1128;
+  color: #f8fafc;
+  padding: 8px 12px;
 }
 
-select.tl-input:focus {
+[data-theme="light"] select.tl-select,
+[data-theme="light"] select.tl-input,
+[data-theme="light"] select {
+  background-color: #ffffff;
+  color: #0b0f24;
+  border-color: rgba(11, 15, 36, 0.16);
+  color-scheme: light;
+}
+
+[data-theme="light"] select option {
+  background-color: #ffffff;
+  color: #0b0f24;
+}
+
+select.tl-input:focus,
+select.tl-select:focus,
+select:focus {
   outline: none;
-  border-color: #5b8def;
+  border-color: var(--tl-cyan);
 }
 
 /* ---------------------------------------------------------------------
@@ -290,7 +314,7 @@ select.tl-input:focus {
 .tl-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
 .tl-field label { font-size: 13px; font-weight: 600; color: var(--tl-text-secondary); }
 .tl-input, .tl-select, .tl-textarea {
-  background: var(--tl-surface);
+  background: var(--tl-surface-solid);
   border: 1px solid var(--tl-border);
   color: var(--tl-text);
   border-radius: var(--tl-radius-sm);

@@ -8,11 +8,23 @@
   const FALLBACK_IMG = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=500&q=70";
   const state = { items: [], type: "" };
 
+  function formatModelType(type) {
+    if (!type) return "";
+    const cleaned = String(type).split("\\").pop().split("/").pop().trim().toLowerCase();
+    if (cleaned.includes("restaurant")) return "Restaurant";
+    if (cleaned.includes("attraction") || cleaned.includes("experience")) return "Experience";
+    if (cleaned.includes("hotel")) return "Hotel";
+    if (cleaned.includes("city")) return "City";
+    if (cleaned.includes("country")) return "Country";
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  }
+
   function card(fav) {
     const item = window.TL.Util.pick(fav, ["favoritable", "item"], fav);
     const name = window.TL.Util.name(item, "Saved item");
     const img = window.TL.Util.image(item, FALLBACK_IMG);
-    const type = window.TL.Util.pick(fav, ["favoritable_type", "type"], "");
+    const rawType = window.TL.Util.pick(fav, ["favoritable_type", "type"], "");
+    const type = formatModelType(rawType);
     const favoritableId = window.TL.Util.pick(fav, ["favoritable_id"], window.TL.Util.id(item));
     const city = window.TL.Util.city(item) || window.TL.Util.country(item);
 
@@ -21,7 +33,7 @@
       <div class="tl-place-media">
         <img src="${img}" alt="${window.TL.Util.escape(name)}" loading="lazy" onerror="this.src='${FALLBACK_IMG}'">
         ${type ? `<span class="tl-badge">${window.TL.Util.escape(type)}</span>` : ""}
-        <button class="tl-fav-btn is-active" data-fav-id="${window.TL.Util.escape(favoritableId)}" data-fav-type="${window.TL.Util.escape(type)}" aria-label="Remove from favorites">♥</button>
+        <button class="tl-fav-btn is-active" data-fav-id="${window.TL.Util.escape(favoritableId)}" data-fav-type="${window.TL.Util.escape(rawType || type)}" aria-label="Remove from favorites">♥</button>
       </div>
       <div class="tl-place-body">
         <div class="tl-place-title"><h3>${window.TL.Util.escape(name)}</h3></div>
@@ -42,13 +54,14 @@
 
   function renderTypeFilter() {
     const row = document.getElementById("fav-type-filter");
+    row.innerHTML = `<button type="button" class="tl-pill ${!state.type ? "is-active" : ""}" data-type="">All</button>`;
     const types = Array.from(new Set(state.items.map((f) => window.TL.Util.pick(f, ["favoritable_type", "type"], "")).filter(Boolean)));
     types.forEach((t) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "tl-pill";
       btn.dataset.type = t;
-      btn.textContent = t;
+      btn.textContent = formatModelType(t);
       row.appendChild(btn);
     });
     row.querySelectorAll("button[data-type]").forEach((btn) => {
@@ -68,10 +81,12 @@
         const type = btn.dataset.favType;
         btn.disabled = true;
         try {
-          await window.TL.Favorites.remove(id, type);
-          state.items = state.items.filter(
-            (f) => String(window.TL.Util.pick(f, ["favoritable_id"], "")) !== String(id)
-          );
+          await window.TL.Favorites.remove(type, id);
+          state.items = state.items.filter((f) => {
+            const item = window.TL.Util.pick(f, ["favoritable", "item"], f);
+            const favId = window.TL.Util.pick(f, ["favoritable_id"], window.TL.Util.id(item));
+            return String(favId) !== String(id);
+          });
           window.TL.toast("Removed from favorites");
           render();
         } catch (err) {

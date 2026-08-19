@@ -57,10 +57,7 @@
           suggestBox.innerHTML = cities
             .slice(0, 8)
             .map((c, i) => {
-              const id = window.TL.Util.id(c);
-              const name = window.TL.Util.name(c);
-              const country = window.TL.Util.country(c);
-              return `<button type="button" data-idx="${i}">${window.TL.Util.escape(name)}${country ? ` — ${window.TL.Util.escape(country)}` : ""}</button>`;
+              return `<button type="button" data-idx="${i}">${window.TL.Util.escape(name)}</button>`;
             })
             .join("");
 

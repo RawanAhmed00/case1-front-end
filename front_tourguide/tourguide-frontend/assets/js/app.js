@@ -26,7 +26,6 @@
       label: "Growth & Messages",
       items: [
         { id: "messages", label: "Messages & Chat", href: "messages.html", icon: "bi-chat-dots" },
-        { id: "reviews", label: "Ratings & Reviews", href: "reviews.html", icon: "bi-star" },
         { id: "earnings", label: "Earnings & Financials", href: "earnings.html", icon: "bi-cash-stack" }
       ]
     },
@@ -117,8 +116,7 @@
       </div>
       <div class="offcanvas-body d-flex flex-column p-0">
         <div class="tl-sidebar__brand">
-          <img src="${getLogoPath()}" alt="Tailora Logo" id="tlSidebarLogo">
-          <span class="tl-sidebar__wordmark">Tailora</span>
+          <img src="${getLogoPath()}" alt="Logo" id="tlSidebarLogo">
           <span class="tl-sidebar__badge">Guide</span>
         </div>
         <nav class="tl-sidebar__nav" aria-label="Primary">

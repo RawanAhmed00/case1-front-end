@@ -26,6 +26,7 @@
     if (!obj) return "Traveler";
     if (typeof obj === "string") return obj;
     const name = obj.username || obj.user_name || obj.name ||
+      (obj.trip && (obj.trip.user_name || (obj.trip.user && (obj.trip.user.username || obj.trip.user.user_name || obj.trip.user.name)))) ||
       (obj.user && (obj.user.username || obj.user.user_name || obj.user.name)) ||
       (obj.traveler && (obj.traveler.username || obj.traveler.user_name || obj.traveler.name || (obj.traveler.user && (obj.traveler.user.username || obj.traveler.user.name)))) ||
       (obj.booking && (obj.booking.username || obj.booking.user_name || (obj.booking.user && (obj.booking.user.username || obj.booking.user.name)))) ||
@@ -40,10 +41,16 @@
       if (!val) return null;
       if (typeof val === "string") return val;
       if (typeof val === "object" && val.name) return val.name;
+      if (typeof val === "object" && val.country_name) return val.country_name;
       return null;
     };
 
-    return parse(obj.country) ||
+    return parse(obj.dis_country) ||
+      parse(obj.country) ||
+      parse(obj.country_name) ||
+      parse(obj.destination) ||
+      parse(obj.trip && (obj.trip.dis_country || obj.trip.country || obj.trip.country_name || obj.trip.destination)) ||
+      parse(obj.booking && obj.booking.trip && (obj.booking.trip.dis_country || obj.booking.trip.country || obj.booking.trip.country_name || obj.booking.trip.destination)) ||
       parse(obj.user && obj.user.country) ||
       parse(obj.traveler && obj.traveler.country) ||
       parse(obj.traveler && obj.traveler.user && obj.traveler.user.country) ||
@@ -97,7 +104,7 @@
       const country = extractCountry(req);
       const avatarInitial = username.charAt(0).toUpperCase();
 
-      const travelerUserId = req.user_id || req.traveler_id || (req.user && req.user.id) || (req.traveler && req.traveler.id) || (req.partner && req.partner.id);
+      const travelerUserId = req.user_id || req.traveler_id || (req.trip && req.trip.user_id) || (req.trip && req.trip.user && req.trip.user.id) || (req.booking && req.booking.user_id) || (req.booking && req.booking.user && req.booking.user.id) || (req.user && req.user.id) || (req.traveler && req.traveler.id) || (req.partner && req.partner.id);
       const chatHref = travelerUserId ? `messages.html?user_id=${travelerUserId}&name=${encodeURIComponent(username)}` : 'messages.html';
 
       return `
@@ -173,6 +180,7 @@
 
       const trip = req.trip || req.booking?.trip || null;
       const tripDates = trip ? `${trip.start_date ? trip.start_date.split('T')[0] : 'N/A'} to ${trip.end_date ? trip.end_date.split('T')[0] : 'N/A'}` : null;
+      const countryName = extractCountry(trip) || country || 'Trip Destination';
 
       // Calculate Number of Trip's Days
       let tripDaysCount = '1 Day';
@@ -207,7 +215,7 @@
                 <i class="bi bi-map fs-5"></i> Associated Traveler Trip Details
               </div>
               <div class="row g-2 small">
-                <div class="col-6"><span class="tl-metadata d-block">Destination / Country</span><strong class="text-light">${escapeHtml(trip.country?.name || country || 'Trip Destination')}</strong></div>
+                <div class="col-6"><span class="tl-metadata d-block">Destination / Country</span><strong class="text-light">${escapeHtml(countryName)}</strong></div>
                 <div class="col-6"><span class="tl-metadata d-block">Trip Budget</span><strong class="text-light">$${trip.budget || '0.00'}</strong></div>
                 <div class="col-6"><span class="tl-metadata d-block">Trip Dates</span><strong class="text-light">${tripDates}</strong></div>
                 <div class="col-6"><span class="tl-metadata d-block">Travelers Count</span><strong class="text-light">${trip.travelers || 1} Traveler(s)</strong></div>

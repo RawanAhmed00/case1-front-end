@@ -41,10 +41,8 @@
             <h3 id="dash-name">Traveler</h3>
             <p class="tl-text-secondary" id="dash-email" style="font-size:13px;"></p>
             <nav class="tl-dash-nav" id="dash-nav">
-              <button type="button" class="is-active" data-panel="overview">🏠 Overview</button>
-              <button type="button" data-panel="trips">🧳 My Trips</button>
+              <button type="button" class="is-active" data-panel="trips">🧳 My Trips</button>
               <button type="button" data-panel="favorites">♥ Favorites</button>
-              <button type="button" data-panel="bookings">🧾 Bookings</button>
               <button type="button" data-panel="settings">⚙️ Settings</button>
             </nav>
           </div>
@@ -55,23 +53,12 @@
             <!-- populated by profile.js -->
           </div>
 
-          <div class="tl-dash-panel is-active" data-panel="overview" id="panel-overview">
-            <div class="tl-card" style="padding:26px;">
-              <h3 style="margin-bottom:14px;">Recent Trips</h3>
-              <div id="overview-trips" class="tl-grid tl-grid--2"></div>
-            </div>
-          </div>
-
-          <div class="tl-dash-panel" data-panel="trips" id="panel-trips">
+          <div class="tl-dash-panel is-active" data-panel="trips" id="panel-trips">
             <div class="tl-grid tl-grid--2" id="trips-grid"></div>
           </div>
 
           <div class="tl-dash-panel" data-panel="favorites" id="panel-favorites">
             <div class="tl-grid" id="favorites-grid"></div>
-          </div>
-
-          <div class="tl-dash-panel" data-panel="bookings" id="panel-bookings">
-            <div class="tl-grid tl-grid--2" id="bookings-grid"></div>
           </div>
 
           <div class="tl-dash-panel" data-panel="settings" id="panel-settings">
@@ -133,6 +120,7 @@
 
 <script src="assets/js/api/api.js"></script>
 <script src="assets/js/api/auth.js"></script>
+<script src="assets/js/api/catalog.js"></script>
 <script src="assets/js/api/hotels.js"></script>
 <script src="assets/js/api/trips.js"></script>
 <script src="assets/js/api/favorites.js"></script>

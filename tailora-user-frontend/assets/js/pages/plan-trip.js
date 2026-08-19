@@ -2515,6 +2515,16 @@
         "Trip saved successfully!"
       );
 
+      if (tripId && (state.wantsTourGuide || window.TL.Cart.getWantsTourGuide())) {
+        try {
+          const guides = await window.TL.TourGuide.getTourGuides();
+          if (guides.length > 0) {
+            window.TL.Cart.setTourGuide(guides[0]);
+            await window.TL.TourGuide.assignTripToGuide(tripId, guides[0].id);
+          }
+        } catch (e) {}
+      }
+
       /*
        * Redirect if backend returned trip_id.
        */
@@ -3097,6 +3107,23 @@
     try {
       await saveAttractions();
 
+      if (state.tripId) {
+        window.TL.Cart.setActiveTripId(state.tripId);
+      }
+
+      if (state.wantsTourGuide || window.TL.Cart.getWantsTourGuide()) {
+        try {
+          const guides = await window.TL.TourGuide.getTourGuides();
+          if (guides.length > 0) {
+            window.TL.Cart.setTourGuide(guides[0]);
+            await window.TL.TourGuide.assignTripToGuide(state.tripId, guides[0].id);
+            window.TL.toast(`Assigned tour guide: ${guides[0].name || "Tour Guide"}!`);
+          }
+        } catch (e) {
+          console.warn("Could not assign guide during trip creation:", e);
+        }
+      }
+
       window.TL.toast(
         "Your trip is ready!"
       );
@@ -3126,6 +3153,36 @@
           "Create My Trip";
       }
     }
+  }
+
+  function wirePlanTourGuide() {
+    const checkbox = document.getElementById("plan-tour-guide-checkbox");
+    if (!checkbox) return;
+    checkbox.checked = window.TL.Cart.getWantsTourGuide();
+    state.wantsTourGuide = checkbox.checked;
+
+    checkbox.addEventListener("change", async () => {
+      const isChecked = checkbox.checked;
+      state.wantsTourGuide = isChecked;
+      window.TL.Cart.setWantsTourGuide(isChecked);
+
+      if (isChecked) {
+        try {
+          const guides = await window.TL.TourGuide.getTourGuides();
+          if (guides.length > 0) {
+            const guide = guides[0];
+            state.tourGuideId = guide.id;
+            window.TL.Cart.setTourGuide(guide);
+            window.TL.toast(`Assigned tour guide: ${guide.name || "Tour Guide"}!`);
+          }
+        } catch (e) {
+          console.warn("Tour guide query note:", e);
+        }
+      } else {
+        state.tourGuideId = null;
+        window.TL.Cart.setTourGuide(null);
+      }
+    });
   }
 
   /* =========================================================
@@ -3195,6 +3252,8 @@
     wireTravelers();
 
     wireStyles();
+
+    wirePlanTourGuide();
 
     wireAiAssistant();
 

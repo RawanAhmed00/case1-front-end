@@ -37,38 +37,125 @@
 
   /* --------------------------- Stats --------------------------- */
 
-  async function loadStats() {
+  function loadStats(tripsCount = 0, favsCount = 0) {
     const mount = document.getElementById("dash-stats");
-    mount.innerHTML = Array.from({ length: 4 })
-      .map(() => `<div class="tl-card tl-stat-card"><div class="tl-skel" style="height:28px;width:50%;margin-bottom:8px;"></div><div class="tl-skel" style="height:12px;width:70%;"></div></div>`)
+    if (!mount) return;
+    const cards = [
+      ["Total Trips", tripsCount],
+      ["Favorites", favsCount]
+    ];
+    mount.innerHTML = cards
+      .map(([label, value]) => `<div class="tl-card tl-stat-card"><div class="tl-stat-num">${window.TL.Util.escape(value)}</div><div class="tl-stat-label">${label}</div></div>`)
       .join("");
+  }
 
+  function formatModelType(type) {
+    if (!type) return "";
+    const cleaned = String(type).split("\\").pop().split("/").pop().trim().toLowerCase();
+    if (cleaned.includes("restaurant")) return "Restaurant";
+    if (cleaned.includes("attraction") || cleaned.includes("experience")) return "Experience";
+    if (cleaned.includes("hotel")) return "Hotel";
+    if (cleaned.includes("city")) return "City";
+    if (cleaned.includes("country")) return "Country";
+    return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+  }
+
+  let countriesMap = {};
+
+  async function ensureCountriesMap() {
+    if (Object.keys(countriesMap).length > 0) return countriesMap;
     try {
-      const response = await window.TL.Dashboard.statistics();
-      const stats = window.TL.Util.pick(response, ["data"], response) || {};
-      const cards = [
-        ["Total Trips", window.TL.Util.pick(stats, ["total_trips"], 0)],
-        ["Upcoming", window.TL.Util.pick(stats, ["upcoming_trips"], 0)],
-        ["Total Bookings", window.TL.Util.pick(stats, ["total_bookings"], 0)],
-        ["Favorites", window.TL.Util.pick(stats, ["total_favorites"], 0)]
-      ];
-      mount.innerHTML = cards
-        .map(([label, value]) => `<div class="tl-card tl-stat-card"><div class="tl-stat-num">${window.TL.Util.escape(value)}</div><div class="tl-stat-label">${label}</div></div>`)
-        .join("");
-    } catch (err) {
-      mount.innerHTML = "";
+      if (window.TL && window.TL.Countries && typeof window.TL.Countries.all === "function") {
+        const response = await window.TL.Countries.all({ per_page: 100 });
+        const list = window.TL.Util.list(response);
+        list.forEach((c) => {
+          const id = window.TL.Util.id(c);
+          const name = window.TL.Util.name(c);
+          if (id && name) countriesMap[String(id)] = name;
+        });
+      }
+    } catch (e) {}
+    return countriesMap;
+  }
+
+  function extractCountryName(trip) {
+    if (!trip) return "Trip";
+
+    // 1. Direct country fields on trip
+    const country = window.TL.Util.pick(trip, [
+      "country.name",
+      "country_name",
+      "countryName"
+    ], "");
+    if (typeof country === "string" && country.trim() && country.toLowerCase() !== "destination" && country.toLowerCase() !== "custom trip") {
+      return country.trim();
     }
+    if (trip.country && typeof trip.country === "object" && trip.country.name) {
+      return String(trip.country.name).trim();
+    }
+    if (typeof trip.country === "string" && trip.country.trim() && trip.country.toLowerCase() !== "destination" && trip.country.toLowerCase() !== "custom trip") {
+      return trip.country.trim();
+    }
+
+    // 2. Lookup by country_id
+    const countryId = window.TL.Util.pick(trip, ["country_id", "countryId"], null);
+    if (countryId && countriesMap[String(countryId)]) {
+      return countriesMap[String(countryId)];
+    }
+
+    // 3. Country from destination or city object
+    const dest = window.TL.Util.pick(trip, ["destination", "city"], null);
+    if (dest && typeof dest === "object") {
+      const cName = window.TL.Util.pick(dest, ["country.name", "country_name", "country"], "");
+      if (typeof cName === "string" && cName.trim() && cName.toLowerCase() !== "destination") {
+        return cName.trim();
+      }
+    }
+
+    // 4. Country from days array
+    const days = window.TL.Util.pick(trip, ["days", "trip_days", "tripDays", "itinerary"], []);
+    if (Array.isArray(days) && days.length > 0) {
+      for (const day of days) {
+        const dayCountry = window.TL.Util.pick(day, [
+          "country.name",
+          "country_name",
+          "country",
+          "city.country.name",
+          "city.country_name",
+          "city.country"
+        ], "");
+        if (typeof dayCountry === "string" && dayCountry.trim() && dayCountry.toLowerCase() !== "destination" && dayCountry.toLowerCase() !== "custom trip") {
+          return dayCountry.trim();
+        }
+      }
+    }
+
+    // 5. Title if contains actual country name
+    const rawTitle = String(window.TL.Util.pick(trip, ["title", "name"], "")).trim();
+    if (rawTitle && !rawTitle.toLowerCase().startsWith("untitled") && !rawTitle.toLowerCase().startsWith("trip #") && !rawTitle.toLowerCase().startsWith("custom trip") && rawTitle.toLowerCase() !== "destination" && rawTitle.toLowerCase() !== "your trip") {
+      const cleaned = rawTitle.replace(/^trip to\s+/i, "").replace(/\s+trip$/i, "").trim();
+      if (cleaned && cleaned.toLowerCase() !== "destination" && cleaned.toLowerCase() !== "custom trip") {
+        return cleaned;
+      }
+    }
+
+    // 6. Direct destination string if valid
+    if (typeof trip.destination === "string" && trip.destination.trim() && trip.destination.toLowerCase() !== "destination" && trip.destination.toLowerCase() !== "custom trip") {
+      return trip.destination.trim();
+    }
+
+    return "Trip";
   }
 
   /* --------------------------- Trips --------------------------- */
 
   function tripCard(trip) {
-    const title = window.TL.Util.pick(trip, ["title", "name", "destination"], "Untitled trip");
-    const destination = window.TL.Util.pick(trip, ["destination", "city.name", "city_name"], "");
+    const id = window.TL.Util.id(trip);
+    const countryName = extractCountryName(trip);
+
     const start = window.TL.Util.pick(trip, ["start_date", "starts_at"], "");
     const end = window.TL.Util.pick(trip, ["end_date", "ends_at"], "");
     const status = window.TL.Util.pick(trip, ["status"], "");
-    const id = window.TL.Util.id(trip);
     
     const formattedStart = start ? window.TL.Util.formatDate(start) : "";
     const formattedEnd = end ? window.TL.Util.formatDate(end) : "";
@@ -76,41 +163,40 @@
     return `
     <a href="trip-details.html?id=${encodeURIComponent(id)}" class="tl-card" style="padding:20px;display:block;">
       <div class="tl-flex tl-justify-between tl-items-center" style="margin-bottom:8px;">
-        <h3 style="font-size:15.5px;">${window.TL.Util.escape(title)}</h3>
+        <h3 style="font-size:16px;font-weight:700;">${window.TL.Util.escape(countryName)}</h3>
         ${status ? `<span class="tl-badge">${window.TL.Util.escape(status)}</span>` : ""}
       </div>
-      ${destination ? `<div class="tl-place-meta">📍 ${window.TL.Util.escape(destination)}</div>` : ""}
+      ${countryName && countryName !== "Trip" ? `<div class="tl-place-meta">📍 ${window.TL.Util.escape(countryName)}</div>` : ""}
       ${formattedStart || formattedEnd ? `<div class="tl-place-meta tl-mt-8">🗓️ ${formattedStart}${formattedEnd ? ` – ${formattedEnd}` : ""}</div>` : ""}
     </a>`;
   }
 
   async function loadTrips() {
     const gridFull = document.getElementById("trips-grid");
-    const gridOverview = document.getElementById("overview-trips");
-    gridFull.innerHTML = window.TL.Util.skeletonCards(4);
-    gridOverview.innerHTML = window.TL.Util.skeletonCards(2);
+    if (gridFull) gridFull.innerHTML = window.TL.Util.skeletonCards(4);
 
     try {
+      await ensureCountriesMap();
+
       let response;
-      try {
-        response = await window.TL.Dashboard.trips();
-      } catch (e) {
+      if (window.TL.Trips && typeof window.TL.Trips.all === "function") {
         response = await window.TL.Trips.all();
+      } else {
+        response = await window.TL.Api.get("/trips");
       }
       const rawTrips = window.TL.Util.list(response);
       const trips = window.TL.Util.uniqueBy(rawTrips, (t) => window.TL.Util.id(t));
       if (!trips.length) {
         const empty = window.TL.Util.emptyState("No trips yet", "Start planning to see your trips here.") +
           `<div class="tl-text-center"><a class="tl-btn tl-btn--primary tl-btn--sm" href="plan-trip.html">Plan a Trip</a></div>`;
-        gridFull.innerHTML = empty;
-        gridOverview.innerHTML = empty;
-        return;
+        if (gridFull) gridFull.innerHTML = empty;
+        return [];
       }
-      gridFull.innerHTML = trips.map(tripCard).join("");
-      gridOverview.innerHTML = trips.slice(0, 4).map(tripCard).join("");
+      if (gridFull) gridFull.innerHTML = trips.map(tripCard).join("");
+      return trips;
     } catch (err) {
-      gridFull.innerHTML = window.TL.Util.errorState(err.message);
-      gridOverview.innerHTML = window.TL.Util.errorState(err.message);
+      if (gridFull) gridFull.innerHTML = window.TL.Util.errorState(err.message);
+      return [];
     }
   }
 
@@ -120,7 +206,10 @@
     const item = window.TL.Util.pick(fav, ["favoritable", "item"], fav);
     const name = window.TL.Util.name(item, "Saved item");
     const img = window.TL.Util.image(item, FALLBACK_IMG);
-    const type = window.TL.Util.pick(fav, ["favoritable_type", "type"], "");
+    const rawType = window.TL.Util.pick(fav, ["favoritable_type", "type"], "");
+    const type = formatModelType(rawType);
+    const city = window.TL.Util.city(item) || window.TL.Util.country(item);
+
     return `
     <div class="tl-card tl-place-card">
       <div class="tl-place-media">
@@ -129,19 +218,20 @@
       </div>
       <div class="tl-place-body">
         <div class="tl-place-title"><h3>${window.TL.Util.escape(name)}</h3></div>
+        ${city ? `<div class="tl-place-meta">📍 ${window.TL.Util.escape(city)}</div>` : ""}
       </div>
     </div>`;
   }
 
   async function loadFavorites() {
     const grid = document.getElementById("favorites-grid");
-    grid.innerHTML = window.TL.Util.skeletonCards(3);
+    if (grid) grid.innerHTML = window.TL.Util.skeletonCards(3);
     try {
       let response;
-      try {
-        response = await window.TL.Dashboard.favorites();
-      } catch (e) {
+      if (window.TL.Favorites && typeof window.TL.Favorites.all === "function") {
         response = await window.TL.Favorites.all();
+      } else {
+        response = await window.TL.Api.get("/favorites");
       }
       const rawFavorites = window.TL.Util.list(response);
       const favorites = window.TL.Util.uniqueBy(rawFavorites, (f) => {
@@ -150,48 +240,15 @@
         const type = window.TL.Util.pick(f, ["favoritable_type", "type"], "");
         return `${type}_${favoritableId}`;
       });
-      grid.innerHTML = favorites.length
-        ? favorites.map(favoriteCard).join("")
-        : window.TL.Util.emptyState("No favorites yet", "Save destinations, hotels, and experiences you love.");
-    } catch (err) {
-      grid.innerHTML = window.TL.Util.errorState(err.message);
-    }
-  }
-
-  /* --------------------------- Bookings --------------------------- */
-
-  function bookingCard(booking) {
-    const label = window.TL.Util.pick(booking, ["reference", "title", "type"], `Booking #${window.TL.Util.id(booking) || ""}`);
-    const status = window.TL.Util.pick(booking, ["status"], "");
-    const amount = window.TL.Util.money(window.TL.Util.pick(booking, ["amount", "total", "price"]));
-    return `
-    <div class="tl-card" style="padding:20px;">
-      <div class="tl-flex tl-justify-between tl-items-center">
-        <h3 style="font-size:15px;">${window.TL.Util.escape(label)}</h3>
-        ${status ? `<span class="tl-badge">${window.TL.Util.escape(status)}</span>` : ""}
-      </div>
-      ${amount ? `<div class="tl-price tl-mt-8">${window.TL.Util.escape(amount)}</div>` : ""}
-      <a href="bookings.html" class="tl-btn tl-btn--outline tl-btn--sm tl-mt-16">Manage</a>
-    </div>`;
-  }
-
-  async function loadBookings() {
-    const grid = document.getElementById("bookings-grid");
-    grid.innerHTML = window.TL.Util.skeletonCards(3);
-    try {
-      let response;
-      try {
-        response = await window.TL.Dashboard.bookings();
-      } catch (e) {
-        response = await window.TL.Bookings.all();
+      if (grid) {
+        grid.innerHTML = favorites.length
+          ? favorites.map(favoriteCard).join("")
+          : window.TL.Util.emptyState("No favorites yet", "Save destinations, hotels, and experiences you love.");
       }
-      const rawBookings = window.TL.Util.list(response);
-      const bookings = window.TL.Util.uniqueBy(rawBookings, (b) => window.TL.Util.id(b));
-      grid.innerHTML = bookings.length
-        ? bookings.map(bookingCard).join("")
-        : window.TL.Util.emptyState("No bookings yet", "Bookings you make will show up here.");
+      return favorites;
     } catch (err) {
-      grid.innerHTML = window.TL.Util.errorState(err.message);
+      if (grid) grid.innerHTML = window.TL.Util.errorState(err.message);
+      return [];
     }
   }
 
@@ -203,7 +260,8 @@
         document.querySelectorAll("#dash-nav button").forEach((b) => b.classList.remove("is-active"));
         document.querySelectorAll(".tl-dash-panel").forEach((p) => p.classList.remove("is-active"));
         btn.classList.add("is-active");
-        document.querySelector(`.tl-dash-panel[data-panel="${btn.dataset.panel}"]`).classList.add("is-active");
+        const panel = document.querySelector(`.tl-dash-panel[data-panel="${btn.dataset.panel}"]`);
+        if (panel) panel.classList.add("is-active");
       });
     });
   }
@@ -317,7 +375,7 @@
 
   /* --------------------------- Init --------------------------- */
 
-  function init() {
+  async function init() {
     const signedOut = document.getElementById("dash-signed-out");
     const shell = document.getElementById("dash-shell");
 
@@ -331,14 +389,20 @@
     shell.classList.remove("tl-hidden");
 
     loadIdentity();
-    loadStats();
-    loadTrips();
-    loadFavorites();
-    loadBookings();
     wirePanelTabs();
     wireProfileForm();
     wirePasswordForm();
     wireDeleteAccount();
+
+    const [trips, favorites] = await Promise.all([
+      loadTrips().catch(() => []),
+      loadFavorites().catch(() => [])
+    ]);
+
+    loadStats(
+      Array.isArray(trips) ? trips.length : 0,
+      Array.isArray(favorites) ? favorites.length : 0
+    );
   }
 
   document.addEventListener("DOMContentLoaded", init);

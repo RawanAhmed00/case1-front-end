@@ -149,10 +149,19 @@
       );
     },
 
+    getTourGuide() {
+      return getJSON("tailora_cart_tour_guide_obj");
+    },
+
+    setTourGuide(guide) {
+      setJSON("tailora_cart_tour_guide_obj", guide);
+    },
+
     clearTourGuide() {
       localStorage.removeItem(
         KEYS.tourGuide
       );
+      localStorage.removeItem("tailora_cart_tour_guide_obj");
     },
 
     getTourGuidePrice() {

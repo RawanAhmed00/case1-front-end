@@ -814,32 +814,46 @@
     },
 
     country(obj) {
-
-      return Util.pick(
+      if (!obj) return "";
+      const val = Util.pick(
         obj,
         [
-          "country",
-          "country_name",
           "country.name",
-
-          // Laravel Countries response
-          "country_information.name"
+          "country_name",
+          "country.country_name",
+          "country.common",
+          "country_information.name",
+          "names.common",
+          "names.official",
+          "country_information.official_name",
+          "country"
         ],
         ""
       );
+      if (typeof val === "object" && val !== null) {
+        return val.name || val.common || val.country_name || "";
+      }
+      return typeof val === "string" ? val : (val ? String(val) : "");
     },
 
     city(obj) {
-
-      return Util.pick(
+      if (!obj) return "";
+      const val = Util.pick(
         obj,
         [
-          "city",
+          "city.name",
           "city_name",
-          "city.name"
+          "city.city_name",
+          "locality",
+          "location.city",
+          "city"
         ],
         ""
       );
+      if (typeof val === "object" && val !== null) {
+        return val.name || val.city_name || "";
+      }
+      return typeof val === "string" ? val : (val ? String(val) : "");
     },
 
     description(obj) {
@@ -971,17 +985,12 @@
     },
 
     escape(str) {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.textContent =
-        str == null
-          ? ""
-          : String(str);
-
+      if (str === null || str === undefined) return "";
+      if (typeof str === "object") {
+        str = str.name || str.title || str.label || "";
+      }
+      const div = document.createElement("div");
+      div.textContent = String(str);
       return div.innerHTML;
     },
 
@@ -1172,6 +1181,93 @@
   };
 
   /* ================================================================
+   * TOUR GUIDE CHAT NOTIFICATIONS (Only when tour guide sends message)
+   * ================================================================ */
+
+  async function checkUnreadChatNotifications() {
+    if (!window.TL?.Auth?.isAuthenticated()) return;
+    try {
+      if (!window.TL?.Api) return;
+      const res = await window.TL.Api.get("/chats");
+      const chats = (res && (Array.isArray(res) ? res : res.data)) || [];
+      if (!Array.isArray(chats)) return;
+
+      const user = (window.TL.Auth.getCachedUser && window.TL.Auth.getCachedUser()) || {};
+      const currentUserId = String(user.id || "");
+
+      let guideUnreadTotal = 0;
+
+      const currentUserName = (user.name || user.full_name || user.username || "").toLowerCase();
+
+      for (const c of chats) {
+        const partner = c.partner || c.guide || c.tour_guide || c.user || c.traveler || {};
+        const partnerId = partner.id || partner.user_id || c.guide_id || c.user_id || c.id;
+        if (!partnerId) continue;
+
+        try {
+          const msgRes = await window.TL.Api.get(`/chats/${partnerId}`);
+          const msgs = (msgRes && (Array.isArray(msgRes) ? msgRes : (msgRes.data || msgRes.messages))) || [];
+          if (Array.isArray(msgs)) {
+            msgs.forEach((m) => {
+              const mSenderId = String(m.sender_id || m.sender?.id || m.from_id || "");
+              const isRead =
+                m.is_read === true ||
+                m.is_read === 1 ||
+                String(m.is_read) === "1" ||
+                String(m.is_read) === "true" ||
+                m.read === true ||
+                m.read === 1 ||
+                String(m.read) === "1" ||
+                String(m.read) === "true" ||
+                m.status === "read" ||
+                m.seen === true ||
+                String(m.seen) === "1" ||
+                String(m.seen) === "true" ||
+                Boolean(m.read_at);
+              const isSentByCurrentUser = Boolean(
+                (currentUserId && mSenderId === currentUserId) ||
+                m.is_sender === true ||
+                m.sent_by_me === true ||
+                String(m.is_sender) === "1" ||
+                String(m.sent_by_me) === "1" ||
+                (currentUserName && m.sender?.name && String(m.sender.name).toLowerCase() === currentUserName)
+              );
+              const isFromTourGuide = !isSentByCurrentUser;
+
+              // ONLY count messages sent by the tour guide
+              if (isFromTourGuide && !isRead) {
+                guideUnreadTotal++;
+              }
+            });
+          }
+        } catch (e) {}
+      }
+
+      updateNavChatBadge(guideUnreadTotal);
+    } catch (e) {}
+  }
+
+  function updateNavChatBadge(count) {
+    const parsed = parseInt(count, 10) || 0;
+    const chatLinks = document.querySelectorAll('a[href="chat.html"]');
+    chatLinks.forEach((link) => {
+      let badge = link.querySelector(".tl-nav-chat-badge");
+      if (parsed > 0) {
+        if (!badge) {
+          badge = document.createElement("span");
+          badge.className = "tl-nav-chat-badge";
+          badge.style.cssText = "display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:#ef4444;color:#fff;font-size:11px;font-weight:700;border-radius:10px;margin-left:6px;vertical-align:middle;";
+          link.appendChild(badge);
+        }
+        badge.textContent = String(parsed);
+        badge.style.display = "inline-flex";
+      } else if (badge) {
+        badge.remove();
+      }
+    });
+  }
+
+  /* ================================================================
    * INITIALIZE
    * ================================================================ */
 
@@ -1187,11 +1283,19 @@
 
       initReveal();
 
+      if (window.location.pathname.indexOf("chat.html") === -1) {
+        checkUnreadChatNotifications();
+        setInterval(checkUnreadChatNotifications, 15000);
+      }
+
     }
   );
 
   window.TL =
     window.TL || {};
+
+  window.TL.checkUnreadMessages =
+    checkUnreadChatNotifications;
 
   window.TL.toast =
     toast;
