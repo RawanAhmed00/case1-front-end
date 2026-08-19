@@ -33,7 +33,7 @@
         if (!categories.length) {
           list.innerHTML = `
             <div style="padding: 24px;">
-              ${P.empty("No categories found", "The categories endpoint returned no records.", "bi-tags")}
+              ${P.empty("No categories found", "No categories have been created yet.", "bi-tags")}
             </div>
           `;
           return;
@@ -43,7 +43,7 @@
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Category Directory</h2>
-              <span class="tl-metadata">Taxonomy items loaded directly from the database</span>
+              <span class="tl-metadata">All active attraction and activity categories</span>
             </div>
             <span class="tl-badge tl-badge--info">${categories.length} categories</span>
           </div>
@@ -187,7 +187,8 @@
         submit(
           form,
           () => TL.Categories.createCategory(data),
-          "Category created successfully."
+          "Category created successfully.",
+          "categoryCreateModal"
         );
       });
     }

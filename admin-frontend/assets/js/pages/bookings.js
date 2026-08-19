@@ -24,7 +24,7 @@
         if (!rows) {
           state.innerHTML = P.empty(
             "Booking data unavailable",
-            "The documented booking data field is rendered when the runtime response contains a JSON array.",
+            "Unable to load booking records at this time.",
             "bi-calendar-x"
           );
           return;
@@ -33,7 +33,7 @@
         if (!rows.length) {
           state.innerHTML = P.empty(
             "No bookings available",
-            "The API returned an empty booking collection.",
+            "There are currently no customer bookings recorded.",
             "bi-calendar-x"
           );
           return;
@@ -56,7 +56,7 @@
                     <tr>
                       <td><strong>#${P.escape(P.display(b.id))}</strong></td>
                       <td>${P.badge(b.status)}</td>
-                      <td>${P.escape(P.display(b.created_at))}</td>
+                      <td>${P.escape(P.date(b.created_at || b.created))}</td>
                       <td>
                         <button class="tl-btn tl-btn--outline tl-btn--sm" data-booking-select="${P.escape(b.id)}">
                           <i class="bi bi-arrow-down-short"></i> Use ID

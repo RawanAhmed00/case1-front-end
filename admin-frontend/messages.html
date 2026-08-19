@@ -46,7 +46,7 @@
             </div>
             <h1 class="tl-page-title">Contact Messages</h1>
             <p class="tl-text-secondary">
-              Review and update status on incoming contact messages matching the Admin API.
+              View and manage messages from website visitors.
             </p>
           </div>
 
@@ -60,7 +60,7 @@
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Inbox</h2>
-              <span class="tl-metadata">GET /contact-messages · Inbound Messages</span>
+              <span class="tl-metadata">Recent customer inquiries and contact forms</span>
             </div>
           </div>
 
@@ -84,7 +84,7 @@
                 <form id="messageStatusForm" novalidate>
                   <input type="hidden" id="msg_id">
                   <div class="tl-field">
-                    <label for="msg_status">Update Status (PUT /contact-messages/{id})</label>
+                    <label for="msg_status">Update Status</label>
                     <input id="msg_status" type="text" class="tl-input" placeholder="e.g. read, resolved, pending"
                       required>
                   </div>

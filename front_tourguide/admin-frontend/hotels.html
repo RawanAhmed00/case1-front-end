@@ -84,6 +84,9 @@
             </p>
 
           </div>
+          <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#hotelCreateModal">
+            <i class="bi bi-plus-lg"></i> Add Hotel
+          </button>
 
         </div>
 
@@ -112,24 +115,16 @@
                CREATE HOTEL
           ===================================================== -->
 
-          <div class="col-xl-6">
-
-            <section class="tl-card">
-
-              <div class="tl-card__head">
-
-                <div class="tl-section-title">
-                  Create hotel
-                </div>
-
-                <span class="tl-metadata">
-                  POST /admin/hotels
-                </span>
-
+        <!-- Create Hotel Modal -->
+        <div class="modal fade" id="hotelCreateModal" tabindex="-1" aria-labelledby="hotelCreateModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content tl-modal">
+              <div class="modal-header">
+                <h5 class="modal-title" id="hotelCreateModalLabel">Add New Hotel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-
-
               <form id="hotelCreateForm">
+                <div class="modal-body">
 
                 <!-- Name -->
 
@@ -352,17 +347,15 @@
 
 
                 <button
-                  class="tl-btn tl-btn--primary"
-                  type="submit"
-                >
-                  Create hotel
-                </button>
-
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+                  <button class="tl-btn tl-btn--primary" type="submit">Create hotel</button>
+                </div>
               </form>
-
-            </section>
-
+            </div>
           </div>
+        </div>
 
 
           <!-- ====================================================

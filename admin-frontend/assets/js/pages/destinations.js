@@ -151,7 +151,7 @@
           cityCreateForm,
           () => TL.Cities.createCity(payload),
           "City created successfully.",
-          null,
+          "cityCreateModal",
           loadCities
         );
       });
@@ -288,7 +288,7 @@
           attractionCreateForm,
           () => TL.Attractions.createAttraction(payload),
           "Attraction created successfully.",
-          null,
+          "attractionCreateModal",
           loadAttractions
         );
       });

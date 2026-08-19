@@ -136,6 +136,18 @@
   border-color: rgba(239, 68, 68, 0.5);
 }
 
+.tl-btn--warning {
+  background: var(--tl-warning-bg);
+  color: var(--tl-warning);
+  border-color: var(--tl-warning-border);
+  font-weight: 600;
+}
+.tl-btn--warning:hover {
+  background: rgba(245, 158, 11, 0.22);
+  border-color: var(--tl-warning);
+  color: #F59E0B;
+}
+
 .tl-btn--sm {
   padding: 7px 12px;
   font-size: 13px;

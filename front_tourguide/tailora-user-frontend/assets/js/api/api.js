@@ -81,20 +81,28 @@
   async function handleResponse(response) {
     const body = await parseBody(response);
 
+    function getErrorMessage(fallback) {
+      if (!body) return fallback;
+      if (typeof body === "string") return body;
+      if (body.message) return body.message;
+      if (body.error) return body.error;
+      return fallback;
+    }
+
     if (response.status === 401) {
       if (window.TL && window.TL.Auth && typeof window.TL.Auth.handle401 === "function") {
         window.TL.Auth.handle401();
       }
-      throw new ApiError(body && body.message ? body.message : "Session expired. Please sign in again.", 401, body);
+      throw new ApiError(getErrorMessage("Session expired. Please sign in again."), 401, body);
     }
 
     if (response.status === 422) {
-      throw new ApiValidationError(body && body.message ? body.message : "Validation failed.", 422, body);
+      throw new ApiValidationError(getErrorMessage("Validation failed."), 422, body);
     }
 
     if (!response.ok) {
       throw new ApiError(
-        body && body.message ? body.message : `Request failed with status ${response.status}.`,
+        getErrorMessage(`Request failed with status ${response.status}.`),
         response.status,
         body
       );

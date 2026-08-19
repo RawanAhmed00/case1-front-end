@@ -152,9 +152,9 @@
 }
 
 .tl-btn--violet {
-  background: var(--tl-gradient-violet);
-  color: #FFFFFF;
-  box-shadow: var(--tl-shadow-glow-purple);
+  background: var(--tl-gradient-aura) !important;
+  color: #06231D !important;
+  box-shadow: var(--tl-shadow-glow-teal);
 }
 .tl-btn--violet:hover {
   transform: translateY(-1px);

@@ -21,8 +21,8 @@
       <header class="tl-topbar" id="tlTopbar"></header>
       <main class="tl-content">
         
-<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-people"></i> User Management</span></div><h1 class="tl-page-title">Users</h1><p class="tl-text-secondary">Manage users using the documented Admin API. Undocumented response fields are never assumed.</p></div><button class="tl-btn tl-btn--primary" data-bs-toggle="modal" data-bs-target="#userCreateModal"><i class="bi bi-person-plus"></i> Add user</button></div>
-<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div><div class="tl-section-title">User directory</div><div class="tl-metadata">GET /admin/users — documented response is a string.</div></div><button id="usersRefresh" class="tl-btn tl-btn--outline tl-btn--sm"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div><div id="usersState"></div></section>
+<div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-people"></i> User Management</span></div><h1 class="tl-page-title">Users</h1><p class="tl-text-secondary">Manage users using the documented Admin API. Undocumented response fields are never assumed.</p></div></div>
+<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div><div class="tl-section-title">User directory</div><div class="tl-metadata">Registered user accounts</div></div><button id="usersRefresh" class="tl-btn tl-btn--outline tl-btn--sm"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div><div id="usersState"></div></section>
 <div class="modal fade" id="userCreateModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Create user</h5><button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><form id="userCreateForm"><div class="modal-body"><div class="row">
 <div class="col-md-6"><div class="tl-field">
 <label for="create_name">Name</label>
@@ -91,7 +91,7 @@
 <input id="edit_phone_num" name="edit_phone_num" type="text" class="tl-input" placeholder="" >
 <div class="tl-field-error" data-error-for="edit_phone_num"></div>
 </div></div></div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Save changes</button></div></form></div></div></div>
-<div class="modal fade" id="userStatusModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Change user status</h5><button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><form id="userStatusForm"><div class="modal-body"><input type="hidden" id="status_user_id"><p class="tl-text-secondary">The API documents this PATCH endpoint but does not document its request body. Enter the backend-defined JSON payload exactly as required.</p><textarea id="status_payload" class="tl-textarea" rows="6" placeholder='{ "status": "..." }'></textarea><div class="tl-field-hint">No field name or enum is invented by this UI.</div></div><div class="modal-footer"><button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button><button class="tl-btn tl-btn--primary" type="submit">Send status request</button></div></form></div></div></div>
+
 
       </main>
     </div>

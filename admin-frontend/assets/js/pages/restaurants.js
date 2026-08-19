@@ -71,7 +71,7 @@
         if (!restaurants.length) {
           list.innerHTML = `
             <div style="padding: 24px;">
-              ${P.empty("No restaurants found", "There are no restaurants available in the database.", "bi-shop")}
+              ${P.empty("No restaurants found", "No restaurant listings added yet.", "bi-shop")}
             </div>
           `;
           return;
@@ -81,7 +81,7 @@
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Restaurant Directory</h2>
-              <span class="tl-metadata">Restaurants loaded directly from the database</span>
+              <span class="tl-metadata">All registered restaurants and dining spots</span>
             </div>
             <span class="tl-badge tl-badge--info">${restaurants.length} restaurants</span>
           </div>
@@ -222,7 +222,8 @@
         submit(
           e.currentTarget,
           () => TL.Restaurants.createRestaurant(vals(e.currentTarget, "restaurant_")),
-          "Restaurant created successfully."
+          "Restaurant created successfully.",
+          "restaurantCreateModal"
         );
       });
     }

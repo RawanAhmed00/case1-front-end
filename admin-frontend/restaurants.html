@@ -48,9 +48,12 @@
             </div>
             <h1 class="tl-page-title">Restaurants</h1>
             <p class="tl-text-secondary">
-              Manage dining establishments, cuisines, booking features and ratings matching the Admin API.
+              Manage dining establishments, cuisines, and restaurant details.
             </p>
           </div>
+          <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#restaurantCreateModal">
+            <i class="bi bi-plus-lg"></i> Add Restaurant
+          </button>
         </div>
 
         <!-- Restaurant List Card -->
@@ -65,17 +68,21 @@
           </div>
         </section>
 
-        <!-- Create Restaurant -->
-        <section class="tl-card">
-          <div class="tl-card__head">
-            <div>
-              <h2 class="tl-section-title">Create Restaurant</h2>
-              <span class="tl-metadata">POST /restaurants</span>
-            </div>
-            <i class="bi bi-plus-square tl-card-icon"></i>
-          </div>
+      </main>
+    </div>
+  </div>
 
-          <form id="restaurantCreateForm" novalidate>
+  <!-- Create Restaurant Modal -->
+  <div class="modal fade" id="restaurantCreateModal" tabindex="-1" aria-labelledby="restaurantCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="restaurantCreateModalLabel">Add New Restaurant</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="restaurantCreateForm" novalidate>
+          <div class="modal-body">
             <div class="row g-3">
               <div class="col-md-6">
                 <div class="tl-field">
@@ -209,14 +216,15 @@
                 </div>
               </div>
             </div>
-
-            <button class="tl-btn tl-btn--primary mt-2" type="submit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">
               <i class="bi bi-plus-circle"></i> Create Restaurant
             </button>
-          </form>
-        </section>
-
-      </main>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

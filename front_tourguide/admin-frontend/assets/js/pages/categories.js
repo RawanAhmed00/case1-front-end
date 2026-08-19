@@ -196,7 +196,8 @@
         });
     }
 
-    async function submit(form, fn, message) {
+    async function submit(form, fn, message, closeModalId) {
+
       P.clearErrors(form);
 
       const button =
@@ -210,6 +211,11 @@
         TL.showToast(message, "success");
 
         form.reset();
+
+        if (closeModalId) {
+          const modalEl = document.getElementById(closeModalId);
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
 
         await loadCategories();
 
@@ -245,7 +251,8 @@
                 name:
                   e.currentTarget.category_create_name.value,
               }),
-            "Category created successfully."
+            "Category created successfully.",
+            "categoryCreateModal"
           );
         }
       );

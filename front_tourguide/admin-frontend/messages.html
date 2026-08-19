@@ -22,7 +22,7 @@
       <main class="tl-content">
         
 <div class="tl-page-header"><div><div class="tl-eyebrow"><span class="tl-badge tl-badge--info"><i class="bi bi-envelope"></i> Contact Center</span></div><h1 class="tl-page-title">Contact Messages</h1><p class="tl-text-secondary">Review, update and remove user inquiries using the documented endpoints.</p></div><button id="messagesRefresh" class="tl-btn tl-btn--outline"><i class="bi bi-arrow-clockwise"></i> Refresh</button></div>
-<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div class="tl-section-title">Inbox</div><div class="tl-metadata">GET /admin/contact-messages</div></div><div id="messagesState"></div></section>
+<section class="tl-card tl-card--flush"><div class="tl-card__head" style="padding:22px 22px 0;"><div class="tl-section-title">Inbox</div><div class="tl-metadata">Recent customer inquiries and contact forms</div></div><div id="messagesState"></div></section>
 <div class="modal fade" id="messageViewModal" tabindex="-1"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content tl-modal"><div class="modal-header"><h5 class="modal-title">Message</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div id="messageDetails"></div><hr class="tl-divider"><form id="messageUpdateForm"><input type="hidden" id="message_update_id"><div class="tl-field">
 <label for="message_status">Status</label>
 <input id="message_status" name="message_status" type="text" class="tl-input" placeholder="Backend-defined status" required >

@@ -44,13 +44,9 @@
             </div>
             <h1 class="tl-page-title">Users</h1>
             <p class="tl-text-secondary">
-              Manage accounts, roles and status matching the documented Admin API.
+              Manage user accounts, roles, and access permissions.
             </p>
           </div>
-
-          <button class="tl-btn tl-btn--primary" id="openCreateUserBtn" data-bs-toggle="modal" data-bs-target="#userCreateModal">
-            <i class="bi bi-person-plus"></i> Add User
-          </button>
         </div>
 
         <!-- Users Table Card -->
@@ -58,7 +54,7 @@
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">User Directory</h2>
-              <span class="tl-metadata">GET /users · Live Accounts</span>
+              <span class="tl-metadata">Registered user accounts</span>
             </div>
 
             <button id="usersRefresh" class="tl-btn tl-btn--outline tl-btn--sm" type="button">
@@ -260,33 +256,6 @@
           <div class="modal-footer">
             <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
             <button class="tl-btn tl-btn--primary" type="submit">Save Changes</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- User Status Modal -->
-  <div class="modal fade" id="userStatusModal" tabindex="-1" aria-labelledby="userStatusModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content tl-modal">
-        <div class="modal-header">
-          <h5 class="modal-title" id="userStatusModalLabel">Change User Status</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <form id="userStatusForm">
-          <div class="modal-body">
-            <input type="hidden" id="status_user_id">
-            <p class="tl-text-secondary mb-3">
-              Update status via <code>PATCH /users/{id}/status</code>. Enter the backend-defined JSON payload:
-            </p>
-            <textarea id="status_payload" class="tl-textarea" rows="5" placeholder='{ "is_active": 1 }'></textarea>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="tl-btn tl-btn--ghost" data-bs-dismiss="modal">Cancel</button>
-            <button class="tl-btn tl-btn--primary" type="submit">Send Status Request</button>
           </div>
         </form>
       </div>

@@ -20,7 +20,7 @@
         if (!rows) {
           state.innerHTML = P.empty(
             "Message data unavailable",
-            "The API response did not expose the contact messages collection.",
+            "Unable to load contact messages.",
             "bi-envelope-x"
           );
           return;
@@ -29,7 +29,7 @@
         if (!rows.length) {
           state.innerHTML = P.empty(
             "No contact messages",
-            "The API returned an empty message list.",
+            "There are no incoming messages at this time.",
             "bi-envelope"
           );
           return;
@@ -41,8 +41,8 @@
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>User ID</th>
-                  <th>Message</th>
+                  <th>Sender</th>
+                  <th>Subject / Message</th>
                   <th>Status</th>
                   <th>Created</th>
                   <th>Actions</th>
@@ -50,15 +50,24 @@
               </thead>
               <tbody>
                 ${rows.map(function (m) {
-          return `
+                  const senderName = m.name || (m.user_id ? `User #${m.user_id}` : "Visitor");
+                  const senderEmail = m.email || "";
+                  const subjectText = m.subject || "";
+                  return `
                     <tr>
                       <td><strong>#${P.escape(P.display(m.id))}</strong></td>
-                      <td>${P.escape(P.display(m.user_id))}</td>
-                      <td style="max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        ${P.escape(P.display(m.message))}
+                      <td>
+                        <strong>${P.escape(senderName)}</strong>
+                        ${senderEmail ? `<div class="tl-metadata" style="font-size: 11px;">${P.escape(senderEmail)}</div>` : ''}
                       </td>
-                      <td>${P.badge(m.status)}</td>
-                      <td>${P.escape(P.display(m.created_at))}</td>
+                      <td style="max-width: 360px;">
+                        ${subjectText ? `<div class="fw-semibold text-truncate">${P.escape(subjectText)}</div>` : ''}
+                        <div class="text-truncate" style="max-width: 320px; color: var(--tl-text-secondary); font-size: 13px;">
+                          ${P.escape(P.display(m.message))}
+                        </div>
+                      </td>
+                      <td>${P.badge(m.status || "unread")}</td>
+                      <td>${P.escape(P.date(m.created_at || m.created))}</td>
                       <td>
                         <div class="tl-table-actions">
                           <button
@@ -81,7 +90,7 @@
                       </td>
                     </tr>
                   `;
-        }).join("")}
+                }).join("")}
               </tbody>
             </table>
           </div>

@@ -94,6 +94,9 @@
             </p>
 
           </div>
+          <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#restaurantCreateModal">
+            <i class="bi bi-plus-lg"></i> Add Restaurant
+          </button>
 
         </div>
 
@@ -139,24 +142,16 @@
                CREATE RESTAURANT
                ==================================================== -->
 
-          <div class="col-xl-6">
-
-            <section class="tl-card">
-
-              <div class="tl-card__head">
-
-                <div class="tl-section-title">
-                  Create restaurant
-                </div>
-
-                <span class="tl-metadata">
-                  POST /admin/restaurants
-                </span>
-
+        <!-- Create Restaurant Modal -->
+        <div class="modal fade" id="restaurantCreateModal" tabindex="-1" aria-labelledby="restaurantCreateModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content tl-modal">
+              <div class="modal-header">
+                <h5 class="modal-title" id="restaurantCreateModalLabel">Add New Restaurant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-
-
               <form id="restaurantCreateForm">
+                <div class="modal-body">
 
 
                 <div class="tl-field">
@@ -527,18 +522,15 @@
                 </div>
 
 
-                <button
-                  class="tl-btn tl-btn--primary"
-                  type="submit"
-                >
-                  Create restaurant
-                </button>
-
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+                  <button class="tl-btn tl-btn--primary" type="submit">Create restaurant</button>
+                </div>
               </form>
-
-            </section>
-
+            </div>
           </div>
+        </div>
 
 
 

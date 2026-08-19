@@ -22,7 +22,7 @@
       if (!rows.length) {
         state.innerHTML = P.empty(
           "No trips available",
-          "No trips found in the database.",
+          "No trip itineraries generated yet.",
           "bi-map"
         );
         return;
@@ -57,7 +57,7 @@
                   <td>${P.escape(P.display(t.num_days))}</td>
                   <td>${P.escape(P.display(t.budget ? `$${t.budget}` : "—"))}</td>
                   <td>${P.escape(P.display(t.number_of_travelers || 1))}</td>
-                  <td>${P.escape(P.display(t.created_at))}</td>
+                  <td>${P.escape(P.date(t.created_at || t.created))}</td>
                   <td>
                     <div class="tl-table-actions">
                       <button class="tl-btn tl-btn--outline tl-btn--sm" data-trip-edit="${P.escape(t.id)}" title="Edit Trip">
@@ -207,7 +207,7 @@
 
           renderTable(rows, meta);
         } else {
-          state.innerHTML = P.error(listRes.reason?.message || "Failed to load trips from database.");
+          state.innerHTML = P.error(listRes.reason?.message || "Failed to load trips.");
         }
       } catch (e) {
         state.innerHTML = P.error(e.message || "Failed to load trips.");

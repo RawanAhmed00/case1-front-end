@@ -47,7 +47,7 @@
 
           state.innerHTML = P.empty(
             "Review data unavailable",
-            "The API response does not contain a review collection.",
+            "Unable to load customer reviews at this time.",
             "bi-star"
           );
 
@@ -59,7 +59,7 @@
 
           state.innerHTML = P.empty(
             "No reviews available",
-            "The API returned an empty review collection.",
+            "No customer reviews submitted yet.",
             "bi-star"
           );
 

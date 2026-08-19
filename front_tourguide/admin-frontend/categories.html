@@ -76,6 +76,9 @@
             </p>
 
           </div>
+          <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#categoryCreateModal">
+            <i class="bi bi-plus-lg"></i> Add Category
+          </button>
         </div>
 
 
@@ -127,59 +130,44 @@
         <!-- CREATE / UPDATE -->
         <div class="row g-4 mt-1">
 
-          <!-- CREATE CATEGORY -->
-          <div class="col-lg-6">
-
-            <section class="tl-card">
-
-              <div class="tl-card__head">
-
-                <div class="tl-section-title">
-                  Create category
-                </div>
-
-                <span class="tl-metadata">
-                  POST /admin/categories
-                </span>
-
-              </div>
-
-              <form id="categoryCreateForm">
-
-                <div class="tl-field">
-
-                  <label for="category_create_name">
-                    Name
-                  </label>
-
-                  <input
-                    id="category_create_name"
-                    name="category_create_name"
-                    type="text"
-                    class="tl-input"
-                    placeholder="Category name"
-                    required
-                  >
-
-                  <div
-                    class="tl-field-error"
-                    data-error-for="category_create_name"
-                  ></div>
-
-                </div>
-                <button
-                  class="tl-btn tl-btn--primary"
-                  type="submit"
-                >
-                  <i class="bi bi-plus-circle"></i>
-                  Create category
-                </button>
-
-              </form>
-
-            </section>
-
+  <!-- Create Category Modal -->
+  <div class="modal fade" id="categoryCreateModal" tabindex="-1" aria-labelledby="categoryCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="categoryCreateModalLabel">Add New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="categoryCreateForm">
+          <div class="modal-body">
+            <div class="tl-field">
+              <label for="category_create_name">
+                Name
+              </label>
+              <input
+                id="category_create_name"
+                name="category_create_name"
+                type="text"
+                class="tl-input"
+                placeholder="Category name"
+                required
+              >
+              <div
+                class="tl-field-error"
+                data-error-for="category_create_name"
+              ></div>
+            </div>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">
+              <i class="bi bi-plus-circle"></i> Create category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
 
           <!-- UPDATE / DELETE -->

@@ -48,9 +48,12 @@
             </div>
             <h1 class="tl-page-title">Categories</h1>
             <p class="tl-text-secondary">
-              Manage attraction and experience categories matching the Admin API.
+              Organize attraction and activity categories across the platform.
             </p>
           </div>
+          <button class="tl-btn tl-btn--primary" type="button" data-bs-toggle="modal" data-bs-target="#categoryCreateModal">
+            <i class="bi bi-plus-lg"></i> Add Category
+          </button>
         </div>
 
         <!-- Categories List Card -->
@@ -65,17 +68,21 @@
           </div>
         </section>
 
-        <!-- Create Category -->
-        <section class="tl-card">
-          <div class="tl-card__head">
-            <div>
-              <h2 class="tl-section-title">Create Category</h2>
-              <span class="tl-metadata">POST /categories · multipart/form-data</span>
-            </div>
-            <i class="bi bi-plus-square tl-card-icon"></i>
-          </div>
+      </main>
+    </div>
+  </div>
 
-          <form id="categoryCreateForm" novalidate>
+  <!-- Create Category Modal -->
+  <div class="modal fade" id="categoryCreateModal" tabindex="-1" aria-labelledby="categoryCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="categoryCreateModalLabel">Add New Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="categoryCreateForm" novalidate>
+          <div class="modal-body">
             <div class="tl-field">
               <label for="category_name">Category Name</label>
               <input id="category_name" name="name" type="text" class="tl-input" placeholder="e.g. Cultural &amp; Heritage" required>
@@ -87,14 +94,15 @@
               <input id="category_image" name="image" type="file" class="tl-input" accept="image/*">
               <div class="tl-field-error" data-error-for="image"></div>
             </div>
-
-            <button class="tl-btn tl-btn--primary mt-2" type="submit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">
               <i class="bi bi-plus-circle"></i> Create Category
             </button>
-          </form>
-        </section>
-
-      </main>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 

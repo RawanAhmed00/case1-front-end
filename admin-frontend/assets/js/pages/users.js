@@ -24,7 +24,7 @@
       if (!rows.length) {
         state.innerHTML = P.empty(
           "No users available",
-          "No user accounts were found in the database.",
+          "No registered user accounts found.",
           "bi-people"
         );
         return;
@@ -45,22 +45,23 @@
               </tr>
             </thead>
             <tbody>
-              ${rows.map(u => `
+              ${rows.map(u => {
+                const isActive = u.is_active === 1 || u.is_active === true || u.is_active === "1" || String(u.status || "").toLowerCase() === "active" || u.is_active === undefined;
+                return `
                 <tr>
                   <td><strong>#${P.escape(P.display(u.id))}</strong></td>
                   <td><strong>${P.escape(P.display(u.name))}</strong></td>
                   <td>${P.escape(P.display(u.email))}</td>
                   <td>${P.escape(P.display(u.dist_country || u.country || "—"))}</td>
                   <td>${P.badge(u.role || "user")}</td>
-                  <td>${P.badge(u.is_active !== undefined ? (u.is_active ? "Active" : "Inactive") : "Active")}</td>
+                  <td>${P.badge(isActive ? "Active" : "Inactive")}</td>
                   <td>
                     <div class="tl-table-actions">
-                      
                       <button class="tl-btn tl-btn--outline tl-btn--sm" data-user-edit="${P.escape(u.id)}" title="Edit User">
                         <i class="bi bi-pencil"></i>
                       </button>
-                      <button class="tl-btn tl-btn--outline tl-btn--sm" data-user-status="${P.escape(u.id)}" title="Change Status">
-                        <i class="bi bi-toggle2-on"></i>
+                      <button class="tl-btn tl-btn--outline tl-btn--sm" data-user-status="${P.escape(u.id)}" title="${isActive ? 'Deactivate User' : 'Activate User'}">
+                        <i class="bi ${isActive ? 'bi-toggle2-on text-success' : 'bi-toggle2-off text-danger'}"></i>
                       </button>
                       <button class="tl-btn tl-btn--danger tl-btn--sm" data-user-delete="${P.escape(u.id)}" title="Delete User">
                         <i class="bi bi-trash"></i>
@@ -68,7 +69,7 @@
                     </div>
                   </td>
                 </tr>
-              `).join("")}
+              `;}).join("")}
             </tbody>
           </table>
         </div>
@@ -244,7 +245,7 @@
 
         try {
           await TL.Users.createUser(payload);
-          TL.showToast("User created and saved to database successfully.", "success");
+          TL.showToast("User created successfully.", "success");
           
           const modal = P.modal("userCreateModal");
           if (modal) modal.hide();
@@ -279,7 +280,7 @@
         try {
           const payload = extractFormData("edit", editForm);
           await TL.Users.updateUser(id, payload);
-          TL.showToast("User updated successfully in database.", "success");
+          TL.showToast("User updated successfully.", "success");
           
           const modal = P.modal("userEditModal");
           if (modal) modal.hide();
@@ -291,35 +292,6 @@
           TL.showToast(err.message || "Failed to update user.", "error");
         } finally {
           P.setBusy(btn, false);
-        }
-      });
-    }
-
-    // Change Status Form Submit
-    const statusForm = document.getElementById("userStatusForm");
-    if (statusForm) {
-      statusForm.addEventListener("submit", async e => {
-        e.preventDefault();
-        const id = document.getElementById("status_user_id").value;
-        let payload = {};
-        const raw = document.getElementById("status_payload").value.trim();
-        if (raw) {
-          try {
-            payload = JSON.parse(raw);
-          } catch (_) {
-            TL.showToast("Status payload must be valid JSON.", "error");
-            return;
-          }
-        }
-
-        try {
-          await TL.Users.changeUserStatus(id, payload);
-          TL.showToast("User status updated successfully.", "success");
-          const modal = P.modal("userStatusModal");
-          if (modal) modal.hide();
-          load(currentPage);
-        } catch (err) {
-          TL.showToast(err.message || "Failed to update status.", "error");
         }
       });
     }
@@ -372,12 +344,24 @@
         return;
       }
 
-      // Status
+      // Status Toggle (Direct activate / deactivate)
       const statBtn = e.target.closest("[data-user-status]");
       if (statBtn) {
-        document.getElementById("status_user_id").value = statBtn.dataset.userStatus;
-        document.getElementById("status_payload").value = "";
-        P.modal("userStatusModal")?.show();
+        const id = statBtn.dataset.userStatus;
+        const userData = currentUsersList.find(x => String(x.id) === String(id)) || {};
+        const isCurrentlyActive = userData.is_active === 1 || userData.is_active === true || userData.is_active === "1" || String(userData.status || "").toLowerCase() === "active" || userData.is_active === undefined;
+        const nextState = isCurrentlyActive ? 0 : 1;
+
+        P.setBusy(statBtn, true);
+        try {
+          await TL.Users.changeUserStatus(id, { is_active: nextState, status: nextState ? "active" : "inactive" });
+          TL.showToast(nextState ? "Account activated successfully." : "Account deactivated successfully.", "success");
+          await load(currentPage);
+        } catch (err) {
+          TL.showToast(err.message || "Failed to change user status.", "error");
+        } finally {
+          P.setBusy(statBtn, false);
+        }
         return;
       }
 
@@ -388,7 +372,7 @@
         if (P.confirm(`Are you sure you want to delete User #${id}? This action cannot be undone.`)) {
           try {
             await TL.Users.deleteUser(id);
-            TL.showToast("User deleted successfully from database.", "success");
+            TL.showToast("User deleted successfully.", "success");
             load(currentPage);
           } catch (err) {
             TL.showToast(err.message || "Failed to delete user.", "error");

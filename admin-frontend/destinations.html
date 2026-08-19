@@ -48,7 +48,7 @@
             </div>
             <h1 class="tl-page-title">Destinations & Attractions</h1>
             <p class="tl-text-secondary">
-              Manage cities and attractions matching the Admin API with live database synchronization.
+              Manage travel destinations, cities, and local tourist attractions.
             </p>
           </div>
         </div>
@@ -60,11 +60,14 @@
         <!-- Cities List Card -->
         <section class="tl-card tl-card--flush mb-4">
           <div class="tl-card__head p-4 pb-0 mb-0">
-            <div>
+            <div class="d-flex align-items-center justify-content-between w-100">
               <div class="d-flex align-items-center gap-2">
                 <span class="tl-badge tl-badge--primary"><i class="bi bi-buildings"></i> Cities</span>
-                <span class="tl-metadata">GET /cities</span>
+                <span class="tl-metadata">Available destination cities</span>
               </div>
+              <button class="tl-btn tl-btn--primary tl-btn--sm" type="button" data-bs-toggle="modal" data-bs-target="#cityCreateModal">
+                <i class="bi bi-plus-lg"></i> Add City
+              </button>
             </div>
           </div>
           <div id="citiesList" class="p-4 pt-3">
@@ -75,17 +78,49 @@
           </div>
         </section>
 
-        <!-- Create City Form -->
-        <section class="tl-card mb-5">
-          <div class="tl-card__head">
-            <div>
-              <h2 class="tl-section-title">Add New City</h2>
-              <span class="tl-metadata">POST /cities</span>
-            </div>
-            <i class="bi bi-plus-circle tl-card-icon"></i>
-          </div>
+        <!-- =========================================================
+             ATTRACTIONS SECTION
+             ========================================================= -->
 
-          <form id="cityCreateForm" novalidate>
+        <!-- Attractions List Card -->
+        <section class="tl-card tl-card--flush mb-4">
+          <div class="tl-card__head p-4 pb-0 mb-0">
+            <div class="d-flex align-items-center justify-content-between w-100">
+              <div class="d-flex align-items-center gap-2">
+                <span class="tl-badge tl-badge--warning"><i class="bi bi-compass"></i> Attractions</span>
+                <span class="tl-metadata">Popular tourist places and activities</span>
+              </div>
+              <button class="tl-btn tl-btn--primary tl-btn--sm" type="button" data-bs-toggle="modal" data-bs-target="#attractionCreateModal">
+                <i class="bi bi-plus-lg"></i> Add Attraction
+              </button>
+            </div>
+          </div>
+          <div id="attractionsList" class="p-4 pt-3">
+            <div class="tl-empty">
+              <div class="tl-empty__icon"><i class="bi bi-hourglass-split"></i></div>
+              <h3 class="tl-section-title">Loading attractions...</h3>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       MODALS
+       ========================================================= -->
+
+  <!-- Create City Modal -->
+  <div class="modal fade" id="cityCreateModal" tabindex="-1" aria-labelledby="cityCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cityCreateModalLabel">Add New City</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="cityCreateForm" novalidate>
+          <div class="modal-body">
             <div class="row g-3">
               <div class="col-md-6">
                 <div class="tl-field">
@@ -119,46 +154,28 @@
                 </div>
               </div>
             </div>
-
-            <button class="tl-btn tl-btn--primary w-100 mt-3" type="submit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">
               <i class="bi bi-plus-lg"></i> Create City
             </button>
-          </form>
-        </section>
-
-        <!-- =========================================================
-             ATTRACTIONS SECTION
-             ========================================================= -->
-
-        <!-- Attractions List Card -->
-        <section class="tl-card tl-card--flush mb-4">
-          <div class="tl-card__head p-4 pb-0 mb-0">
-            <div>
-              <div class="d-flex align-items-center gap-2">
-                <span class="tl-badge tl-badge--warning"><i class="bi bi-compass"></i> Attractions</span>
-                <span class="tl-metadata">GET /attractions</span>
-              </div>
-            </div>
           </div>
-          <div id="attractionsList" class="p-4 pt-3">
-            <div class="tl-empty">
-              <div class="tl-empty__icon"><i class="bi bi-hourglass-split"></i></div>
-              <h3 class="tl-section-title">Loading attractions...</h3>
-            </div>
-          </div>
-        </section>
+        </form>
+      </div>
+    </div>
+  </div>
 
-        <!-- Create Attraction Form -->
-        <section class="tl-card">
-          <div class="tl-card__head">
-            <div>
-              <h2 class="tl-section-title">Add New Attraction</h2>
-              <span class="tl-metadata">POST /attractions</span>
-            </div>
-            <i class="bi bi-plus-circle tl-card-icon text-warning"></i>
-          </div>
-
-          <form id="attractionCreateForm" novalidate>
+  <!-- Create Attraction Modal -->
+  <div class="modal fade" id="attractionCreateModal" tabindex="-1" aria-labelledby="attractionCreateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content tl-modal">
+        <div class="modal-header">
+          <h5 class="modal-title" id="attractionCreateModalLabel">Add New Attraction</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="attractionCreateForm" novalidate>
+          <div class="modal-body">
             <div class="row g-3">
               <div class="col-md-6">
                 <div class="tl-field">
@@ -224,20 +241,17 @@
                 </div>
               </div>
             </div>
-
-            <button class="tl-btn tl-btn--primary w-100 mt-3" type="submit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="tl-btn tl-btn--outline" data-bs-dismiss="modal">Cancel</button>
+            <button class="tl-btn tl-btn--primary" type="submit">
               <i class="bi bi-plus-lg"></i> Create Attraction
             </button>
-          </form>
-        </section>
-
-      </main>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-
-  <!-- =========================================================
-       MODALS
-       ========================================================= -->
 
   <!-- Edit City Modal -->
   <div class="modal fade" id="cityEditModal" tabindex="-1" aria-hidden="true">

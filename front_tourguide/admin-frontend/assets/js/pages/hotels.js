@@ -59,7 +59,7 @@
       return response || {};
     }
 
-    async function submit(form, fn, msg) {
+    async function submit(form, fn, msg, closeModalId) {
       P.clearErrors(form);
 
       const button = form.querySelector("button[type=submit]");
@@ -71,6 +71,11 @@
         TL.showToast(msg, "success");
 
         form.reset();
+
+        if (closeModalId) {
+          const modalEl = document.getElementById(closeModalId);
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
 
         await loadHotels();
       } catch (e) {
@@ -452,7 +457,8 @@
                 )
               );
             },
-            "Hotel created successfully."
+            "Hotel created successfully.",
+            "hotelCreateModal"
           );
         }
       );

@@ -42,7 +42,6 @@
     {
       label: "Insights & System",
       items: [
-        { id: "analytics", label: "Analytics", href: "analytics.html", icon: "bi-graph-up" },
         { id: "settings", label: "Website Settings", href: "settings.html", icon: "bi-gear" },
       ],
     },
@@ -117,10 +116,6 @@
               <div class="role">Administrator</div>
             </div>
           </div>
-          <button type="button" class="tl-btn tl-btn--outline tl-btn--sm tl-logout-btn" id="tlLogoutBtn">
-            <i class="bi bi-box-arrow-right"></i>
-            <span>Log out</span>
-          </button>
         </div>
       </div>`;
   }

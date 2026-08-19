@@ -46,13 +46,25 @@
     return String(value);
   };
 
+  P.date = function (value) {
+    if (value === null || value === undefined || value === "") return "Data unavailable";
+    const str = String(value).trim();
+    const match = str.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (match) return match[1];
+    try {
+      const d = new Date(str);
+      if (!isNaN(d.getTime())) return d.toISOString().split("T")[0];
+    } catch (_) {}
+    return str;
+  };
+
   P.badge = function (value) {
     const text = P.display(value);
     const lower = text.toLowerCase();
     let cls = "tl-badge--neutral";
-    if (["active","approved","success","verified","read","confirmed"].some(x => lower === x || lower.includes(x))) cls = "tl-badge--success";
+    if (["inactive","deactivated","unactive","disabled","rejected","cancelled","blocked","deleted","failed"].some(x => lower === x || lower.includes(x))) cls = "tl-badge--danger";
+    else if (["active","approved","success","verified","read","confirmed"].some(x => lower === x || lower.includes(x))) cls = "tl-badge--success";
     else if (["pending","warning","unread","processing"].some(x => lower === x || lower.includes(x))) cls = "tl-badge--warning";
-    else if (["rejected","cancelled","blocked","deleted","failed"].some(x => lower === x || lower.includes(x))) cls = "tl-badge--danger";
     else if (["info","user","admin"].some(x => lower === x || lower.includes(x))) cls = "tl-badge--info";
     return `<span class="tl-badge ${cls}">${P.escape(text)}</span>`;
   };

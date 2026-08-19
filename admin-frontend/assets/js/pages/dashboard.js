@@ -67,17 +67,13 @@
 
     function formatDate(dateStr) {
       if (!dateStr) return "—";
+      const match = String(dateStr).trim().match(/^(\d{4}-\d{2}-\d{2})/);
+      if (match) return match[1];
       try {
         const d = new Date(dateStr);
-        if (isNaN(d.getTime())) return dateStr;
-        return d.toLocaleString("en-US", {
-          day: "numeric",
-          month: "short",
-          year: "numeric"
-        });
-      } catch (_) {
-        return String(dateStr);
-      }
+        if (!isNaN(d.getTime())) return d.toISOString().split("T")[0];
+      } catch (_) {}
+      return String(dateStr);
     }
 
     function formatDays(trip) {

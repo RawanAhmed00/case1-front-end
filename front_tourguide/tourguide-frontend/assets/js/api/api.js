@@ -82,19 +82,27 @@
   async function handleResponse(response) {
     const body = await parseBody(response);
 
+    function getErrorMessage(fallback) {
+      if (!body) return fallback;
+      if (typeof body === "string") return body;
+      if (body.message) return body.message;
+      if (body.error) return body.error;
+      return fallback;
+    }
+
     if (response.status === 401) {
       if (window.TL && window.TL.Auth && typeof window.TL.Auth.handle401 === "function") {
         window.TL.Auth.handle401();
       }
-      throw new ApiError(body && body.message ? body.message : "Unauthenticated", 401, body);
+      throw new ApiError(getErrorMessage("Unauthenticated"), 401, body);
     }
 
     if (response.status === 422) {
-      throw new ApiValidationError(body && body.message ? body.message : "Validation error", 422, body);
+      throw new ApiValidationError(getErrorMessage("Validation error"), 422, body);
     }
 
     if (!response.ok) {
-      throw new ApiError(body && body.message ? body.message : `Request failed status ${response.status}`, response.status, body);
+      throw new ApiError(getErrorMessage(`Request failed status ${response.status}`), response.status, body);
     }
 
     return body;

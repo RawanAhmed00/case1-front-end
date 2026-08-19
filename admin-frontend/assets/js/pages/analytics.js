@@ -61,7 +61,7 @@
                         <td><strong>#${P.escape(P.display(t.id))}</strong></td>
                         <td>${P.escape(P.display(t.dis_country))}</td>
                         <td>${P.escape(P.display(t.num_days))}</td>
-                        <td>${P.escape(P.display(t.created_at))}</td>
+                        <td>${P.escape(P.date(t.created_at || t.created))}</td>
                       </tr>
                     `).join("")}
                   </tbody>

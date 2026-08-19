@@ -70,7 +70,7 @@
         if (!hotels.length) {
           list.innerHTML = `
             <div style="padding: 24px;">
-              ${P.empty("No hotels found", "There are no hotels available in the database.", "bi-building")}
+              ${P.empty("No hotels found", "No hotel listings added yet.", "bi-building")}
             </div>
           `;
           return;
@@ -80,7 +80,7 @@
           <div class="tl-card__head" style="padding: 24px 24px 0;">
             <div>
               <h2 class="tl-section-title">Hotel Directory</h2>
-              <span class="tl-metadata">Hotels loaded directly from the database</span>
+              <span class="tl-metadata">All active accommodations and partner hotels</span>
             </div>
             <span class="tl-badge tl-badge--info">${hotels.length} hotels</span>
           </div>
@@ -213,7 +213,8 @@
         submit(
           e.currentTarget,
           () => TL.Hotels.createHotel(values(e.currentTarget, "hotel_")),
-          "Hotel created successfully."
+          "Hotel created successfully.",
+          "hotelCreateModal"
         );
       });
     }

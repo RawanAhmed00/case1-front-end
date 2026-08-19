@@ -41,7 +41,7 @@
     }
 
 
-    async function submit(form, fn, msg) {
+    async function submit(form, fn, msg, closeModalId) {
 
       P.clearErrors(form);
 
@@ -56,6 +56,11 @@
         TL.showToast(msg, "success");
 
         form.reset();
+
+        if (closeModalId) {
+          const modalEl = document.getElementById(closeModalId);
+          if (modalEl) bootstrap.Modal.getInstance(modalEl)?.hide();
+        }
 
         loadRestaurants();
 
@@ -547,7 +552,8 @@
 
             },
 
-            "Restaurant created successfully."
+            "Restaurant created successfully.",
+            "restaurantCreateModal"
           );
 
         }
