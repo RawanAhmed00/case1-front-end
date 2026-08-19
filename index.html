@@ -1,19 +1,322 @@
+Listed directory C:\xampp\htdocs\case1-front-end
+
+Here is the complete, redesigned HTML code for your portal landing page styled to match the **Tailora Design System** (dark glassmorphism, glowing aura accents, Bootstrap 5 & Bootstrap Icons, and hover cards) while preserving the exact 3 portal links:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tailora Portal</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tailora Portals — AI Travel Platform</title>
+
+  <link rel="icon" type="image/png" href="front_tourguide/tourguide-frontend/assets/images/logo.png">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Bootstrap Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root {
+      --tl-bg-primary: #0B132B;
+      --tl-bg-secondary: #131A33;
+      --tl-teal: #20E3C2;
+      --tl-purple: #8A5CF6;
+      --tl-blue: #4DA3FF;
+      --tl-text-primary: #F8FAFC;
+      --tl-text-secondary: rgba(248, 250, 252, 0.7);
+      --tl-border: rgba(255, 255, 255, 0.08);
+      --tl-border-hover: rgba(32, 227, 194, 0.4);
+      --tl-gradient-aura: linear-gradient(135deg, #20E3C2 0%, #4DA3FF 100%);
+      --tl-gradient-violet: linear-gradient(135deg, #8A5CF6 0%, #4DA3FF 100%);
+      --tl-gradient-text: linear-gradient(90deg, #20E3C2, #4DA3FF 55%, #8A5CF6);
+      --tl-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--tl-bg-primary);
+      color: var(--tl-text-primary);
+      font-family: var(--tl-font);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+
+    /* Ambient background glows */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: 20%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(32, 227, 194, 0.15) 0%, transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: absolute;
+      bottom: -10%;
+      right: 20%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(138, 92, 246, 0.15) 0%, transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+
+    .tl-container {
+      width: 100%;
+      max-width: 960px;
+      z-index: 1;
+    }
+
+    .tl-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .tl-logo-img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+    }
+
+    .tl-gradient-text {
+      background: var(--tl-gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tl-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: rgba(32, 227, 194, 0.12);
+      color: var(--tl-teal);
+      border: 1px solid rgba(32, 227, 194, 0.2);
+    }
+
+    .tl-badge--violet {
+      background: rgba(138, 92, 246, 0.12);
+      color: #A78BFA;
+      border-color: rgba(138, 92, 246, 0.2);
+    }
+
+    .tl-badge--blue {
+      background: rgba(77, 163, 255, 0.12);
+      color: var(--tl-blue);
+      border-color: rgba(77, 163, 255, 0.2);
+    }
+
+    .tl-portal-card {
+      background: var(--tl-bg-secondary);
+      border: 1px solid var(--tl-border);
+      border-radius: 20px;
+      padding: 2rem;
+      text-decoration: none;
+      color: var(--tl-text-primary);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .tl-portal-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: transparent;
+      transition: background 0.3s ease;
+    }
+
+    .tl-portal-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--tl-border-hover);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(32, 227, 194, 0.15);
+      color: var(--tl-text-primary);
+    }
+
+    .tl-portal-card--admin:hover::before {
+      background: var(--tl-gradient-violet);
+    }
+
+    .tl-portal-card--user:hover::before {
+      background: var(--tl-gradient-aura);
+    }
+
+    .tl-portal-card--guide:hover::before {
+      background: linear-gradient(135deg, #4DA3FF 0%, #20E3C2 100%);
+    }
+
+    .tl-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .tl-portal-card:hover .tl-icon-box {
+      transform: scale(1.1);
+    }
+
+    .tl-icon-box--admin {
+      color: #A78BFA;
+      background: rgba(138, 92, 246, 0.15);
+    }
+
+    .tl-icon-box--user {
+      color: var(--tl-teal);
+      background: rgba(32, 227, 194, 0.15);
+    }
+
+    .tl-icon-box--guide {
+      color: var(--tl-blue);
+      background: rgba(77, 163, 255, 0.15);
+    }
+
+    .tl-card-action {
+      margin-top: auto;
+      padding-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .tl-card-action i {
+      transition: transform 0.2s ease;
+    }
+
+    .tl-portal-card:hover .tl-card-action i {
+      transform: translateX(4px);
+    }
+
+    .tl-footer {
+      margin-top: 3rem;
+      color: var(--tl-text-secondary);
+      font-size: 0.85rem;
+    }
+  </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100">
-    <div class="text-center">
-        <h1 class="mb-4">Tailora Project Portals</h1>
-        <div class="d-grid gap-3 col-6 mx-auto">
-            <a href="admin-frontend/index.html" class="btn btn-dark btn-lg">Go to Admin Frontend</a>
-            <a href="tailora-user-frontend/index.html" class="btn btn-primary btn-lg">Go to User Frontend</a>
-            <a href="front_tourguide/tourguide-frontend/index.html" class="btn btn-success btn-lg">Go to Tour Guide Frontend</a>
-        </div>
+<body>
+
+  <div class="tl-container text-center">
+    
+    <!-- Header -->
+    <div class="tl-header">
+      <img src="front_tourguide/tourguide-frontend/assets/images/logo.png" alt="Tailora Logo" class="tl-logo-img mb-3" onerror="this.src='admin-frontend/assets/images/logo.png'">
+      <div class="mb-2">
+        <span class="tl-badge"><i class="bi bi-stars"></i> Unified Access</span>
+      </div>
+      <h1 class="display-5 fw-bold mb-2">Tailora <span class="tl-gradient-text">Project Portals</span></h1>
+      <p class="text-secondary small max-w-lg mx-auto mb-0" style="max-width: 500px;">
+        Welcome to Tailora AI Travel Platform. Select a portal below to access the corresponding environment.
+      </p>
     </div>
+
+    <!-- Portals Grid -->
+    <div class="row g-4 text-start">
+      
+      <!-- Admin Portal -->
+      <div class="col-md-4">
+        <a href="admin-frontend/index.html" class="tl-portal-card tl-portal-card--admin">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="tl-icon-box tl-icon-box--admin mb-0">
+              <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <span class="tl-badge tl-badge--violet">Admin</span>
+          </div>
+          <h4 class="fw-bold mt-3 mb-2">Admin Command Center</h4>
+          <p class="text-secondary small mb-3">
+            Manage trips, system users, booking requests, and platform configuration.
+          </p>
+          <div class="tl-card-action" style="color: #A78BFA;">
+            Go to Admin Interface<i class="bi bi-arrow-right"></i>
+          </div>
+        </a>
+      </div>
+
+      <!-- Traveler/User Portal -->
+      <div class="col-md-4">
+        <a href="tailora-user-frontend/index.html" class="tl-portal-card tl-portal-card--user">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="tl-icon-box tl-icon-box--user mb-0">
+              <i class="bi bi-compass-fill"></i>
+            </div>
+            <span class="tl-badge">Traveler</span>
+          </div>
+          <h4 class="fw-bold mt-3 mb-2">Traveler Portal</h4>
+          <p class="text-secondary small mb-3">
+            Plan AI itineraries, explore destinations, manage favorites, and chat with AI.
+          </p>
+          <div class="tl-card-action" style="color: var(--tl-teal);">
+            Go to User Interface <i class="bi bi-arrow-right"></i>
+          </div>
+        </a>
+      </div>
+
+      <!-- Tour Guide Portal -->
+      <div class="col-md-4">
+        <a href="front_tourguide/tourguide-frontend/index.html" class="tl-portal-card tl-portal-card--guide">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="tl-icon-box tl-icon-box--guide mb-0">
+              <i class="bi bi-person-badge-fill"></i>
+            </div>
+            <span class="tl-badge tl-badge--blue">Tour Guide</span>
+          </div>
+          <h4 class="fw-bold mt-3 mb-2">Tour Guide Portal</h4>
+          <p class="text-secondary small mb-3">
+            Set availabilities, manage tour schedules, accept booking requests, and message travelers.
+          </p>
+          <div class="tl-card-action" style="color: var(--tl-blue);">
+            Go to Tour Guide Interface <i class="bi bi-arrow-right"></i>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="tl-footer border-top border-secondary border-opacity-25 pt-4">
+      <span>Tailora AI Travel Planner &bull; Multi-Portal Access Hub</span>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap 5 Bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+```

@@ -12,7 +12,7 @@
   const API_CONFIG = {
     // Same Laravel backend as the Admin frontend. All User API endpoints in
     // the docs are given relative to /api, so that's the base here too.
-    baseUrl: "http://127.0.0.1:8000/api",
+    baseUrl: "reliable-laughter-production-a837.up.railway.app/api",
     tokenKey: "tailora_user_token",
     userKey: "tailora_user_profile"
   };
