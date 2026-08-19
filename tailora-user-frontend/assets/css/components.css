@@ -1423,3 +1423,14 @@
 .tl-detail-tabpanel.is-active {
   display: block;
 }
+
+/* ---------------------------------------------------------------------
+   Envelope & Vector Icons (Light / Dark mode adaptive)
+   --------------------------------------------------------------------- */
+.tl-envelope-icon {
+  display: inline-block;
+  vertical-align: middle;
+  stroke: currentColor;
+  fill: none;
+  transition: color var(--tl-transition-fast), stroke var(--tl-transition-fast);
+}

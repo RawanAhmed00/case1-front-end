@@ -16,7 +16,8 @@
     { href: "hotels.html", label: "Hotels" },
     { href: "restaurants.html", label: "Restaurants" },
     { href: "maps.html", label: "Interactive Map" },
-    { href: "chat.html", label: "Chat" }
+    { href: "chat.html", label: "Chat" },
+    { href: "contact.html", label: "Contact Us" }
   ];
 
   function currentPage() {
@@ -103,6 +104,10 @@
 
             <a href="weather.html" role="menuitem">
               🌦 Trip Weather
+            </a>
+
+            <a href="contact.html" role="menuitem">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tl-envelope-icon" aria-hidden="true" style="margin-right:6px;vertical-align:-2px;"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg> Contact Us
             </a>
 
             <hr>
@@ -531,6 +536,10 @@
 
               <a href="index.html#about">
                 About Tailora
+              </a>
+
+              <a href="contact.html">
+                Contact Support
               </a>
 
             </div>
