@@ -21,7 +21,26 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.15.3/dist/echo.iife.js"></script>
 </head>
+<script>
+    
+    window.Pusher = Pusher;
+
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: 'd5f2c5fc19420db851e8', 
+        cluster: 'eu', 
+        forceTLS: true
+    });
+
+    
+    window.Echo.channel('my-channel')
+        .listen('.MyEvent', (e) => {
+            console.log(e);
+        });
+</script>
 <body data-page="messages" data-page-title="Messages & Chat" data-breadcrumb="Growth & Messages, Chat" data-requires-auth="true">
 
 <div class="tl-app">
